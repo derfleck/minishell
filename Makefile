@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/20 16:20:18 by mleitner         ###   ########.fr        #
+#    Updated: 2023/04/20 21:06:25 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ DEBUG			:= -g
 SRCSDIR			:= ./src/
 SRCSLIST		:= main.c
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
+HEADDIR			:= ./inc/
 
 OBJSDIR			:= ./obj/
 OBJSLIST		:= ${SRCSLIST:.c=.o}
@@ -27,7 +28,7 @@ OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 LIBFTDIR		:= ./libft/
 LIBFT			:= ${LIBFTDIR}libft.a
 
-LIBS			:= -L${LIBFTDIR} -lreadline
+LIBS			:= -L${LIBFTDIR} -lft -lreadline
 INCS			:= -I${HEADDIR} -I${LIBFTDIR}
 
 ${NAME}:		${LIBFT} ${OBJSDIR} ${OBJS}
