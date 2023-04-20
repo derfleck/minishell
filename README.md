@@ -1,7 +1,5 @@
 # Minishell
 
-
-
 | **name**         | **library** | **description**                                    | **return**                                                                           | **required for**                        |
 | ---------------- | ----------- | -------------------------------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------- |
 | readline         | stdio.h     | reads a line from the terminal and returns it      | NULL if EOF, empty for empty line, returns text of line as char*, needs to be free'd | reading input from the terminal         |
@@ -65,5 +63,3 @@
 - [Minishell project of other 42 students](https://github.com/zstenger93/minishell)
 
 - [Tutorial - write a shell in C](https://brennan.io/2015/01/16/write-a-shell-in-c/)
-
-
