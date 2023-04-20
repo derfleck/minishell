@@ -6,7 +6,8 @@
 # include <stddef.h>
 # include <unistd.h>
 # include <sys/wait.h>
+# include <signal.h>
 
-extern int	g_exit;
+extern int	g_stat;
 
 #endif
