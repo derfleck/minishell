@@ -1,10 +1,4 @@
 #include "../inc/minishell.h"
-#include <stdio.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdlib.h>
-#include <string.h>
 
 static int	ft_strcmp(char *s1, char *s2)
 {
@@ -50,15 +44,21 @@ void	get_pwd(void)
 	free(buf);
 }
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*s;
+	t_env	*env;
 
+	(void)argc;
+	(void)argv;
+	env = init_env(envp);
 	while (1)
 	{
 		s = readline(prompt_line());
 		if (ft_strcmp(s, "pwd"))
 			get_pwd();
+		else if (ft_strcmp(s, "env"))
+			print_env(env);
 		else
 			printf("%s\n", s);
 		free(s);
@@ -66,16 +66,3 @@ int	main(void)
 	return (0);
 }
 
-/*
-int	main(int argc, char **argv, char **envp)
-{
-	(void)argc;
-	(void)argv;
-	printf("%s\n", envp[5]);
-	while (1)
-	{
-		continue ;	
-	}
-	return (0);
-}
-*/

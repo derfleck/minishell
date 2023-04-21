@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
+#    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/20 21:06:25 by mleitner         ###   ########.fr        #
+#    Updated: 2023/04/21 18:24:03 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,10 @@ FLAGS			:= -Wall -Wextra -Werror
 DEBUG			:= -g
 
 SRCSDIR			:= ./src/
-SRCSLIST		:= main.c
+SRCSLIST		:=	main.c \
+					envcpy.c \
+					list_func.c \
+					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
 
