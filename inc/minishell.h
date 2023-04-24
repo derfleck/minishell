@@ -18,7 +18,7 @@ extern int	g_stat;
 /* List for env */
 typedef struct s_env
 {
-	char			*value;
+	char			*key_value;
 	struct s_env	*next;
 }	t_env;
 

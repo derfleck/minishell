@@ -17,11 +17,11 @@ t_env	*init_env(char **envp)
 	i = 0;
 	if (!size)
 	{
-		head->value = create_env();
+		head->key_value = create_env();
 		return (head);
 	}
 
-	head->value = ft_strdup(envp[i++]);
+	head->key_value = ft_strdup(envp[i++]);
 	head->next = NULL;
 	while (i < size)
 		ft_lstadd_back_env(&head, create_node(envp[i++]));
@@ -37,7 +37,7 @@ t_env	*create_node(char *str)
 	temp = malloc (sizeof (t_env));
 	if (!temp)
 		perror ("Malloc failed");
-	temp->value = ft_strdup(str);
+	temp->key_value = ft_strdup(str);
 	temp->next = NULL;
 	return (temp);
 }
@@ -63,12 +63,12 @@ void	print_env(t_env *env)
 	node = env;
 	while (node != NULL)
 	{
-		printf("%s\n", node->value);
+		printf("%s\n", node->key_value);
 		node = node->next;
 	}
 }
 
-char		*create_env(void)
+char	*create_env(void)
 {
 	char	*pwd;
 	char	*cwd;
