@@ -58,6 +58,8 @@
 
 ## Useful links
 
+- [BASH Manual](https://www.gnu.org/software/bash/manual/bash.html)
+
 - [Building a simple shell](https://blog.ehoneahobed.com/building-a-simple-shell-in-c-part-1): tutorial explaining how to build a very simple shell from the ground up
 
 - [Minishell project of other 42 students](https://github.com/zstenger93/minishell)
