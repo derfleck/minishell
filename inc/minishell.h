@@ -6,7 +6,10 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <unistd.h>
+# include <errno.h>
+# include <fcntl.h>
 # include <sys/wait.h>
+# include <sys/types.h> 
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -33,8 +36,12 @@ char		*create_env(void);
 /* list functions */
 t_env		*ft_lstlast_env(t_env *lst);
 void		ft_lstadd_back_env(t_env **lst, t_env *new);
+t_env		*find_env_node(t_env **env, char *key);
+char		*split_env_value(char *str);
+char		*split_env_key(char *str);
 
-
+/* utils */
+void	*free_ptr(void *ptr);
 
 
 #endif

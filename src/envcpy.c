@@ -1,14 +1,16 @@
 #include "../inc/minishell.h"
 
 /* It is important to check if envp is NULL before accessing it
-in order to avoid segmentation faults and other errors. */
+in order to avoid segmentation faults and other errors. 
+
+Need cpy of env because maintaining the original through reallocing
+on heap would be more laborous. */
 
 t_env	*init_env(char **envp)
 {
 	int		size;
 	int		i;
 	t_env	*head;
-
 
 	size = get_list_size(envp);
 	head = malloc (sizeof (t_env *));
@@ -20,7 +22,6 @@ t_env	*init_env(char **envp)
 		head->key_value = create_env();
 		return (head);
 	}
-
 	head->key_value = ft_strdup(envp[i++]);
 	head->next = NULL;
 	while (i < size)

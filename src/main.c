@@ -1,5 +1,7 @@
 #include "../inc/minishell.h"
 
+int	g_stat = 0;
+
 static int	ft_strcmp(char *s1, char *s2)
 {
 	if (!s1 || !s2)
@@ -49,20 +51,40 @@ int	main(int argc, char **argv, char **envp)
 	char	*s;
 	t_env	*env;
 
+	t_env	node;
+	char 	*key = "USER";
+
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
+	node = *find_env_node(&env, key);
+	printf("%s\n", node.key_value);
 	while (1)
 	{
 		s = readline(prompt_line());
+		if (s == NULL)
+			continue ;
+		add_history(s);
 		if (ft_strcmp(s, "pwd"))
 			get_pwd();
 		else if (ft_strcmp(s, "env"))
 			print_env(env);
+		else if (ft_strcmp(s, "key"))
+		{
+			printf("%s\n", node.key_value);
+			key = split_env_key(node.key_value);
+			printf("%s\n", key);
+		}
+		else if (ft_strcmp(s, "value"))
+		{
+			printf("%s\n", node.key_value);
+			key = split_env_value(node.key_value);
+			printf("%s\n", key);
+		}
 		else
 			printf("%s\n", s);
-		free(s);
+		if (s)
+			free(s);
 	}
 	return (0);
 }
-
