@@ -51,14 +51,9 @@ int	main(int argc, char **argv, char **envp)
 	char	*s;
 	t_env	*env;
 
-	t_env	node;
-	char 	*key = "USER";
-
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
-	node = *find_env_node(&env, key);
-	printf("%s\n", node.key_value);
 	while (1)
 	{
 		s = readline(prompt_line());
@@ -69,18 +64,8 @@ int	main(int argc, char **argv, char **envp)
 			get_pwd();
 		else if (ft_strcmp(s, "env"))
 			print_env(env);
-		else if (ft_strcmp(s, "key"))
-		{
-			printf("%s\n", node.key_value);
-			key = split_env_key(node.key_value);
-			printf("%s\n", key);
-		}
-		else if (ft_strcmp(s, "value"))
-		{
-			printf("%s\n", node.key_value);
-			key = split_env_value(node.key_value);
-			printf("%s\n", key);
-		}
+		else if (ft_strcmp(s, "test env"))
+			env_tester("USER", &env);
 		else
 			printf("%s\n", s);
 		if (s)

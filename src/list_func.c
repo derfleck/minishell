@@ -34,7 +34,6 @@ t_env	*find_env_node(t_env **env, char *key)
 {
 	t_env	*node;
 
-	printf("%s\n", key);
 	if (env == NULL)
 		return (NULL);
 	node = *env;
@@ -45,20 +44,18 @@ t_env	*find_env_node(t_env **env, char *key)
 
 t_env	*replace_node(t_env *node, char *new_value)
 {
-	if (node == NULL)
-		return (NULL);
-	node->key_value = free_ptr(node->key_value);
-	node->key_value = ft_strdup(new_value);
-	return (node);
-}
+	char *key;
 
-void	*free_env_node(t_env *node)
-{
 	if (node == NULL)
 		return (NULL);
+	key = ft_strjoin(split_env_key(node->key_value), "=");
+	if (!key)
+		perror("Malloc failed");
 	node->key_value = free_ptr(node->key_value);
-	node = free_ptr(node);
-	return (NULL);
+	node->key_value = ft_strjoin(key, new_value);
+	if (node->key_value == NULL)
+		perror("Malloc failed");
+	return (node);
 }
 
 void	*free_ptr(void *ptr)
@@ -73,23 +70,25 @@ char	*split_env_value(char *str)
 {
 	if (!str)
 		return (NULL);
-	while (*str != '=')
+	while (*str != '=' && str)
 		str++;
 	str++;
+	if (!str)
+		return (NULL);
 	return (str);
 }
 
-char	*split_env_key(char *str)
+char	*split_env_key(const char *str)
 {
-	int		i;
-	char	*ptr;
+	size_t			i;
+	static char	key[250];
 
 	i = 0;
 	if (!str)
 		return (NULL);
-	while (str[i] != '=')
+	while (str[i] != '=' && str)
 		i++;
-	ptr = &str[i];
-	str[i] = '\0';
-	return (str);
+	ft_memmove(key, str, i);
+	key[ft_strlen(key)] = '\0';
+	return (key);
 }

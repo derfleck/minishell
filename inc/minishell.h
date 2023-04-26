@@ -38,10 +38,14 @@ t_env		*ft_lstlast_env(t_env *lst);
 void		ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env		*find_env_node(t_env **env, char *key);
 char		*split_env_value(char *str);
-char		*split_env_key(char *str);
+char		*split_env_key(const char *str);
+t_env		*replace_node(t_env *node, char *new_value);
+
+/* env tester */
+void	env_tester(char *key, t_env **env);
 
 /* utils */
-void	*free_ptr(void *ptr);
+void		*free_ptr(void *ptr);
 
 
 #endif
