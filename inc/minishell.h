@@ -15,6 +15,14 @@
 # include <readline/history.h>
 # include <string.h>
 
+/* Macros */
+# ifndef PARENT
+#  define PARENT 1
+# endif
+# ifndef CHILD
+#  define CHILD 0
+# endif
+
 /* global variable for exit status */
 extern int	g_stat;
 
@@ -46,6 +54,11 @@ void	env_tester(char *key, t_env **env);
 
 /* utils */
 void		*free_ptr(void *ptr);
+
+/* signals for ctrl+(D || C || \) */
+void		set_sigaction(int i);
+void		handle_ctrlc(int sig);
+void		handle_signals_child(int signum);
 
 
 #endif

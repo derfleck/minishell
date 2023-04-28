@@ -77,6 +77,7 @@ void	print_env(t_env *env)
 		printf("%s\n", node->key_value);
 		node = node->next;
 	}
+	g_stat = 0;
 }
 
 char	*create_env(void)

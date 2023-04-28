@@ -6,7 +6,7 @@
 #    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/26 09:13:43 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/04/28 13:56:11 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ SRCSDIR			:= ./src/
 SRCSLIST		:=	main.c \
 					envcpy.c \
 					list_func.c \
+					signals.c \
 					temp_tester.c \
+
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/

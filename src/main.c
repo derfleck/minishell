@@ -44,6 +44,7 @@ void	get_pwd(void)
 	buf = getcwd(NULL, 0);
 	printf("%s\n", buf);
 	free(buf);
+	g_stat = 0;
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -56,9 +57,10 @@ int	main(int argc, char **argv, char **envp)
 	env = init_env(envp);
 	while (1)
 	{
+		set_sigaction(PARENT);
 		s = readline(prompt_line());
 		if (s == NULL)
-			continue ;
+			return (write(2, "exit\n", 5));
 		add_history(s);
 		if (ft_strcmp(s, "pwd"))
 			get_pwd();
