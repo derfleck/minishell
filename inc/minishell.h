@@ -22,6 +22,9 @@
 # ifndef CHILD
 #  define CHILD 0
 # endif
+# ifndef HOME
+#  define HOME ".."
+# endif
 
 /* global variable for exit status */
 extern int	g_stat;
@@ -32,7 +35,6 @@ typedef struct s_env
 	char			*key_value;
 	struct s_env	*next;
 }	t_env;
-
 
 /* functions env */
 t_env		*init_env(char **envp);
@@ -50,15 +52,19 @@ char		*split_env_key(const char *str);
 t_env		*replace_node(t_env *node, char *new_value);
 
 /* env tester */
-void	env_tester(char *key, t_env **env);
+void		env_tester(char *key, t_env **env);
 
 /* utils */
 void		*free_ptr(void *ptr);
+
+/* Builtins */
+void		builtin_echo(char *str);
+int			builtin_cd(char *str, t_env *env);
+void		update_pwd(t_env *env, char *oldpath);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);
 void		handle_ctrlc(int sig);
 void		handle_signals_child(int signum);
-
 
 #endif

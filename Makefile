@@ -6,7 +6,7 @@
 #    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/28 13:56:11 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/05/03 14:09:21 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRCSLIST		:=	main.c \
 					envcpy.c \
 					list_func.c \
 					signals.c \
+					builtins.c \
 					temp_tester.c \
 
 					
@@ -37,8 +38,12 @@ LIBFT			:= ${LIBFTDIR}libft.a
 LIBS			:= -L${LIBFTDIR} -lft -lreadline
 INCS			:= -I${HEADDIR} -I${LIBFTDIR}
 
+YELLOW			:= \033[1;33m
+CLR_RM			:= \033[0m
+
 ${NAME}:		${LIBFT} ${OBJSDIR} ${OBJS}
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${LIBS} ${INCS}
+				@echo "$(YELLOW)$(NAME) $(CLR_RM)created ✔️"
 
 ${LIBFT}:
 				make -C ${LIBFTDIR}

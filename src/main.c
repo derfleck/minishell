@@ -68,6 +68,10 @@ int	main(int argc, char **argv, char **envp)
 			print_env(env);
 		else if (ft_strcmp(s, "test env"))
 			env_tester("USER", &env);
+		else if (!ft_strncmp(s, "cd ", 3))
+			builtin_cd(s, env);
+		else if (!ft_strncmp(s, "echo", 4))
+			builtin_echo(s);
 		else
 			printf("%s\n", s);
 		if (s)
