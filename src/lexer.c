@@ -1,5 +1,11 @@
-#include "../inc/minishell.h"
+//#include "../inc/minishell.h"
 
+#include "../libft/libft.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+
+//counts total number of commands in trimmed string
 static int	cnt_cmd(char *str, char *set)
 {
 	int		i;
@@ -21,12 +27,13 @@ static int	cnt_cmd(char *str, char *set)
 	return (cnt);
 }
 
+//checks size of command based on character set
 size_t	get_cmd_size(char *str, char *set)
 {
 	size_t	size;
 
 	size = 0;
-	while (*str && ft_strchr(set, *str) == NULL)
+	while (*str && ft_strchr(set, *str) == 0)
 	{
 		size++;
 		str++;
@@ -34,33 +41,49 @@ size_t	get_cmd_size(char *str, char *set)
 	return (size);
 }
 
+//splits string based if character in set is found
 char	**ft_split_set(char *str, char *set)
 {
 	char	**cmd;
 	int		i;
 	int		j;
+	int		len;
 
 	if (!str || !set)
 		return (NULL);
-	cmd = ft_calloc(cnt_cmd(str, set) + 1, sizeof(char *));
+	len = cnt_cmd(str, set);
+	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
 		return (NULL);
 	i = 0;
-	while (cmd[i] && *str)
+	while (i < len && *str)
 	{
-		while (*str && ft_strchr(set, *str) != NULL)
+		while (*str && ft_strchr(set, *str) != 0)
 			str++;
-		cmd[i] = ft_calloc(get_cmd_size(str, set), sizeof(char));
+		cmd[i] = ft_calloc(get_cmd_size(str, set) + 1, sizeof(char));
 		if (cmd[i] == NULL)
 			return (NULL);
 		//TODO: add free if something fails
 		j = 0;
-		while (*str && ft_strchr(set, *set) != NULL)
+		while (*str && ft_strchr(set, *str) == 0)
 			cmd[i][j++] = *str++;
 		i++;
 	}
 	return (cmd);
 }
+
+/*
+int	main(void)
+{
+	char	**str;
+	int	i = 0;
+
+	str = ft_split_set("ls -l | wc -l", " ");
+	while (str[i])
+		printf("%s\n", str[i++]);
+	return (i);
+}
+*/
 
 //only syntax check after this line
 
@@ -106,7 +129,7 @@ int	count_char(char *str, char c)
 //first check: counts if # of brackets matches up
 int	syntax_check(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (count_char(str, '(') != count_char(str, ')'))
