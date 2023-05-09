@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 void	ft_lstadd_back_env(t_env **lst, t_env *new)
 {
@@ -44,7 +44,7 @@ t_env	*find_env_node(t_env **env, char *key)
 
 t_env	*replace_node(t_env *node, char *new_value)
 {
-	char *key;
+	char	*key;
 
 	if (node == NULL)
 		return (NULL);
@@ -55,6 +55,7 @@ t_env	*replace_node(t_env *node, char *new_value)
 	node->key_value = ft_strjoin(key, new_value);
 	if (node->key_value == NULL)
 		perror("Malloc failed");
+	free(key);
 	return (node);
 }
 
@@ -64,31 +65,4 @@ void	*free_ptr(void *ptr)
 		free(ptr);
 	ptr = NULL;
 	return (NULL);
-}
-
-char	*split_env_value(char *str)
-{
-	if (!str)
-		return (NULL);
-	while (*str != '=' && str)
-		str++;
-	str++;
-	if (!str)
-		return (NULL);
-	return (str);
-}
-
-char	*split_env_key(const char *str)
-{
-	size_t			i;
-	static char	key[250];
-
-	i = 0;
-	if (!str)
-		return (NULL);
-	while (str[i] != '=' && str)
-		i++;
-	ft_memmove(key, str, i);
-	key[ft_strlen(key)] = '\0';
-	return (key);
 }

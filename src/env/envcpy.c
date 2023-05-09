@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 /* It is important to check if envp is NULL before accessing it
 in order to avoid segmentation faults and other errors. 

@@ -58,9 +58,9 @@ void		env_tester(char *key, t_env **env);
 void		*free_ptr(void *ptr);
 
 /* Builtins */
-void		builtin_echo(char *str);
+void		builtin_export(char *str);
 int			builtin_cd(char *str, t_env *env);
-void		update_pwd(t_env *env, char *oldpath);
+void		update_pwds(t_env *env, char *oldpath);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

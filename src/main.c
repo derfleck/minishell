@@ -70,8 +70,8 @@ int	main(int argc, char **argv, char **envp)
 			env_tester("USER", &env);
 		else if (!ft_strncmp(s, "cd ", 3))
 			builtin_cd(s, env);
-		else if (!ft_strncmp(s, "echo", 4))
-			builtin_echo(s);
+		else if (!ft_strncmp(s, "export", 6))
+			builtin_export(s);
 		else
 			printf("%s\n", s);
 		if (s)

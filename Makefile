@@ -6,7 +6,7 @@
 #    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/03 14:09:21 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/05/09 13:13:20 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,15 @@ FLAGS			:= -Wall -Wextra -Werror
 DEBUG			:= -g
 
 SRCSDIR			:= ./src/
+SUBDIRS			:= 	./obj/env \
+					./obj/builtins \
+					
 SRCSLIST		:=	main.c \
-					envcpy.c \
-					list_func.c \
+					env/envcpy.c \
+					env/list_func.c \
+					env/list_func2.c \
 					signals.c \
-					builtins.c \
+					builtins/builtins.c \
 					temp_tester.c \
 
 					
@@ -43,7 +47,7 @@ CLR_RM			:= \033[0m
 
 ${NAME}:		${LIBFT} ${OBJSDIR} ${OBJS}
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${LIBS} ${INCS}
-				@echo "$(YELLOW)$(NAME) $(CLR_RM)created ✔️"
+				@echo "${YELLOW}${NAME} ${CLR_RM}created ✔️"
 
 ${LIBFT}:
 				make -C ${LIBFTDIR}
@@ -52,7 +56,7 @@ ${OBJSDIR}%.o:	${SRCSDIR}%.c
 				${CC} ${FLAGS} ${DEBUG} ${INCS} -c $< -o $@
 
 ${OBJSDIR}:
-				mkdir -p ${OBJSDIR}
+				mkdir -p ${OBJSDIR} ${SUBDIRS}
 
 .PHONY:			all clean fclean re
 

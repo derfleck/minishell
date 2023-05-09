@@ -1,6 +1,6 @@
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-void	builtin_echo(char *str)
+void	builtin_export(char *str)
 {
 	int	i;
 
@@ -13,33 +13,41 @@ int	builtin_cd(char *input, t_env *env)
 	int		i;
 	char	**args;
 	char	*oldpath;
+	char	*home;
+	t_env	*node;
 
 	i = -1;
-	args = ft_split(input, ' ');
+	oldpath = getcwd(NULL, 0);
+	args = ft_split(input, ' '); //will not be needed if path comes in
 	if (!args)
 		perror("cd - split failed\n");
 	if (args[2])
 	{
 		printf("Minishell: cd:   : Too many arguments\n");
-		return (0);
+		return (0); //free?
 	}
-	if (!args[1])
-		chdir("/");
-	if (args[1][0] == '\0')
+	if (!args[1] || (args[1][0] == '~' && args[1][1] == '\0'))
+	{
+		node = find_env_node(&env, "HOME");
+		home = split_env_value(node->key_value);
+		if (chdir(home) != 0)
+			printf("Minishell: cd: %s: No such file or directory", args[1]);
+	}
+	else if (args[1][0] == '\0')
 		//return prompt!!
 		return (0);
-	oldpath = getcwd(NULL, 0);
-	if (chdir(args[1]) != 0)
+	else if (chdir(args[1]) != 0)
 	{
 		printf("Minishell: cd: %s", args[1]);
 		printf(": No such file or directory\n");
 		return (0);
 	}
-	update_pwd(env, oldpath);
+	update_pwds(env, oldpath);
 	return (1);
 }
+//TODO check how args come in from parser
 
-void	update_pwd(t_env *env, char *oldpath)
+void	update_pwds(t_env *env, char *oldpath)
 {
 	t_env	*node1;
 	t_env	*node2;
@@ -55,7 +63,7 @@ void	update_pwd(t_env *env, char *oldpath)
 	if (node2 == NULL)
 		node2 = create_node(oldpwd);
 	else
-		node2->key_value = oldpwd;
+		replace_node(node2, oldpath);
 	free(oldpwd);
 	free(oldpath);
 	if (newpath == NULL)
@@ -64,10 +72,6 @@ void	update_pwd(t_env *env, char *oldpath)
 			perror("cd: chdir to home went wrong\n");
 	}
 	else
-	{
-		node1->key_value = ft_strjoin("PWD=", newpath);
-		if (node1->key_value == NULL)
-			perror("Malloc failed\n");
-	}
+		replace_node(node1, newpath);
 	free(newpath);
 }
