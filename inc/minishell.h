@@ -46,10 +46,12 @@ char		*create_env(void);
 /* list functions */
 t_env		*ft_lstlast_env(t_env *lst);
 void		ft_lstadd_back_env(t_env **lst, t_env *new);
-t_env		*find_env_node(t_env **env, char *key);
+t_env		*find_env_node(t_env **head, char *key);
 char		*split_env_value(char *str);
 char		*split_env_key(const char *str);
-t_env		*replace_node(t_env *node, char *new_value);
+t_env		*replace_node_value(t_env *node, char *new_value);
+void		remove_node(t_env **head, char *key);
+void		add_node_to_list(t_env **head, t_env *node);
 
 /* env tester */
 void		env_tester(char *key, t_env **env);
@@ -58,7 +60,8 @@ void		env_tester(char *key, t_env **env);
 void		*free_ptr(void *ptr);
 
 /* Builtins */
-void		builtin_export(char *str);
+void		builtin_export(char *str, t_env *env);
+void		builtin_unset(char *str, t_env *env);
 int			builtin_cd(char *str, t_env *env);
 void		update_pwds(t_env *env, char *oldpath);
 

@@ -1,11 +1,39 @@
 #include "../../inc/minishell.h"
 
-void	builtin_export(char *str)
+void	builtin_export(char *str, t_env *env)
 {
-	int	i;
+	t_env	*node;
+	char	**args;
 
-	printf("%s", str);
-	i = 0;
+	if (!str)
+		return ;
+	args = ft_split(str, ' ');
+	node = find_env_node(&env, split_env_key(args[1]));
+	if (node == NULL)
+	{
+		node = create_node(args[1]);
+		add_node_to_list(&env, node);
+	}
+	else
+		replace_node_value(node, split_env_value(args[1]));
+}
+/* takes a str as argument after export command. tries to find node in env,
+if not found it creates it. If found, it replaces value with new value or nothing if nothing is specified
+TODO: no incoming "=" ??? */
+
+void	builtin_unset(char *str, t_env *env)
+{
+	t_env	*node;
+	char	**args;
+
+	if (!str)
+		return ;
+	args = ft_split(str, ' ');
+	node = find_env_node(&env, args[1]);
+	if (node == NULL)
+		return ; //Unsetting a variable or function that was not previously set shall not be considered an  error and does not cause the shell to abort.
+	else
+		remove_node(&env, args[1]);
 }
 
 int	builtin_cd(char *input, t_env *env)
@@ -63,7 +91,7 @@ void	update_pwds(t_env *env, char *oldpath)
 	if (node2 == NULL)
 		node2 = create_node(oldpwd);
 	else
-		replace_node(node2, oldpath);
+		replace_node_value(node2, oldpath);
 	free(oldpwd);
 	free(oldpath);
 	if (newpath == NULL)
@@ -72,6 +100,6 @@ void	update_pwds(t_env *env, char *oldpath)
 			perror("cd: chdir to home went wrong\n");
 	}
 	else
-		replace_node(node1, newpath);
+		replace_node_value(node1, newpath);
 	free(newpath);
 }

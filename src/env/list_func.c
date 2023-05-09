@@ -30,19 +30,19 @@ t_env	*ft_lstlast_env(t_env *lst)
 	return (lst2);
 }
 
-t_env	*find_env_node(t_env **env, char *key)
+t_env	*find_env_node(t_env **head, char *key)
 {
 	t_env	*node;
 
-	if (env == NULL)
+	if (head == NULL)
 		return (NULL);
-	node = *env;
+	node = *head;
 	while (node && ft_strncmp(node->key_value, key, ft_strlen(key)))
 		node = node->next;
 	return (node);
 }
 
-t_env	*replace_node(t_env *node, char *new_value)
+t_env	*replace_node_value(t_env *node, char *new_value)
 {
 	char	*key;
 
