@@ -1,4 +1,4 @@
-#include "../inc/minishell.h"
+#include "../../inc/minishell.h"
 
 //counts total number of commands in trimmed string
 static int	cnt_cmd(char *str, char *set)
@@ -23,7 +23,7 @@ static int	cnt_cmd(char *str, char *set)
 }
 
 //checks size of command based on character set
-size_t	get_cmd_size(char *str, char *set)
+static size_t	get_cmd_size(char *str, char *set)
 {
 	size_t	size;
 
@@ -37,7 +37,7 @@ size_t	get_cmd_size(char *str, char *set)
 }
 
 //empty 2D array after use/in case of error
-void	*empty_set(char **str)
+static void	*empty_set(char **str)
 {
 	int	i;
 
@@ -64,7 +64,7 @@ char	**ft_split_set(char *str, char *set)
 	len = cnt_cmd(str, set);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
-		return (empty_set(str));
+		return (empty_set(cmd));
 	i = 0;
 	while (i < len && *str)
 	{

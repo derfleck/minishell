@@ -1,33 +1,4 @@
-#include "../inc/minishell.h"
-
-typedef enum s_type {
-	PIPE = 1,
-	GREAT,
-	GREAT_GREAT,
-	LESS,
-	LESS_LESS,
-}	t_type;
-
-typedef struct s_lexer {
-	char			*str;
-	t_type			token;
-	int				i;
-	struct s_lexer	*prev;
-	struct s_lexer	*next;
-}	t_lexer;
-
-/*
-int	main(void)
-{
-	char	**str;
-	int	i = 0;
-
-	str = ft_split_set("ls -l | wc -l >> test", " ");
-	while (str[i])
-		printf("%s\n", str[i++]);
-	return (i);
-}
-*/
+#include "../../inc/minishell.h"
 
 //skips quotes in string, returns value how many characters to skip
 int	skip_quotes(char *str)
@@ -60,7 +31,7 @@ int	count_char(char *str, char c)
 	cnt = 0;
 	while (str[i])
 	{
-		i += skip_quotes(str[i]);
+		i += skip_quotes(str + i);
 		if (str[i] == c)
 			cnt++;
 		if (str[i])
@@ -81,7 +52,7 @@ int	syntax_check(char *str)
 		return (0);
 	while (str[i])
 	{
-		i += skip_quotes(str[i]);
+		i += skip_quotes(str + i);
 		if (str[i] == ';' || str[i] == '\\')
 			return (0);
 		if (str[i])
@@ -119,49 +90,18 @@ t_type	classify_token(char	*str)
 		if (i++ > 1)
 			return (0);
 	}
-	i = 0;
-	while (str[i])
+	if (str[1])
 	{
-		if (str[i + 1])
-		{
-			if (check_token(str[i]) == GREAT && \
-			check_token(str[i + 1] == GREAT))
-				return (GREAT_GREAT);
-			else if (check_token(str[i]) == LESS && \
-			check_token(str[i + 1] == LESS))
-				return (LESS_LESS);
-		}
+		if (check_token(str[0]) == GREAT && \
+		check_token(str[1]) == GREAT)
+			return (GREAT_GREAT);
+		else if (check_token(str[0]) == LESS && \
+			check_token(str[1]) == LESS)
+			return (LESS_LESS);
 		else
-			return (check_token(str[i]));
-		i++;
+			return (0);
 	}
+	else
+		return (check_token(str[0]));
 	return (0);
-}
-
-//creates new linked list for lexer, needs token count
-t_lexer	*new_lexer_list(char **cmd, int i)
-{
-	int		j;
-	t_lexer	*lex;
-
-	j = 0;
-	lex = ft_calloc(sizeof(t_lexer), i);
-	if (!lex)
-		return (NULL);
-	while (cmd[j])
-	{
-		lex[j].i = j;
-		lex[j].str = cmd[i];
-		lex[j].token = classify_token(cmd[i]);
-		if (j < i - 1)
-			lex[j].next = lex[j + 1];
-		else
-			lex[j].next = lex[0];
-		if (j == 0)
-			lex[j].prev = lex[i - 1];
-		else
-			lex[j].prev = lex[j - 1];
-		j++;
-	}
-	return (lex);
 }

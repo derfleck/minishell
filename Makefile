@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
+#    By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/04/28 13:56:11 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/05/09 13:24:02 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,12 +22,16 @@ SRCSLIST		:=	main.c \
 					list_func.c \
 					signals.c \
 					temp_tester.c \
+					lexer/lexer.c \
+					lexer/list.c \
+					lexer/split.c \
 
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
 
 OBJSDIR			:= ./obj/
+OBJSSUB			:= ./obj/lexer/
 OBJSLIST		:= ${SRCSLIST:.c=.o}
 OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 
@@ -47,7 +51,7 @@ ${OBJSDIR}%.o:	${SRCSDIR}%.c
 				${CC} ${FLAGS} ${DEBUG} ${INCS} -c $< -o $@
 
 ${OBJSDIR}:
-				mkdir -p ${OBJSDIR}
+				mkdir -p ${OBJSDIR} ${OBJSSUB}
 
 .PHONY:			all clean fclean re
 
