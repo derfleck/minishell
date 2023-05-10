@@ -49,18 +49,22 @@ void		ft_lstadd_back_env(t_env **lst, t_env *new);
 t_env		*find_env_node(t_env **head, char *key);
 char		*split_env_value(char *str);
 char		*split_env_key(const char *str);
-t_env		*replace_node_value(t_env *node, char *new_value);
+void		replace_node_value(t_env *node, char *new_value);
+void		append_node_value(t_env *node, char *value2);
 void		remove_node(t_env **head, char *key);
 void		add_node_to_list(t_env **head, t_env *node);
+int			key_validity_check(char *key);
 
 /* env tester */
 void		env_tester(char *key, t_env **env);
 
-/* utils */
+/* exit */
 void		*free_ptr(void *ptr);
+void		perror_exit(char *message);
 
 /* Builtins */
 void		builtin_export(char *str, t_env *env);
+void		export_append_helper(char *key, char *str, t_env *env);
 void		builtin_unset(char *str, t_env *env);
 int			builtin_cd(char *str, t_env *env);
 void		update_pwds(t_env *env, char *oldpath);

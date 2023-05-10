@@ -23,6 +23,8 @@ char	*prompt_line(void)
 	char	*tmp3;
 
 	tmp = ft_strjoin(getenv("USER"), "@minishell:");
+	if (!tmp)
+		perror_exit("Malloc failed\n");
 	tmp2 = getcwd(NULL, 0);
 	if (ft_strcmp(tmp2, getenv("HOME")))
 	{
@@ -30,9 +32,13 @@ char	*prompt_line(void)
 		return (ft_strjoin(tmp, "~$"));
 	}
 	tmp3 = ft_strjoin(tmp, tmp2);
+	if (!tmp3)
+		perror_exit("Malloc failed\n");
 	free(tmp);
 	free(tmp2);
 	tmp = ft_strjoin(tmp3, "$");
+	if (!tmp)
+		perror_exit("Malloc failed\n");
 	free(tmp3);
 	return (tmp);
 }

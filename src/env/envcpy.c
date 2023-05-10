@@ -15,7 +15,7 @@ t_env	*init_env(char **envp)
 	size = get_list_size(envp);
 	head = malloc (sizeof (t_env *));
 	if (!head)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	i = 0;
 	if (!size)
 	{
@@ -24,10 +24,10 @@ t_env	*init_env(char **envp)
 	}
 	head->key_value = ft_strdup(envp[i++]);
 	if (head->key_value == NULL)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	head->key_value = ft_strjoin(head->key_value, "");
 	if (head->key_value == NULL)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	head->next = NULL;
 	while (i < size)
 		ft_lstadd_back_env(&head, create_node(envp[i++]));
@@ -42,13 +42,13 @@ t_env	*create_node(char *str)
 		return (NULL);
 	temp = malloc (sizeof (t_env));
 	if (!temp)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	temp->key_value = ft_strdup(str);
 	if (temp->key_value == NULL)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	temp->key_value = ft_strjoin(temp->key_value, "");
 	if (temp->key_value == NULL)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	temp->next = NULL;
 	return (temp);
 }
@@ -87,10 +87,10 @@ char	*create_env(void)
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		perror ("getcwd failed");
+		perror_exit("getcwd failed\n");
 	pwd = ft_strjoin("PWD=", cwd);
 	if (!pwd)
-		perror ("Malloc failed");
+		perror_exit("Malloc failed\n");
 	free (cwd);
 	return (pwd);
 }

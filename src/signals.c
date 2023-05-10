@@ -1,5 +1,7 @@
 #include "../inc/minishell.h"
 
+/* Handle conrol+C signal SIGINT in the parent process. prints newline, empties RL buffer and redisplays prompt
+If parent process receives control+\ it ignores it with SIG_IGN */
 void	handle_ctrlc(int signum)
 {
 	if (signum == SIGINT)
@@ -11,7 +13,8 @@ void	handle_ctrlc(int signum)
 		rl_redisplay();
 	}
 }
-
+/* Child process handler of signal types SIGINT(ctrlC) and SIGQUIT(ctrl\)
+Not sure if it's working, but we can only test if we have multiple processes  */
 void	handle_signals_child(int signum)
 {
 	if (signum == SIGINT)
@@ -27,7 +30,8 @@ void	handle_signals_child(int signum)
 		g_stat = 131;
 	}
 }
-
+/* Checks if process is running as parent (main process) or as child (after fork).
+For this we need to keep track what's going on -> id them or use pid? */
 void	set_sigaction(int i)
 
 {

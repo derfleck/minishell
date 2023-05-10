@@ -42,27 +42,34 @@ t_env	*find_env_node(t_env **head, char *key)
 	return (node);
 }
 
-t_env	*replace_node_value(t_env *node, char *new_value)
+/* Gets env node and char* to replace the current value (string after the first '=' sign ). */
+void	replace_node_value(t_env *node, char *new_value)
 {
+	char	*k;
 	char	*key;
 
 	if (node == NULL)
-		return (NULL);
-	key = ft_strjoin(split_env_key(node->key_value), "=");
-	if (!key)
-		perror("Malloc failed");
+		return ;
+	k = split_env_key(node->key_value);
+	key = ft_strjoin(k, "=");
+	if (!k || !key)
+		perror_exit("Malloc failed\n");
+	free(k);
 	node->key_value = free_ptr(node->key_value);
 	node->key_value = ft_strjoin(key, new_value);
 	if (node->key_value == NULL)
-		perror("Malloc failed");
+		perror_exit("Malloc failed\n");
 	free(key);
-	return (node);
 }
 
-void	*free_ptr(void *ptr)
+/* Gets env node and char* to append it to the existing value. */
+void	append_node_value(t_env *node, char *value2)
 {
-	if (ptr)
-		free(ptr);
-	ptr = NULL;
-	return (NULL);
+	char	*new_value;
+
+	new_value = ft_strjoin(split_env_value(node->key_value), value2);
+	if (!new_value)
+		perror_exit("Malloc failed\n");
+	replace_node_value(node, new_value);
+	free(new_value);
 }

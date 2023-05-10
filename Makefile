@@ -6,7 +6,7 @@
 #    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/09 13:13:20 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/05/10 13:57:46 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,19 +15,21 @@ CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror
 DEBUG			:= -g
-
 SRCSDIR			:= ./src/
+
 SUBDIRS			:= 	./obj/env \
 					./obj/builtins \
+					./obj/exit \
 					
 SRCSLIST		:=	main.c \
 					env/envcpy.c \
 					env/list_func.c \
 					env/list_func2.c \
+					env/list_func3.c \
 					signals.c \
 					builtins/builtins.c \
 					temp_tester.c \
-
+					exit/exit1.c \
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
