@@ -31,7 +31,8 @@ int	count_char(char *str, char c)
 	cnt = 0;
 	while (str[i])
 	{
-		i += skip_quotes(str + i);
+		if (c != '\'' && c != '"')
+			i += skip_quotes(str + i);
 		if (str[i] == c)
 			cnt++;
 		if (str[i])
@@ -40,23 +41,28 @@ int	count_char(char *str, char c)
 	return (cnt);
 }
 
-//checks if line entered has a correct syntax
-//if an odd number of quotes is encountered, heredoc should be launched
-//with quote/dquote as prompt until missing character is used (maybe?)
+//checks if line entered has a correct syntax (closed quotes)
 int	syntax_check(char *str)
 {
-	int	i;
+	int		i;
+	char	tmp;
 
 	i = 0;
-	if ((count_char(str, '\'') % 2 == 1) || (count_char(str, '"') % 2 == 1))
-		return (0);
 	while (str[i])
 	{
-		i += skip_quotes(str + i);
-		if (str[i] == ';' || str[i] == '\\')
-			return (0);
-		if (str[i])
+		while (str[i] && (str[i] != '\'' && str[i] != '"'))
+		{
+			if (str[i] == ';' || str[i] == '\\')
+				return (0);
 			i++;
+		}
+		if (str[i])
+		{
+			tmp = str[i];
+			i += skip_quotes(str + i);
+		}
+		if (!str[i] && str[i - 1] != tmp)
+			return (0);
 	}
 	return (1);
 }

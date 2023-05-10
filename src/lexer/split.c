@@ -3,6 +3,32 @@
 //counts total number of commands in trimmed string
 static int	cnt_cmd(char *str, char *set)
 {
+	char	*tmp;
+	int		i;
+	int		j;
+
+	tmp = ft_strtrim(str, set);
+	j = 0;
+	while (*tmp)
+	{
+		i = skip_quotes(tmp);
+		while (ft_strchr(set, tmp[i]) == 0 && \
+				(tmp[i] != '\'' || tmp[i] != '"'))
+			i++;
+		if (i)
+			j++;
+		else
+		{
+			while (ft_strchr(set, tmp[i]) != 0)
+				i++;
+		}
+		tmp += i;
+	}
+	return (j);
+}
+/*
+static int	cnt_cmd(char *str, char *set)
+{
 	int		i;
 	int		cnt;
 	char	*trim;
@@ -21,8 +47,10 @@ static int	cnt_cmd(char *str, char *set)
 	free(trim);
 	return (cnt);
 }
+*/
 
 //checks size of command based on character set
+/*
 static size_t	get_cmd_size(char *str, char *set)
 {
 	size_t	size;
@@ -35,6 +63,7 @@ static size_t	get_cmd_size(char *str, char *set)
 	}
 	return (size);
 }
+*/
 
 //empty 2D array after use/in case of error
 static void	*empty_set(char **str)
@@ -54,6 +83,37 @@ static void	*empty_set(char **str)
 //splits string based if character in set is found
 char	**ft_split_set(char *str, char *set)
 {
+	int		i;
+	int		j;
+	char	*tmp;
+	char	**split;
+
+	tmp = ft_strtrim(str, set);
+	j = 0;
+	split = ft_calloc(sizeof(char *), cnt_cmd(str, set) + 1);
+	if (!split)
+		empty_set(split);
+	while (*tmp)
+	{
+		i = skip_quotes(tmp);
+		while (ft_strchr(set, tmp[i]) == 0 && \
+				(tmp[i] != '\'' || tmp[i] != '"'))
+			i++;
+		if (i)
+			split[j++] = ft_substr(tmp, 0, i);
+		else
+		{
+			while (ft_strchr(set, tmp[i]) != 0)
+				i++;
+		}
+		tmp += i;
+	}
+	return (split);
+}
+
+/*
+char	**ft_split_set(char *str, char *set)
+{
 	char	**cmd;
 	int		i;
 	int		j;
@@ -64,7 +124,7 @@ char	**ft_split_set(char *str, char *set)
 	len = cnt_cmd(str, set);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
-		return (empty_set(cmd));
+		return (NULL, empty_set(cmd));
 	i = 0;
 	while (i < len && *str)
 	{
@@ -80,3 +140,4 @@ char	**ft_split_set(char *str, char *set)
 	}
 	return (cmd);
 }
+*/

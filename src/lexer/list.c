@@ -34,12 +34,12 @@ t_lexer	*start_lexer(char *str)
 	int			i;
 	char		**split;
 	t_lexer		*lex;
-	static char	set[8] = " \b\t\n\v\f\r";
+	static char	set[6] = " \t\n\v\f\r";
 
 	i = 0;
 	split = ft_split_set(str, set);
-	if (!syntax_check(str) && split)
-		return (free(str), NULL);
+	//if (!syntax_check(str) && split)
+	//	return (free(str), NULL);
 	if (!split)
 		return (NULL);
 	while (split[i])

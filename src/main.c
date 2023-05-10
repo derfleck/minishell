@@ -47,10 +47,26 @@ void	get_pwd(void)
 	g_stat = 0;
 }
 
+void	print_lexer(t_lexer *lex)
+{
+	int		i;
+	t_lexer	*tmp;
+
+	tmp = lex;
+	i = tmp->i;
+	while (i == tmp->i)
+	{
+		printf("%i: %s (%i)\n", tmp->i, tmp->str, tmp->token);
+		tmp = tmp->next;
+		i++;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*s;
 	t_env	*env;
+	t_lexer	*lex;
 
 	(void)argc;
 	(void)argv;
@@ -59,6 +75,9 @@ int	main(int argc, char **argv, char **envp)
 	{
 		set_sigaction(PARENT);
 		s = readline(prompt_line());
+		lex = start_lexer(s);
+		if (lex)
+			print_lexer(lex);
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
 		add_history(s);
