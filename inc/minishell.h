@@ -61,6 +61,7 @@ int			count_char(char *str, char c);
 int			skip_quotes(char *str);
 
 //functions for splitting line
+void		empty_set(char **str);
 char		**ft_split_set(char *str, char *set);
 
 //functions for creating lexer list

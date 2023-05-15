@@ -56,7 +56,9 @@ int	syntax_check(char *str)
 				return (0);
 			i++;
 		}
-		if (str[i])
+		if (!str[i])
+			break ;
+		else
 		{
 			tmp = str[i];
 			i += skip_quotes(str + i);
@@ -93,7 +95,7 @@ t_type	classify_token(char	*str)
 	i = 0;
 	while (str[i])
 	{
-		if (i++ > 1)
+		if (i++ > 1 || (str[i] != '>' || str[i] != '<' || str[i] != '|'))
 			return (0);
 	}
 	if (str[1])

@@ -38,8 +38,8 @@ t_lexer	*start_lexer(char *str)
 
 	i = 0;
 	split = ft_split_set(str, set);
-	//if (!syntax_check(str) && split)
-	//	return (free(str), NULL);
+	if (!syntax_check(str) && split)
+		return (free(str), NULL);
 	if (!split)
 		return (NULL);
 	while (split[i])
@@ -47,6 +47,6 @@ t_lexer	*start_lexer(char *str)
 	lex = new_lexer_list(split, i);
 	if (!lex)
 		return (NULL);
-	free(split);
+	//empty_set(split);
 	return (lex);
 }
