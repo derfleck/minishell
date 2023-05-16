@@ -66,7 +66,8 @@ void		perror_exit(char *message);
 void		builtin_export(char *str, t_env **env);
 void		export_append_helper(char *key, char *str, t_env **env);
 void		builtin_unset(char *str, t_env **env);
-int			builtin_cd(char *str, t_env **env);
+void		builtin_cd(char *str, t_env **env);
+void		cd_go_home(t_env **env, char *str);
 void		update_pwds(t_env **env, char *oldpath);
 
 /* signals for ctrl+(D || C || \) */

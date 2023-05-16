@@ -33,6 +33,7 @@ void	builtin_export(char *str, t_env **env)
 	}
 	free(key);
 }
+
 /* Helper for export: in case of an arg like this: XXX+=555 where '+' is accepted
 as appending the string if exists - or creating XXX=555 as new env variable */
 void	export_append_helper(char *key, char *str, t_env **env)
@@ -54,6 +55,7 @@ void	export_append_helper(char *key, char *str, t_env **env)
 		append_node_value(node, split_env_value(str));
 	free (realkey);
 }
+
 /* removes env variable,  */
 void	builtin_unset(char *str, t_env **env)
 {
@@ -70,44 +72,44 @@ void	builtin_unset(char *str, t_env **env)
 		remove_node(env, args[1]);
 }
 
-int	builtin_cd(char *input, t_env **env)
+void	builtin_cd(char *input, t_env **env)
 {
-	int		i;
 	char	**args;
 	char	*oldpath;
-	char	*home;
-	t_env	*node;
 
-	i = -1;
 	oldpath = getcwd(NULL, 0);
-	args = ft_split(input, ' '); //will not be needed if path comes in
+	args = ft_split(input, ' ');
 	if (!args)
 		perror_exit("cd - split failed\n");
-	if (args[2])
+	if (args[1] && args[2])
 	{
 		printf("Minishell: cd:   : Too many arguments\n");
-		return (0); //free?
-	}
+		return ;
+	}	
 	if (!args[1] || (args[1][0] == '~' && args[1][1] == '\0'))
-	{
-		node = find_env_node(env, "HOME");
-		home = split_env_value(node->key_value);
-		if (chdir(home) != 0)
-			printf("Minishell: cd: %s: No such file or directory", args[1]);
-	}
+		cd_go_home(env, args[1]);
 	else if (args[1][0] == '\0')
-		//return prompt!!
-		return (0);
+		return ;
 	else if (chdir(args[1]) != 0)
 	{
 		printf("Minishell: cd: %s", args[1]);
 		printf(": No such file or directory\n");
-		return (0);
+		return ;
 	}
 	update_pwds(env, oldpath);
-	return (1);
 }
 //TODO check how args come in from parser
+
+void	cd_go_home(t_env **env, char *str)
+{
+	char	*home;
+	t_env	*node;
+
+	node = find_env_node(env, "HOME");
+	home = split_env_value(node->key_value);
+	if (chdir(home) != 0)
+		printf("Minishell: cd: %s: No such file or directory", str);
+}
 
 void	update_pwds(t_env **env, char *oldpath)
 {
