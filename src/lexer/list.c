@@ -18,9 +18,9 @@ static t_lexer	*new_lexer_list(char **cmd, int i)
 		if (j < i - 1)
 			lex[j].next = (lex + j + 1);
 		else
-			lex[j].next = lex;
+			lex[j].next = NULL;
 		if (j == 0)
-			lex[j].prev = (lex + i - 1);
+			lex[j].prev = NULL;
 		else
 			lex[j].prev = (lex + j - 1);
 		j++;

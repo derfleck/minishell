@@ -32,7 +32,7 @@ typedef enum s_type {
 	LESS_LESS,
 }	t_type;
 
-//enum for categorizing tokens in parser
+/* //enum for categorizing tokens in parser
 typedef enum s_parse {
 	FILE_IN = 1, // < character
 	HERE_DOC, // <<
@@ -42,7 +42,7 @@ typedef enum s_parse {
 	STOP_WORD, //word to stop HERE_DOC
 	OUT_FILE, //file to write to after >
 	APP_FILE //file to append to after >>
-}	t_parse;
+}	t_parse; */
 
 //doubly linked list for lexer
 typedef struct s_lexer {

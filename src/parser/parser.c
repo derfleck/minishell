@@ -20,16 +20,104 @@
 
 //just iterate through the 2D-array, assign pointers to the command, iterate through all the arguments and store the number of arguments (don't need to reassign)
 
+//values for iterating through num array
+typedef enum	s_num {
+	CMD = 0,
+	ARG,
+	IN,
+	OUT,
+	APP,
+	HERE
+}	t_num;
 
+//num array contains number of strings for each part of the struct
 typedef struct	s_cmd {
 	char			*cmd;
 	char			**arg;
-	int				num_arg;
+	int				num[6];
 	char			**input;
 	char			**output;
 	char			**append;
 	struct s_cmd	*next;
 }				t_cmd;
+
+//counts types of special tokens in lexer list
+//returns 0 if token isn't followed by a word, 1 on success
+int	count_arg_redir(t_lexer *lex, int *i, t_cmd *cmd)
+{
+	while ((lex + *i) && lex[*i].token != PIPE)
+	{
+		if (!lex[*i].token)
+			cmd->num[ARG]++;
+		else
+		{
+			if (lex[*i].token == GREAT)
+				cmd->num[OUT]++;
+			else if (lex[*i].token == GREAT_GREAT)
+				cmd->num[APP]++;
+			else if (lex[*i].token == LESS)
+				cmd->num[IN]++;
+			else if (lex[*i].token == LESS_LESS)
+				cmd->num[HERE]++;
+			*i++;
+			if (lex[*i].token == 0)
+				*i++;
+			else
+				return (0);
+		}
+		*i++;
+	}
+	return (1);
+}
+
+//initializes num array with values
+static void	init_num(t_cmd *cmd, int n_cmd)
+{
+	cmd->num[CMD] = n_cmd;
+	cmd->num[ARG] = 0;
+	cmd->num[IN] = 0;
+	cmd->num[OUT] = 0;
+	cmd->num[APP] = 0;
+}
+
+//creates node with number of special tokens
+//TODO: add malloc for strings and add strdup
+t_cmd	*create_node(t_lexer *lex, int *i, int *j, int n_cmd)
+{
+	t_cmd	*cmd;
+
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->cmd = ft_strdup(lex[*i].str);
+	init_num(cmd, n_cmd);
+	count_arg_redir(lex, i, cmd);
+	*j++;
+}
+
+//executes parse check and creates new parse list
+//returns NULL on syntax or malloc error
+t_cmd	**create_parse_list(t_lexer *lex, int *i)
+{
+	t_cmd	**tmp;
+	int		cmd;
+	int		i;
+	int		j;
+	
+	j = 0;
+	i = 0;
+	n_cmd = parse_check(lex);
+	if (!n_cmd)
+		return (NULL);
+	tmp = malloc(sizeof(t_cmd *) * n_cmd);
+	if (!tmp)
+		return (NULL);
+	while (j < n_cmd)
+		create_node(lex, &i, &j, n_cmd);
+	return (tmp);
+}
+
+void	create_node
 
 //checks if single tokens at beginning or end or in succession
 //returns number of command groups separated by pipes
@@ -137,6 +225,12 @@ t_cmd	*create_cmd_list(t_lexer *lex)
 	if (!cmds)
 		return (NULL);
 	while (i < cmds)
+	{
+		if (i == 0)
+			cmd = init_cmd_node(tmp->str, NULL);
+		else
+			init_cmd_node(tmp->str, )
+	}
 		tmp = parse_group(tmp, cmd + i, &i);
 }
 
