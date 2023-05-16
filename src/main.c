@@ -75,11 +75,11 @@ int	main(int argc, char **argv, char **envp)
 		else if (ft_strcmp(s, "test env"))
 			env_tester("USER", &env);
 		else if (!ft_strncmp(s, "cd ", 3))
-			builtin_cd(s, env);
+			builtin_cd(s, &env);
 		else if (!ft_strncmp(s, "export", 6))
-			builtin_export(s, env);
+			builtin_export(s, &env);
 		else if (!ft_strncmp(s, "unset", 5))
-			builtin_unset(s, env);
+			builtin_unset(s, &env);
 		else
 			printf("%s\n", s);
 		if (s)

@@ -3,7 +3,7 @@
 /* takes a str as argument after export command. tries to find node in env,
 if not found it creates it. If found, it replaces value with new value or nothing if nothing is specified
 TODO: no incoming "=" ??? */
-void	builtin_export(char *str, t_env *env)
+void	builtin_export(char *str, t_env **env)
 {
 	t_env	*node;
 	char	**args;
@@ -20,11 +20,11 @@ void	builtin_export(char *str, t_env *env)
 		export_append_helper(key, args[1], env);
 		return ;
 	}
-	node = find_env_node(&env, key);
+	node = find_env_node(env, key);
 	if (node == NULL)
 	{
 		node = create_node(args[1]);
-		add_node_to_list(&env, node);
+		add_node_to_list(env, node);
 	}
 	else
 	{
@@ -35,7 +35,7 @@ void	builtin_export(char *str, t_env *env)
 }
 /* Helper for export: in case of an arg like this: XXX+=555 where '+' is accepted
 as appending the string if exists - or creating XXX=555 as new env variable */
-void	export_append_helper(char *key, char *str, t_env *env)
+void	export_append_helper(char *key, char *str, t_env **env)
 {
 	char 	*realkey;
 	t_env	*node;
@@ -44,18 +44,18 @@ void	export_append_helper(char *key, char *str, t_env *env)
 	free (key);
 	if (!realkey)
 		perror_exit("Malloc failed\n");
-	node = find_env_node(&env, realkey);
+	node = find_env_node(env, realkey);
 	if (node == NULL)
 	{
 		node = create_node(str); // remove + (use realkey)
-		add_node_to_list(&env, node);
+		add_node_to_list(env, node);
 	}	
 	else
 		append_node_value(node, split_env_value(str));
 	free (realkey);
 }
 /* removes env variable,  */
-void	builtin_unset(char *str, t_env *env)
+void	builtin_unset(char *str, t_env **env)
 {
 	t_env	*node;
 	char	**args;
@@ -63,14 +63,14 @@ void	builtin_unset(char *str, t_env *env)
 	if (!str)
 		return ;
 	args = ft_split(str, ' ');
-	node = find_env_node(&env, args[1]);
+	node = find_env_node(env, args[1]);
 	if (node == NULL)
 		return ; //Unsetting a variable or function that was not previously set shall not be considered an  error and does not cause the shell to abort.
 	else
-		remove_node(&env, args[1]);
+		remove_node(env, args[1]);
 }
 
-int	builtin_cd(char *input, t_env *env)
+int	builtin_cd(char *input, t_env **env)
 {
 	int		i;
 	char	**args;
@@ -90,7 +90,7 @@ int	builtin_cd(char *input, t_env *env)
 	}
 	if (!args[1] || (args[1][0] == '~' && args[1][1] == '\0'))
 	{
-		node = find_env_node(&env, "HOME");
+		node = find_env_node(env, "HOME");
 		home = split_env_value(node->key_value);
 		if (chdir(home) != 0)
 			printf("Minishell: cd: %s: No such file or directory", args[1]);
@@ -109,7 +109,7 @@ int	builtin_cd(char *input, t_env *env)
 }
 //TODO check how args come in from parser
 
-void	update_pwds(t_env *env, char *oldpath)
+void	update_pwds(t_env **env, char *oldpath)
 {
 	t_env	*node1;
 	t_env	*node2;
@@ -120,8 +120,8 @@ void	update_pwds(t_env *env, char *oldpath)
 	oldpwd = ft_strjoin("OLDPWD=", oldpath);
 	if (oldpwd == NULL)
 		perror_exit("Malloc failed\n");
-	node1 = find_env_node(&env, "PWD");
-	node2 = find_env_node(&env, "OLDPWD");
+	node1 = find_env_node(env, "PWD");
+	node2 = find_env_node(env, "OLDPWD");
 	if (node2 == NULL)
 		node2 = create_node(oldpwd);
 	else

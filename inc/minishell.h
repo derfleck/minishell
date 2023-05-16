@@ -63,11 +63,11 @@ void		*free_ptr(void *ptr);
 void		perror_exit(char *message);
 
 /* Builtins */
-void		builtin_export(char *str, t_env *env);
-void		export_append_helper(char *key, char *str, t_env *env);
-void		builtin_unset(char *str, t_env *env);
-int			builtin_cd(char *str, t_env *env);
-void		update_pwds(t_env *env, char *oldpath);
+void		builtin_export(char *str, t_env **env);
+void		export_append_helper(char *key, char *str, t_env **env);
+void		builtin_unset(char *str, t_env **env);
+int			builtin_cd(char *str, t_env **env);
+void		update_pwds(t_env **env, char *oldpath);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

@@ -29,7 +29,7 @@ void	remove_node(t_env **head, char *key)
 	if (temp == NULL)
 		return ;
 	if (prev == NULL)
-		*head = (*head)->next; //segfaults if env is called after
+		(*head) = (*head)->next;
 	else
 		prev->next = temp->next;
 	free_ptr(temp->key_value);
