@@ -1,0 +1,19 @@
+define a rule that combines all words starting with a quote 
+
+arguments for execve needs to be provided as 2D array
+
+echo treats arguments different, everything except -n flag is a continuous string, just join them with a single space in between
+
+simple rule: check for words until token, invalid if token at error of lexer list or if two tokens follow each other with no words in between
+
+search for redirection tokens and then put them into another lexer list, take them out of the original lexer list
+
+
+if two single tokens (pipe, great, less) are in succession, print error message: syntax error near unexpected token ''
+
+there can be only one heredoc as it is usually redirected to stdout
+
+heredoc mode can only stop if the line actually ends with the stopword, no trailing characters (not even whitespace)
+when there's multiple heredocs, the first stopword needs to be entered and only then the second heredoc starts
+
+just iterate through the 2D-array, assign pointers to the command, iterate through all the arguments and store the number of arguments (don't need to reassign)

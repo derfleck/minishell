@@ -95,8 +95,9 @@ t_type	classify_token(char	*str)
 	i = 0;
 	while (str[i])
 	{
-		if (i++ > 1 || (str[i] != '>' || str[i] != '<' || str[i] != '|'))
+		if (i > 1 || (str[i] != '>' && str[i] != '<' && str[i] != '|'))
 			return (0);
+		i++;
 	}
 	if (str[1])
 	{

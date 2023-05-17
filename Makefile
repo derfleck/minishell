@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+         #
+#    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/09 13:24:02 by mleitner         ###   ########.fr        #
+#    Updated: 2023/05/17 13:50:43 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,13 +25,15 @@ SRCSLIST		:=	main.c \
 					lexer/lexer.c \
 					lexer/list.c \
 					lexer/split.c \
-
+					parser/parser.c \
+					parser/parser_syntax.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
 
 OBJSDIR			:= ./obj/
-OBJSSUB			:= ./obj/lexer/
+OBJSSUB			:= ./obj/lexer/ \
+					./obj/parser/
 OBJSLIST		:= ${SRCSLIST:.c=.o}
 OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 

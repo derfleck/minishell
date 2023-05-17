@@ -32,19 +32,29 @@ typedef enum s_type {
 	LESS_LESS,
 }	t_type;
 
-/* //enum for categorizing tokens in parser
-typedef enum s_parse {
-	FILE_IN = 1, // < character
-	HERE_DOC, // <<
-	FILE_OUT, // > character
-	FILE_APP, // >>
-	INPUT_FILE, //name after FILE_IN
-	STOP_WORD, //word to stop HERE_DOC
-	OUT_FILE, //file to write to after >
-	APP_FILE //file to append to after >>
-}	t_parse; */
+//values for iterating through num array
+typedef enum s_num {
+	CMD = 0,
+	ARG,
+	IN,
+	OUT,
+	APP,
+	HERE
+}	t_num;
 
-//doubly linked list for lexer
+//num array contains number of strings for each part of the struct
+typedef struct s_cmd {
+	char			*cmd;
+	char			**arg;
+	int				num[6];
+	char			**input;
+	char			**output;
+	char			**append;
+	char			**here;
+	struct s_cmd	*next;
+}	t_cmd;
+
+//linked list for lexer
 typedef struct s_lexer {
 	char			*str;
 	t_type			token;
@@ -59,6 +69,10 @@ t_type		check_token(char c);
 int			syntax_check(char *str);
 int			count_char(char *str, char c);
 int			skip_quotes(char *str);
+
+//functions for parser
+t_cmd		*create_parse_node(t_lexer *lex, int *i, int n_cmd);
+t_cmd		**create_parse_list(t_lexer *lex);
 
 //functions for splitting line
 void		empty_set(char **str);
@@ -94,7 +108,7 @@ char		*split_env_key(const char *str);
 t_env		*replace_node(t_env *node, char *new_value);
 
 /* env tester */
-void	env_tester(char *key, t_env **env);
+void		env_tester(char *key, t_env **env);
 
 /* utils */
 void		*free_ptr(void *ptr);
