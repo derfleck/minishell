@@ -2,10 +2,11 @@
 
 /* It is important to check if envp is NULL before accessing it
 in order to avoid segmentation faults and other errors. 
-
 Need cpy of env because maintaining the original through reallocing
 on heap would be more laborous. */
 
+/* Receives envp, and initializes list creation. Returns 
+the head of the created linear linked list */
 t_env	*init_env(char **envp)
 {
 	int		size;
@@ -25,15 +26,14 @@ t_env	*init_env(char **envp)
 	head->key_value = ft_strdup(envp[i++]);
 	if (head->key_value == NULL)
 		perror_exit("Malloc failed\n");
-	head->key_value = ft_strjoin(head->key_value, "");
-	if (head->key_value == NULL)
-		perror_exit("Malloc failed\n");
 	head->next = NULL;
 	while (i < size)
-		ft_lstadd_back_env(&head, create_node(envp[i++]));
+		add_node_to_list(&head, create_node(envp[i++]));
 	return (head);
 }
 
+/* Receives a str as "key=value". If not, it returns NULL.
+Creates a single node and sets next pointer to NULL. Returns the node */
 t_env	*create_node(char *str)
 {
 	t_env	*temp;
@@ -53,6 +53,7 @@ t_env	*create_node(char *str)
 	return (temp);
 }
 
+/* Counts the amount of envp elements */
 int	get_list_size(char **envp)
 {
 	int	size;
@@ -67,11 +68,12 @@ int	get_list_size(char **envp)
 	return (size);
 }
 
-void	print_env(t_env *env)
+/* prints the environment line by line */
+void	print_env(t_env **env)
 {
 	t_env	*node;
 
-	node = env;
+	node = *env;
 	while (node != NULL)
 	{
 		printf("%s\n", node->key_value);
@@ -80,6 +82,8 @@ void	print_env(t_env *env)
 	g_stat = 0;
 }
 
+/* Helps creating a dummy env list with a single element (PWD)
+it simply returns a key=value string to add to the node later */
 char	*create_env(void)
 {
 	char	*pwd;

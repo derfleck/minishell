@@ -1,15 +1,5 @@
 #include "../../inc/minishell.h"
 
-void	add_node_to_list(t_env **head, t_env *node)
-{
-	t_env	*temp;
-
-	temp = *head;
-	while (temp->next != NULL)
-		temp = temp->next;
-	temp->next = node;
-	node->next = NULL;
-}
 /* removes node - used for builtin UNSET 
 TODO: if head id removed, I get a segfault!!!! */
 void	remove_node(t_env **head, char *key)
@@ -36,6 +26,9 @@ void	remove_node(t_env **head, char *key)
 	free_ptr(temp);
 }
 
+/* Allow only alphanumericals and the '_' in the key received.
+If true, it returns 1. If false, it returns 0.
+If the last element before the null is +, returns -1 (important for export) */
 int	key_validity_check(char *key)
 {
 	int	i;
@@ -55,9 +48,10 @@ int	key_validity_check(char *key)
 	}
 	return (1);
 }
-/* Allow only alphanumericals and the '_' in the key received. If true, it returns 1. If 
-false, it returns 0. If the last element before the null is +, returns -1 (important for export) */
 
+/* receives key=value string, splits the value off (everything after
+the (=) sign, and returns it as a str.
+If something goes wrong, returns a NULL */
 char	*split_env_value(char *str)
 {
 	if (!str)
@@ -70,6 +64,9 @@ char	*split_env_value(char *str)
 	return (str);
 }
 
+/* receives key=value string, splits the key off (everything before
+the (=) sign, and returns it as an allocated new str
+TODO: free key somewhere!!! */
 char	*split_env_key(const char *str)
 {
 	size_t		i;
@@ -78,7 +75,7 @@ char	*split_env_key(const char *str)
 	i = 0;
 	if (!str)
 		return (NULL);
-	while (str[i] != '=' && str)
+	while (str[i] && str[i] != '=')
 		i++;
 	key = ft_substr(str, 0, i);
 	if (!key)
@@ -90,7 +87,7 @@ char	*split_env_key(const char *str)
 	}	
 	return (key);
 }
-//TODO free key somewhere!!!
+
 //or alternatively a no-malloc option:
 // char	*split_env_key(const char *str)
 // {

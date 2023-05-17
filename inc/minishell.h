@@ -40,19 +40,18 @@ typedef struct s_env
 t_env		*init_env(char **envp);
 t_env		*create_node(char *str);
 int			get_list_size(char **envp);
-void		print_env(t_env *env);
+void		print_env(t_env **env);
 char		*create_env(void);
 
 /* list functions */
-t_env		*ft_lstlast_env(t_env *lst);
-void		ft_lstadd_back_env(t_env **lst, t_env *new);
+t_env		*returnlast_env(t_env *lst);
 t_env		*find_env_node(t_env **head, char *key);
 char		*split_env_value(char *str);
 char		*split_env_key(const char *str);
 void		replace_node_value(t_env *node, char *new_value);
 void		append_node_value(t_env *node, char *value2);
 void		remove_node(t_env **head, char *key);
-void		add_node_to_list(t_env **head, t_env *node);
+void		add_node_to_list(t_env **head, t_env *new);
 int			key_validity_check(char *key);
 
 /* env tester */
@@ -62,7 +61,12 @@ void		env_tester(char *key, t_env **env);
 void		*free_ptr(void *ptr);
 void		perror_exit(char *message);
 
+/* utils */
+int			ft_strcmp(char *s1, char *s2);
+void		get_pwd(void);
+
 /* Builtins */
+void		builtin_pathfinder(t_env **env, char *input);
 void		builtin_export(char *str, t_env **env);
 void		export_append_helper(char *key, char *str, t_env **env);
 void		builtin_unset(char *str, t_env **env);

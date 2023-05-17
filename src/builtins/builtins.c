@@ -1,77 +1,29 @@
 #include "../../inc/minishell.h"
 
-/* takes a str as argument after export command. tries to find node in env,
-if not found it creates it. If found, it replaces value with new value or nothing if nothing is specified
-TODO: no incoming "=" ??? */
-void	builtin_export(char *str, t_env **env)
+/* Checks the first arg of the input for the correct command and sends
+the rest of the args towards the right builtin */
+void	builtin_pathfinder(t_env **env, char *input)
 {
-	t_env	*node;
-	char	**args;
-	char	*key;
-
-	if (!str)
-		return ;
-	args = ft_split(str, ' ');
-	if (!args)
-		perror_exit("Malloc failed\n");
-	key = split_env_key(args[1]);
-	if (key_validity_check(key) == -1)
-	{
-		export_append_helper(key, args[1], env);
-		return ;
-	}
-	node = find_env_node(env, key);
-	if (node == NULL)
-	{
-		node = create_node(args[1]);
-		add_node_to_list(env, node);
-	}
+	if (ft_strcmp(input, "pwd"))
+		get_pwd();
+	else if (ft_strcmp(input, "env"))
+		print_env(env);
+	else if (ft_strcmp(input, "test env"))
+		env_tester("USER", env);
+	else if (!ft_strncmp(input, "cd", 2))
+		builtin_cd(input, env);
+	else if (!ft_strncmp(input, "export", 6))
+		builtin_export(input, env);
+	else if (!ft_strncmp(input, "unset", 5))
+		builtin_unset(input, env);
 	else
-	{
-		if (key_validity_check(key) == 1)
-			replace_node_value(node, split_env_value(args[1]));
-	}
-	free(key);
+		printf("%s\n", input);
+	if (input)
+		free(input);
 }
 
-/* Helper for export: in case of an arg like this: XXX+=555 where '+' is accepted
-as appending the string if exists - or creating XXX=555 as new env variable */
-void	export_append_helper(char *key, char *str, t_env **env)
-{
-	char 	*realkey;
-	t_env	*node;
-
-	realkey = ft_strtrim(key, "+");
-	free (key);
-	if (!realkey)
-		perror_exit("Malloc failed\n");
-	node = find_env_node(env, realkey);
-	if (node == NULL)
-	{
-		node = create_node(str); // remove + (use realkey)
-		add_node_to_list(env, node);
-	}	
-	else
-		append_node_value(node, split_env_value(str));
-	free (realkey);
-}
-
-/* removes env variable,  */
-void	builtin_unset(char *str, t_env **env)
-{
-	t_env	*node;
-	char	**args;
-
-	if (!str)
-		return ;
-	args = ft_split(str, ' ');
-	node = find_env_node(env, args[1]);
-	if (node == NULL)
-		return ; //Unsetting a variable or function that was not previously set shall not be considered an  error and does not cause the shell to abort.
-	else
-		remove_node(env, args[1]);
-}
-
+/* changes the current working directory and updates env */
+//TODO check how args come in from parser
 void	builtin_cd(char *input, t_env **env)
 {
 	char	**args;
@@ -98,8 +50,8 @@ void	builtin_cd(char *input, t_env **env)
 	}
 	update_pwds(env, oldpath);
 }
-//TODO check how args come in from parser
 
+/* Helper for cd to change working directory to HOME based on env */
 void	cd_go_home(t_env **env, char *str)
 {
 	char	*home;
@@ -111,6 +63,7 @@ void	cd_go_home(t_env **env, char *str)
 		printf("Minishell: cd: %s: No such file or directory", str);
 }
 
+/* updates env variables PWD and OLDPWD after cd was called */
 void	update_pwds(t_env **env, char *oldpath)
 {
 	t_env	*node1;

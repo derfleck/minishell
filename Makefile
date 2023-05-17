@@ -6,7 +6,7 @@
 #    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/10 13:57:46 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/05/17 15:45:47 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCSLIST		:=	main.c \
 					env/list_func3.c \
 					signals.c \
 					builtins/builtins.c \
+					builtins/builtins2.c \
 					temp_tester.c \
 					exit/exit1.c \
 					

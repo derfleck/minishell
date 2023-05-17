@@ -2,7 +2,7 @@
 
 int	g_stat = 0;
 
-static int	ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
 	if (!s1 || !s2)
 		return (0);
@@ -68,22 +68,7 @@ int	main(int argc, char **argv, char **envp)
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
 		add_history(s);
-		if (ft_strcmp(s, "pwd"))
-			get_pwd();
-		else if (ft_strcmp(s, "env"))
-			print_env(env);
-		else if (ft_strcmp(s, "test env"))
-			env_tester("USER", &env);
-		else if (!ft_strncmp(s, "cd", 2))
-			builtin_cd(s, &env);
-		else if (!ft_strncmp(s, "export", 6))
-			builtin_export(s, &env);
-		else if (!ft_strncmp(s, "unset", 5))
-			builtin_unset(s, &env);
-		else
-			printf("%s\n", s);
-		if (s)
-			free(s);
+		builtin_pathfinder(&env, s);
 	}
 	return (0);
 }

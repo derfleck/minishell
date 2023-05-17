@@ -1,22 +1,23 @@
 #include "../../inc/minishell.h"
-
-void	ft_lstadd_back_env(t_env **lst, t_env *new)
+/* appends list by adding a node to the end of the list */
+void	add_node_to_list(t_env **head, t_env *new)
 {
 	t_env	*end;
 
-	if (lst)
+	if (head)
 	{
-		if (*lst == NULL)
-			*lst = new;
+		if (*head == NULL)
+			*head = new;
 		else
 		{
-			end = ft_lstlast_env(*lst);
+			end = returnlast_env(*head);
 			end->next = new;
 		}
 	}
 }
 
-t_env	*ft_lstlast_env(t_env *lst)
+/* It returns the last element of the env list */
+t_env	*returnlast_env(t_env *lst)
 {
 	t_env	*lst2;
 
@@ -29,20 +30,29 @@ t_env	*ft_lstlast_env(t_env *lst)
 	}
 	return (lst2);
 }
-
+/* finds and returns env node based on key string received. 
+If not found, or no env list, it returns NULL */
 t_env	*find_env_node(t_env **head, char *key)
 {
 	t_env	*node;
 
-	if (head == NULL)
+	if (*head == NULL)
 		return (NULL);
 	node = *head;
-	while (node && ft_strncmp(node->key_value, key, ft_strlen(key)))
+	while (node)
+	{
+		if (ft_strlen(key) == ft_strlen(split_env_key(node->key_value)))
+		{
+			if (!ft_strncmp(node->key_value, key, ft_strlen(key)))
+				return (node);
+		}
 		node = node->next;
-	return (node);
+	}
+	return (NULL);
 }
 
-/* Gets env node and char* to replace the current value (string after the first '=' sign ). */
+/* Gets env node and char* to replace the current value 
+(string after the first '=' sign ). */
 void	replace_node_value(t_env *node, char *new_value)
 {
 	char	*k;
@@ -62,7 +72,7 @@ void	replace_node_value(t_env *node, char *new_value)
 	free(key);
 }
 
-/* Gets env node and char* to append it to the existing value. */
+/* Gets env node and str to append it to the existing value in that node. */
 void	append_node_value(t_env *node, char *value2)
 {
 	char	*new_value;
