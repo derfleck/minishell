@@ -2,20 +2,6 @@
 
 int	g_stat = 0;
 
-int	ft_strcmp(char *s1, char *s2)
-{
-	if (!s1 || !s2)
-		return (0);
-	while (*s1 || *s2)
-	{
-		if (*s1 != *s2)
-			return (0);
-		s1++;
-		s2++;
-	}
-	return (1);
-}
-
 char	*prompt_line(void)
 {
 	char	*tmp;
@@ -41,16 +27,6 @@ char	*prompt_line(void)
 		perror_exit("Malloc failed\n");
 	free(tmp3);
 	return (tmp);
-}
-
-void	get_pwd(void)
-{
-	char	*buf;
-
-	buf = getcwd(NULL, 0);
-	printf("%s\n", buf);
-	free(buf);
-	g_stat = 0;
 }
 
 int	main(int argc, char **argv, char **envp)

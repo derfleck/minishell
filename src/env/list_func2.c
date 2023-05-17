@@ -27,14 +27,16 @@ void	remove_node(t_env **head, char *key)
 }
 
 /* Allow only alphanumericals and the '_' in the key received.
-If true, it returns 1. If false, it returns 0.
+If true, it returns 1. If false, it returns 0. Also returns 0 if key is only nrs.
 If the last element before the null is +, returns -1 (important for export) */
 int	key_validity_check(char *key)
 {
 	int	i;
 	int	len;
+	int	nrs;
 
 	i = -1;
+	nrs = 0;
 	len = ft_strlen(key) - 1;
 	while (key[++i])
 	{
@@ -45,8 +47,13 @@ int	key_validity_check(char *key)
 			else
 				return (0);
 		}
+		if (ft_isnum(key[i]))
+			nrs++;
 	}
-	return (1);
+	if (nrs == len - 1)
+		return (0);
+	else
+		return (1);
 }
 
 /* receives key=value string, splits the value off (everything after
@@ -84,7 +91,7 @@ char	*split_env_key(const char *str)
 	{
 		printf("Minishell: export: %s: not a valid identifier\n", key);
 		return (NULL);
-	}	
+	}
 	return (key);
 }
 

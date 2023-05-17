@@ -64,6 +64,7 @@ void		perror_exit(char *message);
 /* utils */
 int			ft_strcmp(char *s1, char *s2);
 void		get_pwd(void);
+int			ft_isnum(int c);
 
 /* Builtins */
 void		builtin_pathfinder(t_env **env, char *input);

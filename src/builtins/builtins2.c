@@ -25,7 +25,7 @@ void	builtin_export(char *str, t_env **env)
 	node = find_env_node(env, key);
 	if (node == NULL)
 	{
-		node = create_node(args[1]);
+		node = create_node(str);
 		add_node_to_list(env, node);
 	}
 	else
@@ -72,9 +72,21 @@ void	builtin_unset(char *str, t_env **env)
 	if (!str)
 		return ;
 	args = ft_split(str, ' ');
-	node = find_env_node(env, args[1]);
-	if (node == NULL)
-		return ;
+	if (key_validity_check(args[1]) != 1)
+	{
+		printf("Minishell: unset: `%s': not a valid identifier\n", args[1]);
+		g_stat = 1;
+	}
 	else
-		remove_node(env, args[1]);
+	{
+		node = find_env_node(env, args[1]);
+		if (node == NULL)
+		{
+			g_stat = 0;
+			return ;
+		}
+		else
+			remove_node(env, args[1]);
+	}
+	g_stat = 0;
 }
