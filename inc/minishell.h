@@ -69,6 +69,7 @@ int			ft_isnum(int c);
 /* Builtins */
 void		builtin_pathfinder(t_env **env, char *input);
 void		builtin_export(char *str, t_env **env);
+int			export_isarg(char **args);
 void		export_append_helper(char *key, char *str, t_env **env);
 void		builtin_unset(char *str, t_env **env);
 void		builtin_cd(char *str, t_env **env);
