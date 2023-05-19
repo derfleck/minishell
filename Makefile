@@ -6,7 +6,7 @@
 #    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/17 13:50:43 by mleitner         ###   ########.fr        #
+#    Updated: 2023/05/19 18:20:39 by mleitner         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,8 +25,9 @@ SRCSLIST		:=	main.c \
 					lexer/lexer.c \
 					lexer/list.c \
 					lexer/split.c \
-					parser/parser.c \
-					parser/parser_syntax.c
+					parser/parser_start.c \
+					parser/parser_input.c \
+					parser/parser_utils.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/

@@ -59,12 +59,48 @@ void	print_lexer(t_lexer *lex)
 	}
 }
 
+void	print_cmd(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+	int		i;
+
+	tmp = cmd;
+	while (tmp)
+	{
+		printf("Command group %s: \narguments:", tmp->cmd);
+		while (tmp->arg[i])
+			printf("%s ", tmp->arg[i++]);
+		i = 0;
+		printf("\ninput: ");
+		while (tmp->in->input[i])
+			printf("%s ", tmp->in->input[i++]);
+		i = 0;
+		printf("\noutput: ");
+		while (tmp->out->output[i])
+			printf("%s ", tmp->out->output[i++]);
+		i = 0;
+		printf("\nappend: ");
+		while (tmp->out->append[i])
+			printf("%s ", tmp->out->append[i++]);
+		i = 0;
+		printf("\nhere: ");
+		while (tmp->in->here[i])
+			printf("%s ", tmp->in->here[i++]);
+		if (tmp->in->last)
+			printf("\nlast input: %s\n",  tmp->in->last->next->str);
+		if (tmp->out->last)
+			printf("last output: %s\n", tmp->out->last->next->str);
+		printf("\n");
+		tmp = tmp->next;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*s;
 	t_env	*env;
 	t_lexer	*lex;
-	t_cmd	**cmd;
+	t_cmd	*cmd;
 
 	(void)argc;
 	(void)argv;
@@ -75,8 +111,8 @@ int	main(int argc, char **argv, char **envp)
 		s = readline(prompt_line());
 		lex = start_lexer(s);
 		cmd = create_parse_list(lex);
-		if (lex)
-			print_lexer(lex);
+		if (cmd)
+			print_cmd(cmd);
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
 		add_history(s);

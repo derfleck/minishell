@@ -17,3 +17,5 @@ heredoc mode can only stop if the line actually ends with the stopword, no trail
 when there's multiple heredocs, the first stopword needs to be entered and only then the second heredoc starts
 
 just iterate through the 2D-array, assign pointers to the command, iterate through all the arguments and store the number of arguments (don't need to reassign)
+
+//expander: remove quotations, search for env variable if "" and closed
