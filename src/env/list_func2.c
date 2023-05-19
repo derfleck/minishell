@@ -50,7 +50,7 @@ int	key_validity_check(char *key)
 		if (ft_isnum(key[i]))
 			nrs++;
 	}
-	if (nrs == len - 1)
+	if (nrs == len + 1)
 		return (0);
 	else
 		return (1);
@@ -87,11 +87,6 @@ char	*split_env_key(const char *str)
 	key = ft_substr(str, 0, i);
 	if (!key)
 		perror_exit("Malloc failed\n");
-	if (!key_validity_check(key))
-	{
-		printf("Minishell: export: %s: not a valid identifier\n", key);
-		return (NULL);
-	}
 	return (key);
 }
 

@@ -17,7 +17,9 @@ void	builtin_export(char *str, t_env **env)
 	args = ft_split(str, ' ');
 	if (!args)
 		perror_exit("Malloc failed\n");
-	if (export_isarg(args))
+	if (!args[1])
+		return ;
+	if (export_isequal(args))
 		return ;
 	key = split_env_key(args[1]);
 	if (key_validity_check(key) == -1)
@@ -40,25 +42,26 @@ void	builtin_export(char *str, t_env **env)
 }
 
 /* Checks for an arg coming in without value OR (=)
---> if 1, it should do nothing */
-
-//WORK ON THIS!!!
-int	export_isarg(char **args)
+--> if 1, export should return */
+int	export_isequal(char **args)
 {
 	size_t	len;
 	int		i;
 
-	i = -1
+	i = -1;
 	len = ft_strlen(args[1]);
-	
 	while (args[1][++i])
 	{
 		if (args[1][i] == '=')
 		{
-			if (args[1][len] == '\0' && ft_strlen(split_env_key(args[1])) == len)
+			if (args[1][i + 1] == '\0')
+				return (0);
+			else
 				return (0);
 		}
 	}
+	if (!key_validity_check(split_env_key(args[1])))
+		printf("Minishell: export: `%s': not a valid identifier\n", args[1]);
 	return (1);
 }
 

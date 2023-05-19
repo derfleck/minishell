@@ -1,27 +1,5 @@
 #include "../../inc/minishell.h"
 
-/* Checks the first arg of the input for the correct command and sends
-the rest of the args towards the right builtin */
-void	builtin_pathfinder(t_env **env, char *input)
-{
-	if (ft_strcmp(input, "pwd"))
-		get_pwd();
-	else if (ft_strcmp(input, "env"))
-		print_env(env);
-	else if (ft_strcmp(input, "test env"))
-		env_tester("USER", env);
-	else if (!ft_strncmp(input, "cd", 2))
-		builtin_cd(input, env);
-	else if (!ft_strncmp(input, "export", 6))
-		builtin_export(input, env);
-	else if (!ft_strncmp(input, "unset", 5))
-		builtin_unset(input, env);
-	else
-		printf("%s\n", input);
-	if (input)
-		free(input);
-}
-
 /* changes the current working directory and updates env */
 //TODO check how args come in from parser
 void	builtin_cd(char *input, t_env **env)
