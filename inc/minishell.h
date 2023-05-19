@@ -29,6 +29,19 @@
 /* global variable for exit status */
 extern int	g_stat;
 
+/* structs */
+typedef struct s_cmd
+{
+	char			*cmd;
+	char			**arg;
+	int				num[6];
+	char			**input;
+	char			**output;
+	char			**append;
+	char			**here;
+	struct s_cmd	*next;
+}	t_cmd;
+
 /* List for env */
 typedef struct s_env
 {
@@ -66,16 +79,17 @@ int			ft_strcmp(char *s1, char *s2);
 int			ft_isnum(int c);
 
 /* Builtins */
-void		builtin_pathfinder(t_env **env, char *input);
+void		builtin_pathfinder(t_env **env, t_cmd *cmd);
 void		builtin_pwd(void);
 int			helper_get_arg_count(char **args);
-void		builtin_export(char *str, t_env **env);
-int			export_isequal(char **args);
+void		builtin_export(t_cmd *cmd, t_env **env);
+int			export_isequal(char *arg);
 void		export_append_helper(char *key, char *str, t_env **env);
-void		builtin_unset(char *str, t_env **env);
-void		builtin_cd(char *str, t_env **env);
+void		builtin_unset(t_cmd *cmd, t_env **env);
+void		builtin_cd(t_cmd *cmd, t_env **env);
 void		cd_go_home(t_env **env, char *str);
 void		update_pwds(t_env **env, char *oldpath);
+int			builtin_exit(t_cmd *cmd, int process);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

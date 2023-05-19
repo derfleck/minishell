@@ -30,6 +30,7 @@ t_env	*returnlast_env(t_env *lst)
 	}
 	return (lst2);
 }
+
 /* finds and returns env node based on key string received. 
 If not found, or no env list, it returns NULL */
 t_env	*find_env_node(t_env **head, char *key)

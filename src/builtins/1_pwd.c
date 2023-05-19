@@ -2,24 +2,24 @@
 
 /* Checks the first arg of the input for the correct command and sends
 the rest of the args towards the right builtin */
-void	builtin_pathfinder(t_env **env, char *input)
+void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 {
-	if (ft_strcmp(input, "pwd"))
+	if (ft_strcmp(cmd->cmd, "pwd"))
 		builtin_pwd();
-	else if (ft_strcmp(input, "env"))
+	else if (ft_strcmp(cmd->cmd, "env"))
 		print_env(env);
-	else if (ft_strcmp(input, "test env"))
+	else if (ft_strcmp(cmd->cmd, "test env"))
 		env_tester("USER", env);
-	else if (!ft_strncmp(input, "cd", 2))
-		builtin_cd(input, env);
-	else if (!ft_strncmp(input, "export", 6))
-		builtin_export(input, env);
-	else if (!ft_strncmp(input, "unset", 5))
-		builtin_unset(input, env);
+	else if (!ft_strncmp(cmd->cmd, "cd", 2))
+		builtin_cd(cmd->arg, env);
+	else if (!ft_strncmp(cmd->cmd, "export", 6))
+		builtin_export(cmd->arg, env);
+	else if (!ft_strncmp(cmd->cmd, "unset", 5))
+		builtin_unset(cmd->arg, env);
 	else
-		printf("%s\n", input);
-	if (input)
-		free(input);
+		printf("%s\n", cmd->cmd);
+	// if (cmd->cmd)
+	// 	free(cmd->cmd);
 }
 
 /* gets the current working directory and prints it on the screen */

@@ -3,65 +3,66 @@
 /* takes a str as argument after export command. tries to find
 node in env, if not found it creates it. If found, it replaces
 value with new value or nothing if nothing is specified
-TODO: no incoming "=" ??? 
-TODO: remove split, check input from Parser 
 TODO: if no args?? declare -x $(env_var) shit */
-void	builtin_export(char *str, t_env **env)
+void	builtin_export(char **args, t_env **env)
 {
 	t_env	*node;
-	char	**args;
 	char	*key;
+	int		i;
 
-	if (!str)
+	i = -1;
+	if (!args || !args[0])
 		return ;
-	args = ft_split(str, ' ');
-	if (!args)
-		perror_exit("Malloc failed\n");
-	if (!args[1])
-		return ;
-	if (export_isequal(args))
-		return ;
-	key = split_env_key(args[1]);
-	if (key_validity_check(key) == -1)
+	while(args[++i])
 	{
-		export_append_helper(key, args[1], env);
-		return ;
+		if (export_isequal(args[i]))
+			return ;
+		key = split_env_key(args[i]);
+		if (key_validity_check(key) == -1)
+		{
+			export_append_helper(key, args[i], env);
+			return ;
+		}
+		node = find_env_node(env, key);
+		if (node == NULL)
+		{
+			node = create_node(args[i]);
+			add_node_to_list(env, node);
+		}
+		else
+		{
+			if (key_validity_check(key) == 1)
+				replace_node_value(node, split_env_value(args[i]));
+		}
+		free(key);
 	}
-	node = find_env_node(env, key);
-	if (node == NULL)
-	{
-		node = create_node(args[1]);
-		add_node_to_list(env, node);
-	}
-	else
-	{
-		if (key_validity_check(key) == 1)
-			replace_node_value(node, split_env_value(args[1]));
-	}
-	free(key);
 }
 
 /* Checks for an arg coming in without value OR (=)
 --> if 1, export should return */
-int	export_isequal(char **args)
+int	export_isequal(char *arg)
 {
 	size_t	len;
 	int		i;
 
 	i = -1;
-	len = ft_strlen(args[1]);
-	while (args[1][++i])
+	len = ft_strlen(arg);
+	while (arg[++i])
 	{
-		if (args[1][i] == '=')
+		if (arg[i] == '=')
 		{
-			if (args[1][i + 1] == '\0')
+			if (arg[i + 1] == '\0')
 				return (0);
 			else
 				return (0);
 		}
 	}
-	if (!key_validity_check(split_env_key(args[1])))
-		printf("Minishell: export: `%s': not a valid identifier\n", args[1]);
+	if (!key_validity_check(split_env_key(arg)))
+	{
+		ft_putstr_fd("Minishell: export: `", 2);
+		ft_putsrt_fr(arg, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
+	}
 	return (1);
 }
 
@@ -93,29 +94,29 @@ void	export_append_helper(char *key, char *str, t_env **env)
 writes bash: unset: `STR': not a valid identifier if not found 
 Unsetting a variable or function that was not previously set
 shall not be considered an error and does not cause the shell to abort.*/
-void	builtin_unset(char *str, t_env **env)
+void	builtin_unset(char **args, t_env **env)
 {
 	t_env	*node;
-	char	**args;
 
-	if (!str)
+	if (!args || args[0])
 		return ;
-	args = ft_split(str, ' ');
-	if (key_validity_check(args[1]) != 1)
+	if (key_validity_check(args[0]) != 1)
 	{
-		printf("Minishell: unset: `%s': not a valid identifier\n", args[1]);
+		ft_putstr_fd("Minishell: unset: `", 2);
+		ft_putsrt_fr(args[0], 2);
+		ft_putendl_fd("': not a valid identifier", 2);
 		g_stat = 1;
 	}
 	else
 	{
-		node = find_env_node(env, args[1]);
+		node = find_env_node(env, args[0]);
 		if (node == NULL)
 		{
 			g_stat = 0;
 			return ;
 		}
 		else
-			remove_node(env, args[1]);
+			remove_node(env, args[0]);
 	}
 	g_stat = 0;
 }

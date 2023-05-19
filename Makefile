@@ -6,7 +6,7 @@
 #    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/19 11:41:21 by rmocsai          ###   ########.fr        #
+#    Updated: 2023/05/19 16:44:46 by rmocsai          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,8 @@ SRCSLIST		:=	main.c \
 					builtins/1_pwd.c \
 					builtins/2_cd.c \
 					builtins/3_export_unset.c \
+					builtins/4_exit.c \
+					builtins/5_echo.c \
 					temp_tester.c \
 					exit/exit1.c \
 					utils.c \

@@ -44,7 +44,7 @@ int	main(int argc, char **argv, char **envp)
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
 		add_history(s);
-		builtin_pathfinder(&env, s);
+		builtin_pathfinder(&env, cmd); //struct from parser??
 	}
 	return (0);
 }

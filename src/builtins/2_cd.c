@@ -2,27 +2,25 @@
 
 /* changes the current working directory and updates env */
 //TODO check how args come in from parser
-void	builtin_cd(char *input, t_env **env)
+void	builtin_cd(char **args, t_env **env)
 {
-	char	**args;
 	char	*oldpath;
+	int		argc;
 
+	argc = helper_get_arg_count(args);
 	oldpath = getcwd(NULL, 0);
-	args = ft_split(input, ' ');
-	if (!args)
-		perror_exit("cd - split failed\n");
-	if (args[1] && args[2])
+	if (argc > 1)
 	{
 		printf("Minishell: cd:   : Too many arguments\n");
 		return ;
 	}	
-	if (!args[1] || (args[1][0] == '~' && args[1][1] == '\0'))
-		cd_go_home(env, args[1]);
-	else if (args[1][0] == '\0')
+	if (!args[0] || (args[0][0] == '~' && args[0][1] == '\0'))
+		cd_go_home(env, args[0]);
+	else if (args[0][0] == '\0')
 		return ;
-	else if (chdir(args[1]) != 0)
+	else if (chdir(args[0]) != 0)
 	{
-		printf("Minishell: cd: %s", args[1]);
+		printf("Minishell: cd: %s", args[0]);
 		printf(": No such file or directory\n");
 		return ;
 	}
