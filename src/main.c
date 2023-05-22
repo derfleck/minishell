@@ -45,8 +45,6 @@ int	main(int argc, char **argv, char **envp)
 		s = readline(prompt_line());
 		lex = start_lexer(s);
 		cmd = create_parse_list(lex);
-		if (cmd)
-			print_cmd(cmd);
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
 		add_history(s);

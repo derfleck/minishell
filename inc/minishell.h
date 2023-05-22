@@ -71,14 +71,17 @@ int			ft_isnum(int c);
 void		builtin_pathfinder(t_env **env, t_cmd *cmd);
 void		builtin_pwd(void);
 int			helper_get_arg_count(char **args);
-void		builtin_export(t_cmd *cmd, t_env **env);
+void		builtin_export(char **args, t_env **env);
 int			export_isequal(char *arg);
 void		export_append_helper(char *key, char *str, t_env **env);
-void		builtin_unset(t_cmd *cmd, t_env **env);
-void		builtin_cd(t_cmd *cmd, t_env **env);
+void		builtin_unset(char **args, t_env **env);
+void		builtin_cd(char **args, t_env **env);
 void		cd_go_home(t_env **env, char *str);
 void		update_pwds(t_env **env, char *oldpath);
-int			builtin_exit(t_cmd *cmd, int process);
+int			builtin_exit(t_cmd *cmd, t_env **env, int process);
+void		exit_parent(t_env **head, int argc);
+void		*free_env_list(t_env **head);
+void		*free_env_node(t_env *node);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

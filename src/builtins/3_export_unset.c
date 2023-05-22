@@ -42,11 +42,9 @@ void	builtin_export(char **args, t_env **env)
 --> if 1, export should return */
 int	export_isequal(char *arg)
 {
-	size_t	len;
 	int		i;
 
 	i = -1;
-	len = ft_strlen(arg);
 	while (arg[++i])
 	{
 		if (arg[i] == '=')
@@ -60,7 +58,7 @@ int	export_isequal(char *arg)
 	if (!key_validity_check(split_env_key(arg)))
 	{
 		ft_putstr_fd("Minishell: export: `", 2);
-		ft_putsrt_fr(arg, 2);
+		ft_putstr_fd(arg, 2);
 		ft_putendl_fd("': not a valid identifier", 2);
 	}
 	return (1);
@@ -103,7 +101,7 @@ void	builtin_unset(char **args, t_env **env)
 	if (key_validity_check(args[0]) != 1)
 	{
 		ft_putstr_fd("Minishell: unset: `", 2);
-		ft_putsrt_fr(args[0], 2);
+		ft_putstr_fd(args[0], 2);
 		ft_putendl_fd("': not a valid identifier", 2);
 		g_stat = 1;
 	}

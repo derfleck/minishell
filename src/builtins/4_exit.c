@@ -11,22 +11,21 @@ int	builtin_exit(t_cmd *cmd, t_env **env, int process)
 	(void)process;
 	ft_putendl_fd("exit", 2);
 	if (argc == 1)
-		exit_parent(cmd, env, argc);
+		exit_parent(env, argc);
 	if (argc > 2)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
 		return (1);
 	}
+	return (0);
 }
 
 /* Exits parent process */
-void	exit_parent(t_cmd *cmd, t_env **head, int argc)
+void	exit_parent(t_env **head, int argc)
 {
-
-
 	if (argc == 1)
 	{
-		head = free_env_lst(head);
+		head = free_env_list(head);
 		// cmd = free_cmd_structs(cmd);
 		exit(0);
 	}
@@ -42,9 +41,9 @@ void	*free_env_list(t_env **head)
 		return (NULL);
 	while (head)
 	{
-		node = *head->next;
-		head = free_env_node(head);
-		head = node;
+		node = (*head)->next;
+		head = free_env_node(*head);
+		head = &node;
 	}
 	return (NULL);
 }
