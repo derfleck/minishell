@@ -96,7 +96,7 @@ void	builtin_unset(char **args, t_env **env)
 {
 	t_env	*node;
 
-	if (!args || args[0])
+	if (!args || !args[0])
 		return ;
 	if (key_validity_check(args[0]) != 1)
 	{

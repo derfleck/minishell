@@ -49,6 +49,9 @@ int	main(int argc, char **argv, char **envp)
 			return (write(2, "exit\n", 5));
 		add_history(s);
 		builtin_pathfinder(&env, cmd);
+
+		if (ft_strcmp(s, "test"))
+			create_env_arr(&env);
 	}
 	return (0);
 }
