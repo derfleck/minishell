@@ -3,41 +3,29 @@
 //counts total number of commands in trimmed string
 static int	cnt_cmd(char *str, char *set)
 {
+	char	*tmp;
 	int		i;
-	int		cnt;
-	char	*trim;
+	int		j;
 
-	i = 0;
-	cnt = 0;
-	trim = ft_strtrim(str, set);
-	if (ft_strchr(set, trim[i]) == NULL)
-		cnt++;
-	while (trim[i])
+	tmp = ft_strtrim(str, set);
+	j = 0;
+	while (*tmp)
 	{
-		if (ft_strchr(set, trim[i]) != NULL)
-			cnt++;
-		i++;
+		i = skip_quotes(tmp);
+		while (ft_strchr(set, tmp[i]) == 0 && \
+				(tmp[i] != '\'' || tmp[i] != '"'))
+			i++;
+		if (i)
+			j++;
+		while (ft_strchr(set, tmp[i]) != 0 && tmp[i])
+			i++;
+		tmp += i;
 	}
-	free(trim);
-	return (cnt);
-}
-
-//checks size of command based on character set
-static size_t	get_cmd_size(char *str, char *set)
-{
-	size_t	size;
-
-	size = 0;
-	while (*str && ft_strchr(set, *str) == 0)
-	{
-		size++;
-		str++;
-	}
-	return (size);
+	return (j);
 }
 
 //empty 2D array after use/in case of error
-static void	*empty_set(char **str)
+void	empty_set(char **str)
 {
 	int	i;
 
@@ -48,35 +36,50 @@ static void	*empty_set(char **str)
 	}
 	if (str)
 		free(str);
-	return (NULL);
 }
+
+/*
+//helper, initializes int array with three int values
+//0: start, 1: len, 3: overall position
+static void	init_int_arr(int *i)
+{
+	int	num;
+
+	num = 0;
+	while (num < 3)
+		i[num++] = 0;
+}
+*/
 
 //splits string based if character in set is found
 char	**ft_split_set(char *str, char *set)
 {
-	char	**cmd;
-	int		i;
-	int		j;
+	int		start;
 	int		len;
+	int		j;
+	char	*tmp;
+	char	**split;
 
-	if (!str || !set)
-		return (NULL);
-	len = cnt_cmd(str, set);
-	cmd = ft_calloc(len + 1, sizeof(char *));
-	if (!cmd)
-		return (empty_set(cmd));
-	i = 0;
-	while (i < len && *str)
+	j = 0;
+	start = 0;
+	len = 0;
+	tmp = ft_strtrim(str, set);
+	split = ft_calloc(sizeof(char *), cnt_cmd(str, set) + 1);
+	if (!split)
+		empty_set(split);
+	while (tmp[start])
 	{
-		while (*str && ft_strchr(set, *str) != 0)
-			str++;
-		cmd[i] = ft_calloc(get_cmd_size(str, set) + 1, sizeof(char));
-		if (cmd[i] == NULL)
-			return (empty_set(cmd));
-		j = 0;
-		while (*str && ft_strchr(set, *str) == 0)
-			cmd[i][j++] = *str++;
-		i++;
+		len = skip_quotes(tmp + start);
+		while (ft_strchr(set, tmp[start + len]) == 0 && \
+				(tmp[start + len] != '\'' || tmp[start + len] != '"'))
+			len++;
+		if (len)
+			split[j++] = ft_substr(tmp, start, len);
+		while (ft_strchr(set, tmp[start + len]) != 0 && tmp[start + len])
+			len++;
+		start += len;
 	}
-	return (cmd);
+	if (tmp)
+		free(tmp);
+	return (split);
 }

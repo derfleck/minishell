@@ -18,9 +18,9 @@ static t_lexer	*new_lexer_list(char **cmd, int i)
 		if (j < i - 1)
 			lex[j].next = (lex + j + 1);
 		else
-			lex[j].next = lex;
+			lex[j].next = NULL;
 		if (j == 0)
-			lex[j].prev = (lex + i - 1);
+			lex[j].prev = NULL;
 		else
 			lex[j].prev = (lex + j - 1);
 		j++;
@@ -34,7 +34,7 @@ t_lexer	*start_lexer(char *str)
 	int			i;
 	char		**split;
 	t_lexer		*lex;
-	static char	set[8] = " \b\t\n\v\f\r";
+	static char	set[6] = " \t\n\v\f\r";
 
 	i = 0;
 	split = ft_split_set(str, set);
@@ -47,6 +47,6 @@ t_lexer	*start_lexer(char *str)
 	lex = new_lexer_list(split, i);
 	if (!lex)
 		return (NULL);
-	free(split);
+	//empty_set(split);
 	return (lex);
 }

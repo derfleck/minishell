@@ -1,6 +1,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "parser.h"
+# include "lexer.h"
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -22,37 +24,6 @@
 # ifndef CHILD
 #  define CHILD 0
 # endif
-
-//types for classifiying tokens in lexer
-typedef enum s_type {
-	PIPE = 1,
-	GREAT,
-	GREAT_GREAT,
-	LESS,
-	LESS_LESS,
-}	t_type;
-
-//doubly linked list for lexer
-typedef struct s_lexer {
-	char			*str;
-	t_type			token;
-	int				i;
-	struct s_lexer	*prev;
-	struct s_lexer	*next;
-}	t_lexer;
-
-//functions for lexer
-t_type		classify_token(char	*str);
-t_type		check_token(char c);
-int			syntax_check(char *str);
-int			count_char(char *str, char c);
-int			skip_quotes(char *str);
-
-//functions for splitting line
-char		**ft_split_set(char *str, char *set);
-
-//functions for creating lexer list
-t_lexer		*start_lexer(char *str);
 
 /* global variable for exit status */
 extern int	g_stat;
@@ -81,7 +52,7 @@ char		*split_env_key(const char *str);
 t_env		*replace_node(t_env *node, char *new_value);
 
 /* env tester */
-void	env_tester(char *key, t_env **env);
+void		env_tester(char *key, t_env **env);
 
 /* utils */
 void		*free_ptr(void *ptr);
