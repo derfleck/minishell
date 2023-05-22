@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/19 16:44:46 by rmocsai          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME			:= minishell
 CC				:= cc
 RM		    	:= rm -f
@@ -35,12 +23,19 @@ SRCSLIST		:=	main.c \
 					temp_tester.c \
 					exit/exit1.c \
 					utils.c \
-
+					lexer/lexer.c \
+					lexer/list.c \
+					lexer/split.c \
+					parser/parser_start.c \
+					parser/parser_input.c \
+					parser/parser_utils.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
 
 OBJSDIR			:= ./obj/
+OBJSSUB			:= ./obj/lexer/ \
+					./obj/parser/
 OBJSLIST		:= ${SRCSLIST:.c=.o}
 OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 
@@ -65,6 +60,7 @@ ${OBJSDIR}%.o:	${SRCSDIR}%.c
 
 ${OBJSDIR}:
 				mkdir -p ${OBJSDIR} ${SUBDIRS}
+
 
 .PHONY:			all clean fclean re
 

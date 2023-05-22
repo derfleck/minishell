@@ -1,6 +1,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "parser.h"
+# include "lexer.h"
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -28,19 +30,6 @@
 
 /* global variable for exit status */
 extern int	g_stat;
-
-/* structs */
-typedef struct s_cmd
-{
-	char			*cmd;
-	char			**arg;
-	int				num[6];
-	char			**input;
-	char			**output;
-	char			**append;
-	char			**here;
-	struct s_cmd	*next;
-}	t_cmd;
 
 /* List for env */
 typedef struct s_env

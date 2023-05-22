@@ -33,6 +33,8 @@ int	main(int argc, char **argv, char **envp)
 {
 	char	*s;
 	t_env	*env;
+	t_lexer	*lex;
+	t_cmd	*cmd;
 
 	(void)argc;
 	(void)argv;
@@ -41,10 +43,14 @@ int	main(int argc, char **argv, char **envp)
 	{
 		set_sigaction(PARENT);
 		s = readline(prompt_line());
+		lex = start_lexer(s);
+		cmd = create_parse_list(lex);
+		if (cmd)
+			print_cmd(cmd);
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
 		add_history(s);
-		builtin_pathfinder(&env, cmd); //struct from parser??
+		builtin_pathfinder(&env, cmd);
 	}
 	return (0);
 }
