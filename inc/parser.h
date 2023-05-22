@@ -25,6 +25,8 @@ typedef struct s_in {
 }	t_in;
 
 //num array contains number of strings for each part of the struct
+//index for num array in t_num struct, e.g. num[HERE] gives you
+//the number of heredoc stopwords
 typedef struct s_cmd {
 	char			*cmd;
 	char			**arg;

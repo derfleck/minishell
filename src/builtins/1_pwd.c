@@ -16,6 +16,8 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 		builtin_export(cmd->arg, env);
 	else if (!ft_strncmp(cmd->cmd, "unset", 5))
 		builtin_unset(cmd->arg, env);
+	else if (!ft_strncmp(cmd->cmd, "heredoc", 7))
+		start_heredoc(cmd);
 	else
 		return ;
 }
