@@ -24,7 +24,7 @@ void	copy_list_to_arr(t_env **head, char **env_arr)
 		return ;
 	node = (*head);
 	i = 0;
-	while (node->next)
+	while (node)
 	{
 		env_arr[i] = ft_strdup(node->key_value);
 		if (!env_arr[i])
@@ -45,7 +45,7 @@ int	return_list_size(t_env **head)
 		return (0);
 	i = 0;
 	node = (*head);
-	while (node->next)
+	while (node)
 	{
 		i++;
 		node = node->next;
