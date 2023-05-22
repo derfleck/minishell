@@ -1,27 +1,28 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: mleitner <mleitner@student.42vienna.com    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/03/15 14:51:37 by mleitner          #+#    #+#              #
-#    Updated: 2023/05/19 18:20:39 by mleitner         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME			:= minishell
 CC				:= cc
 RM		    	:= rm -f
 FLAGS			:= -Wall -Wextra -Werror
 DEBUG			:= -g
-
 SRCSDIR			:= ./src/
+
+SUBDIRS			:= 	./obj/env \
+					./obj/builtins \
+					./obj/exit \
+					
 SRCSLIST		:=	main.c \
-					envcpy.c \
-					list_func.c \
+					env/envcpy.c \
+					env/list_func.c \
+					env/list_func2.c \
+					env/list_func3.c \
 					signals.c \
+					builtins/1_pwd.c \
+					builtins/2_cd.c \
+					builtins/3_export_unset.c \
+					builtins/4_exit.c \
+					builtins/5_echo.c \
 					temp_tester.c \
+					exit/exit1.c \
+					utils.c \
 					lexer/lexer.c \
 					lexer/list.c \
 					lexer/split.c \
@@ -44,8 +45,12 @@ LIBFT			:= ${LIBFTDIR}libft.a
 LIBS			:= -L${LIBFTDIR} -lft -lreadline
 INCS			:= -I${HEADDIR} -I${LIBFTDIR}
 
+YELLOW			:= \033[1;33m
+CLR_RM			:= \033[0m
+
 ${NAME}:		${LIBFT} ${OBJSDIR} ${OBJS}
 				${CC} ${FLAGS} ${DEBUG} ${OBJS} -o ${NAME} ${LIBS} ${INCS}
+				@echo "${YELLOW}${NAME} ${CLR_RM}created ✔️"
 
 ${LIBFT}:
 				make -C ${LIBFTDIR}
@@ -54,7 +59,8 @@ ${OBJSDIR}%.o:	${SRCSDIR}%.c
 				${CC} ${FLAGS} ${DEBUG} ${INCS} -c $< -o $@
 
 ${OBJSDIR}:
-				mkdir -p ${OBJSDIR} ${OBJSSUB}
+				mkdir -p ${OBJSDIR} ${SUBDIRS}
+
 
 .PHONY:			all clean fclean re
 

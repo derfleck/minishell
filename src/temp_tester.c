@@ -16,6 +16,6 @@ void	env_tester(char *key, t_env **env)
 	p2 = split_env_key(node->key_value);
 	printf("Funct: split_env_key returns:   %s\n", p2);
 	printf("Funct: replace_node:  Old keyvalue: %s\n", node->key_value);
-	node = replace_node(node, "NEW=value_set=yeeees.");
+	replace_node_value(node, "NEW=value_set=yeeees.");
 	printf("Funct: replace_node:  New keyvalue: %s\n", node->key_value);
 }

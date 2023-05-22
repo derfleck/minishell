@@ -1,5 +1,5 @@
 # Minishell
-- see in Wiki :)
+- see in [Wiki] (https://github.com/derfleck/minishell/wiki) :)
 
 ## Useful links
 

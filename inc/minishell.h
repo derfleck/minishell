@@ -24,6 +24,9 @@
 # ifndef CHILD
 #  define CHILD 0
 # endif
+# ifndef HOME
+#  define HOME ".."
+# endif
 
 /* global variable for exit status */
 extern int	g_stat;
@@ -35,32 +38,51 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-
 /* functions env */
 t_env		*init_env(char **envp);
 t_env		*create_node(char *str);
 int			get_list_size(char **envp);
-void		print_env(t_env *env);
+void		print_env(t_env **env);
 char		*create_env(void);
 
 /* list functions */
-t_env		*ft_lstlast_env(t_env *lst);
-void		ft_lstadd_back_env(t_env **lst, t_env *new);
-t_env		*find_env_node(t_env **env, char *key);
+t_env		*returnlast_env(t_env *lst);
+t_env		*find_env_node(t_env **head, char *key);
 char		*split_env_value(char *str);
 char		*split_env_key(const char *str);
-t_env		*replace_node(t_env *node, char *new_value);
+void		replace_node_value(t_env *node, char *new_value);
+void		append_node_value(t_env *node, char *value2);
+void		remove_node(t_env **head, char *key);
+void		add_node_to_list(t_env **head, t_env *new);
+int			key_validity_check(char *key);
 
 /* env tester */
 void		env_tester(char *key, t_env **env);
 
-/* utils */
+/* exit */
 void		*free_ptr(void *ptr);
+void		perror_exit(char *message);
+
+/* utils */
+int			ft_strcmp(char *s1, char *s2);
+int			ft_isnum(int c);
+
+/* Builtins */
+void		builtin_pathfinder(t_env **env, t_cmd *cmd);
+void		builtin_pwd(void);
+int			helper_get_arg_count(char **args);
+void		builtin_export(t_cmd *cmd, t_env **env);
+int			export_isequal(char *arg);
+void		export_append_helper(char *key, char *str, t_env **env);
+void		builtin_unset(t_cmd *cmd, t_env **env);
+void		builtin_cd(t_cmd *cmd, t_env **env);
+void		cd_go_home(t_env **env, char *str);
+void		update_pwds(t_env **env, char *oldpath);
+int			builtin_exit(t_cmd *cmd, int process);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);
 void		handle_ctrlc(int sig);
 void		handle_signals_child(int signum);
-
 
 #endif
