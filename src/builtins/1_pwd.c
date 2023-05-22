@@ -17,9 +17,7 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 	else if (!ft_strncmp(cmd->cmd, "unset", 5))
 		builtin_unset(cmd->arg, env);
 	else
-		printf("%s\n", cmd->cmd);
-	// if (cmd->cmd)
-	// 	free(cmd->cmd);
+		return ;
 }
 
 /* gets the current working directory and prints it on the screen */

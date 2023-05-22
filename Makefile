@@ -8,12 +8,15 @@ SRCSDIR			:= ./src/
 SUBDIRS			:= 	./obj/env \
 					./obj/builtins \
 					./obj/exit \
+					./obj/lexer \
+					./obj/parser \
 					
 SRCSLIST		:=	main.c \
 					env/envcpy.c \
 					env/list_func.c \
 					env/list_func2.c \
 					env/list_func3.c \
+					env/list_to_arr.c \
 					signals.c \
 					builtins/1_pwd.c \
 					builtins/2_cd.c \
