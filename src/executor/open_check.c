@@ -15,12 +15,13 @@ static int	try_open(t_lexer *lex)
 {
 	int fd;
 
+	fd = 0;
 	if (lex->token == LESS && lex->next)
 		fd = open(lex->next->str, O_RDONLY);
 	else if (lex->token == GREAT && lex->next)
-		fd = open(lex->next->str, O_WRONLY);
+		fd = open(lex->next->str, O_CREAT | O_WRONLY | O_TRUNC);
 	else if (lex->token == GREAT_GREAT && lex->next)
-		fd = open(lex->next->str, O_APPEND);
+		fd = open(lex->next->str, O_CREAT | O_APPEND);
 	if (fd)
 		close(fd);
 	return (fd);
@@ -41,7 +42,7 @@ int	open_files(t_lexer *lex)
 			tmp = tmp->next;
 		if (tmp && try_open(tmp) == -1)
 		{
-			printf("minishell: ");
+			write(STDOUT_FILENO, "minishell: ", 11);
 			perror(tmp->next->str);
 			return (0);
 		}

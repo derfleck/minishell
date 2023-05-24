@@ -16,9 +16,9 @@ static int	parse_check(t_lexer *lex)
 		|| (tmp->next == NULL && tmp->token))
 		{
 			if (tmp->token == PIPE && tmp->prev == NULL)
-				printf("syntax error near unexpected token %s", tmp->str);
+				printf("minishell: syntax error near unexpected token %s", tmp->str);
 			else if (tmp->next == NULL && tmp->token)
-				printf("syntax error near unexpected token `newline'");
+				printf("minishell: syntax error near unexpected token `newline'");
 			return (0);
 		}
 		while (tmp && tmp->token != PIPE)
