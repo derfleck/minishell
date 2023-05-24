@@ -32,7 +32,6 @@ SRCSLIST		:=	main.c \
 					lexer/split.c \
 					parser/parser_start.c \
 					parser/parser_input.c \
-					parser/parser_utils.c \
 					heredoc/heredoc.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})

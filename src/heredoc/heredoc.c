@@ -7,7 +7,7 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		input = readline("> ");
 		if (i == cmd->num[HERE] - 1)
 		{
-			if (!input || ft_strcmp(input, cmd->in->here[i]))
+			if (!input || ft_strcmp(input, cmd->here[i]))
 			{
 				free(input);
 				break ;
@@ -21,7 +21,7 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		}
 		else
 		{
-			if (input && ft_strcmp(input, cmd->in->here[i]))
+			if (input && ft_strcmp(input, cmd->here[i]))
 				i++;
 		}
 		free(input);
@@ -30,7 +30,6 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 
 //starts the heredoc mode, iterates through all stopwords
 //IMPORTANT: should always be started if heredoc stopwords provided
-//but char string needs to be freed if last input isn't a heredoc
 char	*start_heredoc (t_cmd *cmd)
 {
 	int     fd;
