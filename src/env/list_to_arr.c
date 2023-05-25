@@ -11,7 +11,6 @@ char	**create_env_arr(t_env **head)
 	if (!env_arr)
 		perror_exit("Malloc failed\n");
 	copy_list_to_arr(head, env_arr);
-	print_env_arr(env_arr);
 	return (env_arr);
 }
 
@@ -54,15 +53,3 @@ int	return_list_size(t_env **head)
 	return (i);
 }
 
-/* Prints created array to check.
-TODO: remove before submission */
-void	print_env_arr(char **arr)
-{
-	int	i;
-
-	i = -1;
-	while (arr[++i])
-	{
-		printf("%s\n", arr[i]);
-	}
-}

@@ -49,7 +49,6 @@ char		*create_env(void);
 char		**create_env_arr(t_env **head);
 void		copy_list_to_arr(t_env **head, char **env_arr);
 int			return_list_size(t_env **head);
-void		print_env_arr(char **arr);
 
 /* list functions */
 t_env		*returnlast_env(t_env *lst);
