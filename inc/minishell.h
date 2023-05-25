@@ -38,6 +38,8 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+# include "executor.h"
+
 /* functions env */
 t_env		*init_env(char **envp);
 t_env		*create_node(char *str);

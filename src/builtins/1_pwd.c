@@ -18,6 +18,8 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 		builtin_unset(cmd->arg, env);
 	else if (!ft_strncmp(cmd->cmd, "heredoc", 7))
 		start_heredoc(cmd);
+	else if (cmd->cmd != NULL)
+		init_shell(cmd, env);
 	else
 		return ;
 }

@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 
 //appends string to existing strings, used for adding / to the end of path
-char	**append_to_string(char **str, char *app)
+static char	**add_to_string(char **str, char *app)
 {
 	int		i;
 	char	*tmp;
@@ -11,28 +11,31 @@ char	**append_to_string(char **str, char *app)
 	{
 		tmp = ft_strjoin(str[i], app);
 		free(str[i]);
-		str[i] = tmp;
-		i++;
+		str[i++] = tmp;
 	}
 	return (str);
 }
 
 //searches through environment variables for path variable
 //splits and returns them individually
-char    **get_paths(char **envp)
+char	**get_paths(char **envp)
 {
-	int     i;
+	int		i;
 	char	**tmp;
+	char	*sub;
 
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], "PATH", 4) == 0)
+		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
 			break ;
 		i++;
 	}
-	tmp = ft_split(ft_substr(envp[i], 4, ft_strlen(envp[i]) - 4), ':');
-	return (append_to_string(tmp, "/"));
+	sub = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
+	tmp = ft_split(sub, ':');
+	free(sub);
+	//tmp = ft_split(ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5), ':');
+	return (add_to_string(tmp, "/"));
 }
 
 //F_OK checks if the file exists, X_OK if the file is executable by the proccess
@@ -48,7 +51,7 @@ char    *get_cmd_with_path(t_cmd *cmd, char **path)
 		full_path = ft_strjoin(path[i++], cmd->cmd);
 		if (access(full_path, F_OK | X_OK) == 0)
 			return (full_path);
-		free(full_path);
+		full_path = safe_free(full_path);
 	}
 	return (full_path);
 }
