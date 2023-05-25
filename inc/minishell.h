@@ -95,4 +95,6 @@ void		set_sigaction(int i);
 void		handle_ctrlc(int sig);
 void		handle_signals_child(int signum);
 
+char		*start_heredoc (t_cmd *cmd);
+
 #endif
