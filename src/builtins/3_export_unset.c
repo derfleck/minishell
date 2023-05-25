@@ -13,7 +13,7 @@ void	builtin_export(char **args, t_env **env)
 	i = -1;
 	if (!args || !args[0])
 		return ;
-	while(args[++i])
+	while (args[++i])
 	{
 		if (export_isequal(args[i]))
 			return ;
@@ -91,7 +91,8 @@ void	export_append_helper(char *key, char *str, t_env **env)
 /* removes existing env variable, 
 writes bash: unset: `STR': not a valid identifier if not found 
 Unsetting a variable or function that was not previously set
-shall not be considered an error and does not cause the shell to abort.*/
+shall not be considered an error and does not cause the shell to abort.
+TODO: multiple KEYs to unset in one command */
 void	builtin_unset(char **args, t_env **env)
 {
 	t_env	*node;
