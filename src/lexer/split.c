@@ -19,11 +19,15 @@ static int	get_sub(char *str, char *set)
 {
 	int	i;
 
-	i = skip_quotes(str);
+	i = 0;
 	while (ft_strchr(set, str[i]) == 0 && \
-			(str[i] != '\'' && str[i] != '"') && \
 			(str[i] != '<' && str[i] != '>' && str[i] != '|'))
+	{
+		if (str[i] == '\'' || str[i] == '"')
+			i += skip_quotes(str + i);
+		else
 			i++;
+	}		
 	return (i);
 }
 
@@ -44,7 +48,8 @@ static int	cnt_with_token(char *str, char *set)
 			nbr++;
 		if (token_check(tmp, &i))
 			nbr++;
-		while (tmp[i] && ft_strchr(set, tmp[i]) != 0)
+		while (tmp[i] && (ft_strchr(set, tmp[i]) != 0 && \
+				tmp[i] != '\'' && tmp[i] != '"'))
 			i++;
 		tmp += i;
 	}
@@ -88,7 +93,8 @@ char	**ft_split_set(char *str, char *set)
 		len = get_sub(tmp, set);
 		if (len)
 			split[word++] = ft_substr(tmp, 0, len);
-		while (tmp[len] && ft_strchr(set, tmp[len]) != 0)
+		while (tmp[len] && (ft_strchr(set, tmp[len]) != 0 && \
+				tmp[len] != '\'' && tmp[len] != '"'))
 			len++;
 		tmp += len;
 	}
