@@ -31,12 +31,14 @@ static int	parse_check(t_lexer *lex)
 }
 
 //creates node with number of special tokens
-static t_lexer	*create_parse_node(t_lexer *lex, int n_cmd, t_cmd *cmd)
+static t_lexer	*create_parse_node(t_lexer *lex, int n_cmd, t_cmd *cmd, int j)
 {
 	t_lexer	*tmp;
 
 	tmp = lex;
+	cmd->start = lex;
 	cmd->num[CMD] = n_cmd;
+	cmd->i = j;
 	count_arg_redir(lex, cmd);
 	create_words(cmd, lex);
 	while (tmp && tmp->token != PIPE)
@@ -69,6 +71,6 @@ t_cmd	*create_parse_list(t_lexer *lex)
 	if (!cmd)
 		return (NULL);
 	while (++j < n_cmd)
-		tmp = create_parse_node(tmp, n_cmd, cmd + j);
+		tmp = create_parse_node(tmp, n_cmd, cmd + j, j);
 	return (cmd);
 }

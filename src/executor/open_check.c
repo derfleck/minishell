@@ -40,13 +40,37 @@ int	open_files(t_lexer *lex)
 	{
 		while (tmp && !is_redir(tmp))
 			tmp = tmp->next;
-		if (tmp && try_open(tmp) == -1)
+		if (tmp && tmp->next && try_open(tmp) == -1)
 		{
 			write(STDOUT_FILENO, "minishell: ", 11);
 			perror(tmp->next->str);
 			return (0);
 		}
-		tmp = tmp->next;
+		if (tmp)
+			tmp = tmp->next;
 	}
 	return (1);
+}
+
+//opens last in and out files and assigns fd to cmd struct
+void	open_in_out(t_cmd *cmd)
+{
+	if (cmd->in != NULL)
+	{
+		if (cmd->in->token == LESS)
+			cmd->fd[IN] = open(cmd->in->next->str, O_RDONLY);
+		else if (cmd->in->token == LESS_LESS)
+			cmd->fd[IN] = start_heredoc(cmd);
+		else
+			cmd->fd[IN] = STDIN_FILENO;
+	}
+	if (cmd->out != NULL)
+	{
+		if (cmd->out->token == GREAT)
+			cmd->fd[OUT] = open(cmd->out->next->str, O_CREAT | O_WRONLY | O_TRUNC);
+		else if (cmd->in->token == GREAT_GREAT)
+			cmd->fd[OUT] = open(cmd->out->next->str, O_CREAT | O_APPEND);
+		else
+			cmd->fd[OUT] = STDOUT_FILENO;
+	}
 }

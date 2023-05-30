@@ -1,6 +1,7 @@
 #include "../../inc/minishell.h"
 
-static void	execute_cmd(t_cmd *cmd, t_shell *shell)
+//checks if command path is absolute or relative
+void	execute_cmd(t_cmd *cmd, t_shell *shell)
 {
 	char	*tmp;
 
@@ -25,18 +26,22 @@ static void	execute_cmd(t_cmd *cmd, t_shell *shell)
 	}
 }
 
+//initializes shell struct containing environment variables
+//and extracted paths from PATH variable, if it exists
 t_shell	*init_shell(t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
-	//if (!open_files(lex))
+	//if (!open_files(cmd->start))
 	//	return (NULL);
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
 	shell->envp = create_env_arr(head);
 	shell->paths = get_paths(shell->envp);
-	shell->pid = NULL;
+	shell->pid = ft_calloc(cmd->num[CMD], sizeof(pid_t));
+	if (!shell->pid)
+		return (NULL);
 	shell->wstatus = 0;
 	execute_cmd(cmd, shell);
 	return (shell);
