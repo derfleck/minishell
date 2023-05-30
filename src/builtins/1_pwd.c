@@ -4,6 +4,8 @@
 the rest of the args towards the right builtin */
 void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 {
+	char **args;
+
 	if (ft_strcmp(cmd->cmd, "pwd"))
 		builtin_pwd();
 	else if (ft_strcmp(cmd->cmd, "env"))
@@ -17,7 +19,10 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 	else if (!ft_strncmp(cmd->cmd, "unset", 5))
 		builtin_unset(cmd->arg, env);
 	else if (!ft_strncmp(cmd->cmd, "echo", 4))
-		builtin_echo(cmd->arg, env);
+	{
+		args = expander_start(cmd->arg, env);
+		builtin_echo(args, env);
+	}
 	else if (!ft_strncmp(cmd->cmd, "heredoc", 7))
 		start_heredoc(cmd);
 	else
