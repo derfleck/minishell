@@ -12,6 +12,7 @@ SUBDIRS			:= 	./obj/env \
 					./obj/parser \
 					./obj/heredoc \
 					./obj/executor
+					./obj/expander
 					
 SRCSLIST		:=	main.c \
 					env/envcpy.c \
@@ -39,6 +40,11 @@ SRCSLIST		:=	main.c \
 					executor/open_check.c \
 					executor/search_path.c \
 					executor/exec_multiple.c
+					parser/parser_utils.c \
+					expander/expand1.c \
+					expander/expand2.c \
+					expander/expand3.c \
+					heredoc/heredoc.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
@@ -48,6 +54,7 @@ OBJSSUB			:= ./obj/lexer/ \
 					./obj/parser/ \
 					./obj/heredoc \
 					./obj/executor
+
 OBJSLIST		:= ${SRCSLIST:.c=.o}
 OBJS			:= $(addprefix ${OBJSDIR}, ${OBJSLIST})
 

@@ -3,6 +3,7 @@
 
 # include "parser.h"
 # include "lexer.h"
+
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -39,6 +40,7 @@ typedef struct s_env
 }	t_env;
 
 # include "executor.h"
+# include "expander.h"
 
 /* functions env */
 t_env		*init_env(char **envp);
@@ -49,7 +51,6 @@ char		*create_env(void);
 char		**create_env_arr(t_env **head);
 void		copy_list_to_arr(t_env **head, char **env_arr);
 int			return_list_size(t_env **head);
-void		print_env_arr(char **arr);
 
 /* list functions */
 t_env		*returnlast_env(t_env *lst);
@@ -88,6 +89,7 @@ int			builtin_exit(t_cmd *cmd, t_env **env, int process);
 void		exit_parent(t_env **head, int argc);
 void		*free_env_list(t_env **head);
 void		*free_env_node(t_env *node);
+void		builtin_echo(char **args, t_env **head);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

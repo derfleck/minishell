@@ -1,4 +1,5 @@
 #include "../../inc/minishell.h"
+
 /* Counts list size, allocates and fills in new array to be returned */
 char	**create_env_arr(t_env **head)
 {

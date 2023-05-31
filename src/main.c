@@ -49,9 +49,6 @@ int	main(int argc, char **argv, char **envp)
 		cmd = create_parse_list(lex);
 		add_history(s);
 		builtin_pathfinder(&env, cmd);
-
-		if (ft_strcmp(s, "test"))
-			create_env_arr(&env);
 	}
 	return (0);
 }
