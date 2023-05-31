@@ -48,6 +48,8 @@ int	main(int argc, char **argv, char **envp)
 		lex = start_lexer(s);
 		cmd = create_parse_list(lex);
 		add_history(s);
+		lex = start_lexer(s);
+		cmd = create_parse_list(lex);
 		builtin_pathfinder(&env, cmd);
 	}
 	return (0);

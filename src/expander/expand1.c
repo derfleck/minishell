@@ -16,114 +16,155 @@ char	**expander_start(char **args, t_env **head)
 	return (args);
 }
 
+/* deals with each incoming arg from expander_start one by one */
 char	*expander(char *input, t_env **head)
+{
+	char	*new;
+
+	if (!input || !head)
+		return (NULL);
+	if (found_quotes(input))
+		new = deal_with_quotes(input, head);
+	else
+		new = do_expansion(input, head);
+	return (new);
+}
+
+/* gets string with surely a quote in it.
+iterates through it to find first occurence.
+if single - removes them and continues.
+if double: removes them and sends inner str for expansion check.
+Then continues */
+char	*deal_with_quotes(char *input, t_env **head)
+{
+	int		i;
+	int		end;
+
+	i = -1;
+	while (input[++i])
+	{
+		if (input[i] == '\'')
+		{
+			end = i + return_quote_len(&input[i], input[i]);
+			input = remove_quotes(input, i, end);
+			i = end;
+		}
+		else if (input[i] == '"')
+		{
+			end = i + return_quote_len(&input[i], input[i]);
+			input = remove_quotes(input, i, end);
+			input = expand_parts(input, head, i, end - 2);
+			//save the leftoverstr ?? then do it and return here? cause i is untrackable...
+			i = end; //not true if expanded. TODO!
+		}
+		else if (input[i] == '$' || input[i] == '~')
+			input = replace_string(input, head, &input[i]);
+	}
+	return (input);
+}
+
+/* Checks if expansion is needed for the quoted part of the strings. */
+char	*expand_parts(char *input, t_env **head, int start, int end)
+{
+	char	*new;
+	int		i;
+
+	(void)end;
+	i = start - 1;
+	while (input[++i])
+	{
+		if (input[i] == '$')
+			new = replace_string(input, head, &input[i]);
+	}
+	free(input);
+	return (new);
+}
+
+/* Removes quotes from an incoming string, sends new string back */
+char	*remove_quotes(char *input, int start, int end)
+{
+	char	*new;
+	char	*pre;
+	char	*post;
+
+	pre = return_pre_str(input, &input[start]);
+	if (!pre)
+		new = create_quote_free_str(input, start, end);
+	else
+		new = ft_strjoin(pre, create_quote_free_str(input, start, end));
+	if (!new)
+		perror_exit("Malloc failed\n");
+	free(pre);
+	post = return_post_str(&input[end -1]);
+	new = ft_strjoin(new, post);
+	if (!new)
+		perror_exit("Malloc failed\n");
+	free(input);
+	free(post);
+	return (new);
+}
+
+/* Creates new string with the content of the quotes without quotes */
+char	*create_quote_free_str(char *input, int start, int end)
+{
+	char	*new;
+	char	*quoted_str;
+
+	quoted_str = ft_substr(input, start, (size_t)end - start);
+	if (!quoted_str)
+		perror_exit("Malloc failed\n");
+	new = ft_strtrim(quoted_str, "'\"");
+	if (!new)
+		perror_exit("Malloc failed\n");
+	free(quoted_str);
+	return (new);
+}
+
+/* Starts from right after the first quote (start + 1)
+and returns an int representing the length of str until the end quote */
+int	return_quote_len(char *start, char c)
+{
+	int	i;
+
+	i = 0;
+	while (start[++i])
+	{
+		if (start[i] == c)
+			break ;
+	}
+	return (i);
+}
+
+/* Iterates through the str, if finds a quotation mark, 
+returns 1 if not, returns 0 */
+int	found_quotes(char *input)
 {
 	int	i;
 
 	i = -1;
-	if (!input || !head)
-		return (NULL);
-	if (input[0] == '\'')
-		return (ft_strtrim(input, "'"));
-	else
+	while (input[++i])
 	{
-		if (input[0] == '"' && input[1] != '~')
-			input = ft_strtrim(input, "\"");
-		while (input[++i])
+		if (input[i] == '\'' || input[i] == '"')
+			return (1);
+	}
+	return (0);
+}
+
+/* Checks incoming str if expansion is needed  */
+char	*do_expansion(char *input, t_env **head)
+{
+	int	i;
+
+	i = -1;
+	while (input[++i])
+	{
+		if (input[i] == '$' || input[i] == '~')
 		{
-			if (input[i] == '$' || input[i] == '~')
-			{
-				input = replace_string(input, head, &input[i]);
-				if (input[i] == '~')
-					return (input);
-				i = -1;
-			}
+			input = replace_string(input, head, &input[i]);
+			if (input[i] == '~')
+				return (input); //YOU SURE? i++?
+			i = -1; // what if tilde is kept?
 		}
 	}
 	return (input);
-}
-
-/* Gets everything to recreate new, expanded string.
-TODO: to Malloc new, expanded string */
-char	*replace_string(char *input, t_env **head, char *spec)
-{
-	char	*value;
-	char	*new_str;
-
-	if ((input[0] == '~' && input[1] == '\0') || \
-	(input[0] == '~' && input[1] == '/'))
-		return (expand_home(input, head, spec));
-	else if (input[0] == '"' && input[1] == '~')
-		return (ft_strtrim(input, "\""));
-	if (spec[0] == '$')
-	{
-		value = check_key_exist(head, spec + 1);
-		if (!value)
-		{
-			new_str = remove_var_reference(input, spec);
-			return (new_str);
-		}
-		else
-			new_str = expand_env_var(input, spec, value);
-		return (new_str);
-	}
-	return (input);
-}
-
-/* i is position of tilde. Replace it with value of home. rejoin str 
-Return new str */
-char	*expand_home(char *input, t_env **head, char *tilde)
-{
-	char	*home_value;
-	char	*new_str;
-	t_env	*node;
-	char	*pre;
-	char	*post;
-
-	node = find_env_node(head, "HOME");
-	if (!node)
-		node = create_home("HOME=/nfs/homes/", head);
-	home_value = split_env_value(node->key_value);
-	pre = return_pre_str(input, tilde);
-	if (!pre)
-		new_str = ft_strdup(home_value);
-	else
-		new_str = ft_strjoin(pre, home_value);
-	if (!new_str)
-		perror_exit("Malloc failed\n");
-	post = return_post_str(tilde + return_key_len(tilde + 1));
-	new_str = ft_strjoin(new_str, post);
-	if (!new_str)
-		perror_exit("Malloc failed\n");
-	free(pre);
-	free(post);
-	return (new_str);
-}
-
-/* Receives input and place of dollarsign, 
-object: excise dollarsign and key, replace with "" */
-char	*remove_var_reference(char *input, char *dollar)
-{
-	char	*new_str;
-	char	*pre;
-	char	*post;
-	int		key_len;
-
-	pre = return_pre_str(input, dollar);
-	if (!pre)
-		new_str = ft_strdup("");
-	else
-		new_str = ft_strjoin(pre, "");
-	if (!new_str)
-		perror_exit("Malloc failed\n");
-	free(pre);
-	key_len = return_key_len(dollar + 1);
-	post = return_post_str(dollar + key_len);
-	if (!post)
-		return (new_str);
-	new_str = ft_strjoin(new_str, post);
-	if (!new_str)
-		perror_exit("Malloc failed\n");
-	free(post);
-	return (new_str);
 }
