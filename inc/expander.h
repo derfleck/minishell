@@ -6,7 +6,7 @@
 /*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 14:48:15 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/05/31 14:48:17 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/05/31 17:39:13 by rmocsai          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	*create_quote_free_str(char *input, int start, int end);
 int		return_quote_len(char *start, char c);
 int		found_quotes(char *input);
 char	*do_expansion(char *input, t_env **head);
+char	*kill_quotes(char *expanded);
 
 /* expander 2 - helpers */
 char	*return_key(char *str);
