@@ -30,9 +30,9 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 
 //starts the heredoc mode, iterates through all stopwords
 //IMPORTANT: should always be started if heredoc stopwords provided
-int	start_heredoc (t_cmd *cmd)
+int	start_heredoc(t_cmd *cmd)
 {
-	int     fd;
+	int		fd;
 	int		i;
 	char	*input;
 	char	*filename;

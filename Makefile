@@ -11,7 +11,7 @@ SUBDIRS			:= 	./obj/env \
 					./obj/lexer \
 					./obj/parser \
 					./obj/heredoc \
-					./obj/executor
+					./obj/executor \
 					./obj/expander
 					
 SRCSLIST		:=	main.c \
@@ -39,14 +39,12 @@ SRCSLIST		:=	main.c \
 					executor/utils.c \
 					executor/open_check.c \
 					executor/search_path.c \
-					executor/exec_multiple.c
-					parser/parser_utils.c \
+					executor/exec_multiple.c \
 					expander/expand1.c \
 					expander/expand2.c \
 					expander/expand3.c \
-					expander/expand4.c \
-					heredoc/heredoc.c
-					
+					expander/expand4.c 
+										
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
 
