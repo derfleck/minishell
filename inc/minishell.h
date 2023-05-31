@@ -88,6 +88,7 @@ void		exit_parent(t_env **head, int argc);
 void		*free_env_list(t_env **head);
 void		*free_env_node(t_env *node);
 void		builtin_echo(char **args, t_env **head);
+int			look_for_nflag(char *str);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

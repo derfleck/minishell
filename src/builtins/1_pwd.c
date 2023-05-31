@@ -4,7 +4,7 @@
 the rest of the args towards the right builtin */
 void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 {
-	char **args;
+	char	**args;
 
 	if (ft_strcmp(cmd->cmd, "pwd"))
 		builtin_pwd();
