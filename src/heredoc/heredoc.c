@@ -7,7 +7,7 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		input = readline("> ");
 		if (i == cmd->num[HERE] - 1)
 		{
-			if (!input || ft_strcmp(input, cmd->in->here[i]))
+			if (!input || ft_strcmp(input, cmd->here[i]))
 			{
 				free(input);
 				break ;
@@ -21,7 +21,7 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		}
 		else
 		{
-			if (input && ft_strcmp(input, cmd->in->here[i]))
+			if (input && ft_strcmp(input, cmd->here[i]))
 				i++;
 		}
 		free(input);
@@ -30,29 +30,43 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 
 //starts the heredoc mode, iterates through all stopwords
 //IMPORTANT: should always be started if heredoc stopwords provided
-//but char string needs to be freed if last input isn't a heredoc
-char	*start_heredoc (t_cmd *cmd)
+int	start_heredoc (t_cmd *cmd)
 {
 	int     fd;
 	int		i;
 	char	*input;
+	char	*filename;
+	char	*number;
+
+	number = ft_itoa(cmd->i);
+	filename = ft_strjoin("here_", number);
+	i = 0;
+	input = NULL;
+	fd = open(filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
+	free(filename);
+	free(number);
+	if (fd == -1)
+		return (-1);
+	heredoc_loop(cmd, i, fd, input);
+	return (fd);
+}
+
+/*
+//reads heredoc, closes and writes it to a string and returns it
+char	*read_heredoc(int fd, char *filename)
+{
 	char	*tmp;
 	char	*out;
 
-	i = 0;
-	input = NULL;
-	fd = open("here_tmp", O_CREAT | O_EXCL | O_WRONLY, 0600);
 	out = "";
-	if (fd == -1)
-		return (NULL);
-	heredoc_loop(cmd, i, fd, input);
 	tmp = get_next_line(fd);
 	while (tmp)
 	{
 		out = ft_strjoin(out, tmp);
 		tmp = get_next_line(fd);
 	}
-	if (close(fd) == -1 || unlink("here_tmp") == -1)
+	if (close(fd) == -1 || unlink(filename) == -1)
 		return (NULL);
-	return (out);
+	return (tmp);
 }
+*/

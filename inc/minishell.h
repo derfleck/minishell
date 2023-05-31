@@ -39,7 +39,9 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+# include "executor.h"
 # include "expander.h"
+
 /* functions env */
 t_env		*init_env(char **envp);
 t_env		*create_node(char *str);
@@ -94,6 +96,6 @@ void		set_sigaction(int i);
 void		handle_ctrlc(int sig);
 void		handle_signals_child(int signum);
 
-char		*start_heredoc (t_cmd *cmd);
+int			start_heredoc (t_cmd *cmd);
 
 #endif

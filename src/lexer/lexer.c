@@ -16,7 +16,7 @@ int	skip_quotes(char *str)
 		while (str[++i] && str[i] != '"')
 			;
 	}
-	return (i);
+	return (i + 1);
 }
 
 //counts how many times c occurs in str, ignores quoted text

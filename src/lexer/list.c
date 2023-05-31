@@ -37,9 +37,9 @@ t_lexer	*start_lexer(char *str)
 	static char	set[6] = " \t\n\v\f\r";
 
 	i = 0;
+	if (!syntax_check(str))
+		return(perror("Syntax error"), free(str), NULL);
 	split = ft_split_set(str, set);
-	if (!syntax_check(str) && split)
-		return (free(str), NULL);
 	if (!split)
 		return (NULL);
 	while (split[i])
