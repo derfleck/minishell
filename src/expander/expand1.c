@@ -72,8 +72,10 @@ char	*expand_parts(char *input, t_env **head, int start, int end)
 	(void)end;
 	i = start - 1;
 	while (input[++i])
-	if (input[i] == '$')
-		new = replace_string(input, head, &input[i]);
+	{
+		if (input[i] == '$')
+			new = replace_string(input, head, &input[i]);
+	}
 	free(input);
 	return (new);
 }
