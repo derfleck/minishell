@@ -36,14 +36,17 @@ int	start_heredoc (t_cmd *cmd)
 	int		i;
 	char	*input;
 	char	*filename;
+	char	*number;
 
-	filename = ft_strjoin("here_", (char)cmd->i + 48);
+	number = ft_itoa(cmd->i);
+	filename = ft_strjoin("here_", number);
 	i = 0;
 	input = NULL;
 	fd = open(filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
 	free(filename);
+	free(number);
 	if (fd == -1)
-		return (NULL);
+		return (-1);
 	heredoc_loop(cmd, i, fd, input);
 	return (fd);
 }

@@ -35,9 +35,10 @@ SRCSLIST		:=	main.c \
 					parser/parser_input.c \
 					heredoc/heredoc.c \
 					executor/exec.c \
-					executor/children.c \
+					executor/utils.c \
 					executor/open_check.c \
-					executor/search_path.c
+					executor/search_path.c \
+					executor/exec_multiple.c
 					
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/

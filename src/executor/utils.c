@@ -27,3 +27,37 @@ pid_t   *wait_children(t_shell *shell, int cmd)
 	shell->pid = safe_free(shell->pid);
 	return (shell->pid);
 }
+
+//frees t_cmd struct, checks if values exist before freeing
+void	free_cmd(t_cmd *cmd)
+{
+	int		i;
+
+	i = 0;
+	if (cmd->cmd)
+		cmd = safe_free(cmd->cmd);
+	while(i < cmd->num[ARG])
+		free(cmd->arg[i++]);
+	i = 0;
+	while(i < cmd->num[HERE])
+		free(cmd->here[i++]);
+	if (cmd->arg)
+		cmd->arg = safe_free(cmd->arg);
+	if (cmd->here)
+		cmd->here = safe_free(cmd->here);
+}
+
+//frees lexer list node by node
+void	free_lex(t_lexer *lex)
+{
+	t_lexer	*tmp;
+
+	tmp = lex;
+	while (tmp)
+	{
+		if (tmp->str)
+			free(tmp->str);
+		tmp = lex->next;
+		free(lex);		
+	}
+}

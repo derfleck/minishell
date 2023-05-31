@@ -1,39 +1,5 @@
 #include "../../inc/executor.h"
 
-//frees t_cmd struct, checks if values exist before freeing
-void	free_cmd(t_cmd *cmd)
-{
-	int		i;
-
-	i = 0;
-	if (cmd->cmd)
-		cmd = safe_free(cmd->cmd);
-	while(i < cmd->num[ARG])
-		free(cmd->arg[i++]);
-	i = 0;
-	while(i < cmd->num[HERE])
-		free(cmd->here[i++]);
-	if (cmd->arg)
-		cmd->arg = safe_free(cmd->arg);
-	if (cmd->here)
-		cmd->here = safe_free(cmd->here);
-}
-
-//frees lexer list node by node
-void	free_lex(t_lexer *lex)
-{
-	t_lexer	*tmp;
-
-	tmp = lex;
-	while (tmp)
-	{
-		if (tmp->str)
-			free(tmp->str);
-		tmp = lex->next;
-		free(lex);		
-	}
-}
-
 //closes custom redirections and redirect read end
 //of shared pipe to STDIN of parent process
 int	parent_redir(int *pip, t_cmd *cmd)
@@ -75,6 +41,7 @@ int	child_redir(int *pip, t_cmd *cmd, t_shell *shell)
 	return (1);
 }
 
+//creates fork of process and checks if parent/child process
 int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 {
 	if (cmd->next != NULL)
@@ -100,6 +67,7 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 
 //executes piped commands and initializes redirects
 //returns 1 on success, 0 on failure
+//starting point for piped execution
 int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 {
 	int		pip[2];

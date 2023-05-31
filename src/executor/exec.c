@@ -43,6 +43,12 @@ t_shell	*init_shell(t_cmd *cmd, t_env **head)
 	if (!shell->pid)
 		return (NULL);
 	shell->wstatus = 0;
-	execute_cmd(cmd, shell);
+	if (cmd->num[CMD] > 1)
+	{
+		if (!cmd_with_pipes(shell, cmd))
+			return (NULL);
+	}
+	else
+		execute_cmd(cmd, shell);
 	return (shell);
 }

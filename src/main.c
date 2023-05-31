@@ -43,10 +43,10 @@ int	main(int argc, char **argv, char **envp)
 	{
 		set_sigaction(PARENT);
 		s = readline(prompt_line());
-		lex = start_lexer(s);
-		cmd = create_parse_list(lex);
 		if (s == NULL)
 			return (write(2, "exit\n", 5));
+		lex = start_lexer(s);
+		cmd = create_parse_list(lex);
 		add_history(s);
 		builtin_pathfinder(&env, cmd);
 

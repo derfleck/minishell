@@ -20,6 +20,8 @@ static void	init_cmd_struct(t_cmd *cmd)
 		return ;
 	cmd->in = NULL;
 	cmd->out = NULL;
+	cmd->fd[IN] = STDIN_FILENO;
+	cmd->fd[OUT] = STDOUT_FILENO;
 	cmd->here = ft_calloc(cmd->num[HERE] + 1, sizeof(char *));
 	if (!cmd->here)
 		return ;
