@@ -15,18 +15,30 @@ char	*prompt_line(void)
 	if (ft_strcmp(tmp2, getenv("HOME")))
 	{
 		free(tmp2);
-		return (ft_strjoin(tmp, "~$"));
+		return (ft_strjoin(tmp, "~$ "));
 	}
 	tmp3 = ft_strjoin(tmp, tmp2);
 	if (!tmp3)
 		perror_exit("Malloc failed\n");
 	free(tmp);
 	free(tmp2);
-	tmp = ft_strjoin(tmp3, "$");
+	tmp = ft_strjoin(tmp3, "$ ");
 	if (!tmp)
 		perror_exit("Malloc failed\n");
 	free(tmp3);
 	return (tmp);
+}
+
+char	*get_input()
+{
+	char	*line;
+
+	line = readline(prompt_line());
+	if (line == NULL)
+		return (ft_strdup("exit"));
+	else if (line[0] == 0)
+		return (safe_free(line));
+	return (line);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -42,15 +54,18 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_sigaction(PARENT);
-		s = readline(prompt_line());
+		//s = readline(prompt_line());
+		s = get_input();
 		if (s == NULL)
-			return (write(2, "exit\n", 5));
+			continue ;
+		//if (s == NULL)
+		//	return (write(2, "exit\n", 5));
 		lex = start_lexer(s);
-		cmd = create_parse_list(lex);
 		add_history(s);
-		lex = start_lexer(s);
-		cmd = create_parse_list(lex);
-		builtin_pathfinder(&env, cmd);
+		if (lex)
+			cmd = create_parse_list(lex);
+		if (cmd)
+			builtin_pathfinder(&env, cmd);
 	}
 	return (0);
 }

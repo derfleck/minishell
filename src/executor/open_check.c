@@ -15,14 +15,14 @@ static int	try_open(t_lexer *lex)
 {
 	int fd;
 
-	fd = 0;
+	fd = -2;
 	if (lex->token == LESS && lex->next)
 		fd = open(lex->next->str, O_RDONLY);
 	else if (lex->token == GREAT && lex->next)
-		fd = open(lex->next->str, O_CREAT | O_WRONLY | O_TRUNC);
+		fd = open(lex->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	else if (lex->token == GREAT_GREAT && lex->next)
-		fd = open(lex->next->str, O_CREAT | O_APPEND);
-	if (fd)
+		fd = open(lex->next->str, O_CREAT | O_APPEND, 0644);
+	if (fd >= 0)
 		close(fd);
 	return (fd);
 }
@@ -67,9 +67,9 @@ void	open_in_out(t_cmd *cmd)
 	if (cmd->out != NULL)
 	{
 		if (cmd->out->token == GREAT)
-			cmd->fd[OUT] = open(cmd->out->next->str, O_CREAT | O_WRONLY | O_TRUNC);
-		else if (cmd->in->token == GREAT_GREAT)
-			cmd->fd[OUT] = open(cmd->out->next->str, O_CREAT | O_APPEND);
+			cmd->fd[OUT] = open(cmd->out->next->str, O_WRONLY | O_TRUNC, 0644);
+		else if (cmd->out->token == GREAT_GREAT)
+			cmd->fd[OUT] = open(cmd->out->next->str, O_WRONLY | O_APPEND, 0644);
 		else
 			cmd->fd[OUT] = STDOUT_FILENO;
 	}

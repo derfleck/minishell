@@ -38,4 +38,7 @@ void	open_in_out(t_cmd *cmd);
 char	**get_paths(char **envp);
 char    *get_cmd_with_path(t_cmd *cmd, char **path);
 
+//single cmd
+void	exec_single_cmd(t_cmd *cmd, t_shell *shell);
+
 #endif

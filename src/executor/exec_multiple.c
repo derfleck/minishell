@@ -78,6 +78,10 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 	i = 0;
 	while (tmp)
 	{
+		if (open_files(tmp->start))
+			open_in_out(tmp);
+		else
+			return (0);
 		if (!fork_and_exec(pip, tmp, shell, i++))
 			return (0);
 		tmp = tmp->next;

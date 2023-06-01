@@ -49,6 +49,6 @@ t_shell	*init_shell(t_cmd *cmd, t_env **head)
 			return (NULL);
 	}
 	else
-		execute_cmd(cmd, shell);
+		exec_single_cmd(cmd, shell);
 	return (shell);
 }

@@ -13,11 +13,11 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 	else if (ft_strcmp(cmd->cmd, "test env"))
 		env_tester("USER", env);
 	else if (!ft_strncmp(cmd->cmd, "cd", 2))
-		builtin_cd(cmd->arg, env);
+		builtin_cd(&cmd->arg[1], env);
 	else if (!ft_strncmp(cmd->cmd, "export", 6))
-		builtin_export(cmd->arg, env);
+		builtin_export(&cmd->arg[1], env);
 	else if (!ft_strncmp(cmd->cmd, "unset", 5))
-		builtin_unset(cmd->arg, env);
+		builtin_unset(&cmd->arg[1], env);
 	else if (!ft_strncmp(cmd->cmd, "echo", 4))
 	{
 		args = expander_start(cmd->arg, env);
