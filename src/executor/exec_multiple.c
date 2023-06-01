@@ -52,16 +52,10 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 	shell->pid[i] = fork();
 	if (shell->pid[i] < 0)
 		return (0);
-	if (shell->pid[i] == 0)
-	{
-		if (!child_redir(pip, cmd, shell))
-			return (0);
-	}
+	if (shell->pid[i] == CHILD)
+		return(child_redir(pip, cmd, shell));
 	else
-	{
-		if (!parent_redir(pip, cmd))
-			return (0);
-	}
+		return (parent_redir(pip, cmd));
 	return (1);
 }
 
