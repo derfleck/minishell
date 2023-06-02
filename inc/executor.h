@@ -12,6 +12,7 @@ typedef struct s_shell
 	int		wstatus;
 	char	**envp;
 	char	**paths;
+	int		stdin_cpy;
 }	t_shell;
 
 //exec multiple

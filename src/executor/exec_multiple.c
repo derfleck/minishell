@@ -4,9 +4,9 @@
 //of shared pipe to STDIN of parent process
 int	parent_redir(int *pip, t_cmd *cmd)
 {
-	if (cmd->in != NULL)
+	if (cmd->in != NULL && cmd->fd[IN] != STDIN_FILENO)
 		close(cmd->fd[IN]);
-	if (cmd->out != NULL)
+	if (cmd->out != NULL && cmd->fd[OUT] != STDOUT_FILENO)
 		close(cmd->fd[OUT]);
 	if (cmd->next != NULL)
 	{
@@ -22,7 +22,7 @@ int	parent_redir(int *pip, t_cmd *cmd)
 //redirects in and out files to STDIN/STDOUT respectively
 int	child_redir(int *pip, t_cmd *cmd, t_shell *shell)
 {
-	if (cmd->next != NULL)
+ 	if (cmd->next != NULL)
 	{
 		if (dup2(pip[1], STDOUT_FILENO) == -1)
 			return (0);
@@ -37,6 +37,7 @@ int	child_redir(int *pip, t_cmd *cmd, t_shell *shell)
 		return (0);
 	if (cmd->out != NULL)
 		close(cmd->fd[OUT]);
+	close(shell->stdin_cpy);
 	execute_cmd(cmd, shell);
 	return (1);
 }
@@ -69,17 +70,20 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 	int		i;
 
 	tmp = cmd;
+	shell->stdin_cpy = dup(STDIN_FILENO);
 	i = 0;
 	while (tmp)
 	{
 		if (open_files(tmp->start))
 			open_in_out(tmp);
 		else
-			return (0);
+			break ;
 		if (!fork_and_exec(pip, tmp, shell, i++))
-			return (0);
+			break ;
 		tmp = tmp->next;
 	}
-	shell->pid = wait_children(shell, cmd->num[CMD]);
+	dup2(shell->stdin_cpy, STDIN_FILENO);
+	close(shell->stdin_cpy);
+	shell->pid = wait_children(shell, i);
 	return (1);
 }
