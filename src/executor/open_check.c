@@ -55,12 +55,19 @@ int	open_files(t_lexer *lex)
 //opens last in and out files and assigns fd to cmd struct
 void	open_in_out(t_cmd *cmd)
 {
+	char *filename;
+
+	filename = NULL;
 	if (cmd->in != NULL)
 	{
 		if (cmd->in->token == LESS)
 			cmd->fd[IN] = open(cmd->in->next->str, O_RDONLY);
 		else if (cmd->in->token == LESS_LESS)
-			cmd->fd[IN] = start_heredoc(cmd);
+		{
+			filename = start_heredoc(cmd);
+			cmd->fd[IN] = open(filename, O_RDONLY);
+			free(filename);
+		}
 		else
 			cmd->fd[IN] = STDIN_FILENO;
 	}

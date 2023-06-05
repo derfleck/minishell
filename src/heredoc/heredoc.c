@@ -30,7 +30,7 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 
 //starts the heredoc mode, iterates through all stopwords
 //IMPORTANT: should always be started if heredoc stopwords provided
-int	start_heredoc(t_cmd *cmd)
+char	*start_heredoc(t_cmd *cmd)
 {
 	int		fd;
 	int		i;
@@ -42,31 +42,12 @@ int	start_heredoc(t_cmd *cmd)
 	filename = ft_strjoin("here_", number);
 	i = 0;
 	input = NULL;
-	fd = open(filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
-	free(filename);
+	fd = open(filename, O_CREAT | O_RDWR, 0644);
+	//free(filename);
 	free(number);
 	if (fd == -1)
-		return (-1);
-	heredoc_loop(cmd, i, fd, input);
-	return (fd);
-}
-
-/*
-//reads heredoc, closes and writes it to a string and returns it
-char	*read_heredoc(int fd, char *filename)
-{
-	char	*tmp;
-	char	*out;
-
-	out = "";
-	tmp = get_next_line(fd);
-	while (tmp)
-	{
-		out = ft_strjoin(out, tmp);
-		tmp = get_next_line(fd);
-	}
-	if (close(fd) == -1 || unlink(filename) == -1)
 		return (NULL);
-	return (tmp);
+	heredoc_loop(cmd, i, fd, input);
+	close(fd);
+	return (filename);
 }
-*/
