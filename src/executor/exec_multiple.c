@@ -81,6 +81,7 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 			break ;
 		if (!fork_and_exec(pip, tmp, shell, i++))
 			break ;
+		unlink_heredoc(tmp);
 		tmp = tmp->next;
 	}
 	dup2(shell->stdin_cpy, STDIN_FILENO);
