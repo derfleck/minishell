@@ -25,6 +25,7 @@ typedef struct s_cmd {
 	t_lexer			*in;
 	t_lexer			*out;
 	char			**here;
+	char			*here_file;
 	struct s_cmd	*next;
 	t_lexer			*start;
 	int				fd[2];

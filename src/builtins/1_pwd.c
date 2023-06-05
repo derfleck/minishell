@@ -23,8 +23,6 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 		args = expander_start(cmd->arg, env);
 		builtin_echo(args, env);
 	}
-	else if (!ft_strncmp(cmd->cmd, "heredoc", 7))
-		start_heredoc(cmd);
 	else if (cmd->cmd != NULL)
 		init_shell(cmd, env);
 	else

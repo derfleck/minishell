@@ -4,9 +4,9 @@
 //of shared pipe to STDIN of parent process
 int	parent_redir(int *pip, t_cmd *cmd)
 {
-	if (cmd->in != NULL && cmd->fd[IN] != STDIN_FILENO)
+	if (cmd->in != NULL)
 		close(cmd->fd[IN]);
-	if (cmd->out != NULL && cmd->fd[OUT] != STDOUT_FILENO)
+	if (cmd->out != NULL)
 		close(cmd->fd[OUT]);
 	if (cmd->next != NULL)
 	{
@@ -72,9 +72,10 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 	tmp = cmd;
 	shell->stdin_cpy = dup(STDIN_FILENO);
 	i = 0;
+	run_heredoc(cmd);
 	while (tmp)
 	{
-		if (open_files(tmp->start))
+		if (open_files(tmp))
 			open_in_out(tmp);
 		else
 			break ;

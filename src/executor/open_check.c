@@ -31,11 +31,12 @@ static int	try_open(t_lexer *lex)
 //throws an error on first input file that can't be opened (in order)
 //creates files which don't exist yet for output
 //returns 1 on success, 0 on error, stops at error in list
-int	open_files(t_lexer *lex)
+//TODO: add heredoc unlink if opening fails
+int		open_files(t_cmd *cmd)
 {
 	t_lexer *tmp;
 
-	tmp = lex;
+	tmp = cmd->start;
 	while (tmp && tmp->token != PIPE)
 	{
 		while (tmp && !is_redir(tmp))
@@ -63,11 +64,7 @@ void	open_in_out(t_cmd *cmd)
 		if (cmd->in->token == LESS)
 			cmd->fd[IN] = open(cmd->in->next->str, O_RDONLY);
 		else if (cmd->in->token == LESS_LESS)
-		{
-			filename = start_heredoc(cmd);
-			cmd->fd[IN] = open(filename, O_RDONLY);
-			free(filename);
-		}
+			cmd->fd[IN] = open(cmd->here_file, O_RDONLY);
 		else
 			cmd->fd[IN] = STDIN_FILENO;
 	}

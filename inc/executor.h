@@ -32,7 +32,7 @@ void	free_cmd(t_cmd *cmd);
 void	free_lex(t_lexer *lex);
 
 //open check
-int		open_files(t_lexer *lex);
+int		open_files(t_cmd *cmd);
 void	open_in_out(t_cmd *cmd);
 
 //search path
@@ -41,5 +41,9 @@ char    *get_cmd_with_path(t_cmd *cmd, char **path);
 
 //single cmd
 void	exec_single_cmd(t_cmd *cmd, t_shell *shell);
+
+//heredoc
+void	run_heredoc(t_cmd *cmd);
+int		unlink_heredoc(t_cmd *cmd);
 
 #endif

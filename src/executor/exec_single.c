@@ -2,7 +2,8 @@
 
 void	exec_single_cmd(t_cmd *cmd, t_shell *shell)
 {
-	if (open_files(cmd->start))
+	run_heredoc(cmd);
+	if (open_files(cmd))
 		open_in_out(cmd);
 	else
 		return ;
@@ -23,4 +24,5 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell)
 			close(cmd->fd[OUT]);
 		shell->pid = wait_children(shell, 1);
 	}
+	unlink_heredoc(cmd);
 }
