@@ -39,12 +39,18 @@ void	builtin_export(char **args, t_env **env)
 }
 
 /* Checks for an arg coming in without value OR (=)
---> if 1, export should return */
+--> if 1, and key is valid, export should just return */
 int	export_isequal(char *arg)
 {
 	int		i;
 
 	i = -1;
+	if (!key_validity_check(split_env_key(arg)))
+	{
+		ft_putstr_fd("Minishell: export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
+	}
 	while (arg[++i])
 	{
 		if (arg[i] == '=')
@@ -55,12 +61,7 @@ int	export_isequal(char *arg)
 				return (0);
 		}
 	}
-	if (!key_validity_check(split_env_key(arg)))
-	{
-		ft_putstr_fd("Minishell: export: `", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putendl_fd("': not a valid identifier", 2);
-	}
+	g_stat = 1;
 	return (1);
 }
 

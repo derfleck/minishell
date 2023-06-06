@@ -54,13 +54,13 @@ char	*expand_home(char *input, t_env **head, char *tilde)
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free(pre);
-	free(post);
-	free(input);
+	free_ptr(pre);
+	free_ptr(post);
+	free_ptr(input);
 	return (new_str);
 }
 
-/* Receives input and dollarsign pos as char* 
+/* Receives input and dollarsign position as char* 
 object: excise dollarsign and key, replace with empty str ("") */
 char	*remove_var_reference(char *input, char *dollar)
 {
