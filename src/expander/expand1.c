@@ -49,7 +49,7 @@ char	*kill_quotes(char *expanded)
 		{
 			end = i + return_quote_len(&expanded[i], expanded[i]);
 			str = remove_quotes(expanded, i, end);
-			i = end;
+			i = end + 1;
 		}
 	}
 	// free(expanded);
@@ -101,9 +101,7 @@ char	*expand_parts(char *input, t_env **head, int start, int end)
 		if (input[i] == '$')
 			input = replace_string(input, head, &input[i]);
 	}
-	if (!new || new[0] == '\0')
-		return (input);
-	return (new);
+	return (input);
 }
 
 /* Removes quotes (at positions start and end) from an incoming string,
@@ -126,7 +124,6 @@ char	*remove_quotes(char *input, int start, int end)
 	new = ft_strjoin(new, post);
 	if (!new)
 		perror_exit("Malloc failed\n");
-	free(input);
 	free(post);
 	return (new);
 }

@@ -40,7 +40,7 @@ t_env	*create_node(char *str)
 
 	if (!str)
 		return (NULL);
-	temp = malloc (sizeof (t_env *));
+	temp = malloc (sizeof (t_env));
 	if (!temp)
 		perror_exit("Malloc failed\n");
 	temp->key_value = ft_strdup(str);

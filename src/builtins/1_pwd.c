@@ -10,8 +10,8 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 		builtin_pwd();
 	else if (ft_strcmp(cmd->cmd, "env"))
 		print_env(env);
-	else if (ft_strcmp(cmd->cmd, "test env"))
-		env_tester("USER", env);
+	else if (ft_strcmp(cmd->cmd, "exit"))
+		builtin_exit(cmd->arg, env, PARENT);
 	else if (!ft_strncmp(cmd->cmd, "cd", 2))
 		builtin_cd(cmd->arg, env);
 	else if (!ft_strncmp(cmd->cmd, "export", 6))
