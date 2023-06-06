@@ -7,7 +7,7 @@ static t_lexer	*new_lexer_list(char **cmd, int i)
 	t_lexer	*lex;
 
 	j = 0;
-	lex = ft_calloc(sizeof(t_lexer), i);
+	lex = ft_calloc(i, sizeof(t_lexer));
 	if (!lex)
 		return (NULL);
 	while (cmd[j])

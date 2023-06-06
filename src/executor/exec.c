@@ -18,6 +18,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell)
 		}
 		if (execve(tmp, cmd->arg, shell->envp) == -1)
 			perror("execve");
+		free(tmp);
 	}
 	else
 	{
@@ -32,8 +33,6 @@ t_shell	*init_shell(t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
-	//if (!open_files(cmd->start))
-	//	return (NULL);
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
 		return (NULL);
@@ -50,5 +49,7 @@ t_shell	*init_shell(t_cmd *cmd, t_env **head)
 	}
 	else
 		exec_single_cmd(cmd, shell);
+	cmd->start = free_lex(cmd->start);
+	cmd = free_cmd(cmd);
 	return (shell);
 }

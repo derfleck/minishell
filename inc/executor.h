@@ -28,8 +28,8 @@ t_shell	*init_shell(t_cmd *cmd, t_env **head);
 //utils
 void	*safe_free(void	*ptr);
 pid_t   *wait_children(t_shell *shell, int cmd);
-void	free_cmd(t_cmd *cmd);
-void	free_lex(t_lexer *lex);
+t_cmd	*free_cmd(t_cmd *cmd);
+t_lexer	*free_lex(t_lexer *lex);
 
 //open check
 int		open_files(t_cmd *cmd);

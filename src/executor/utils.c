@@ -29,35 +29,61 @@ pid_t   *wait_children(t_shell *shell, int cmd)
 }
 
 //frees t_cmd struct, checks if values exist before freeing
+t_cmd	*free_cmd(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+
+	tmp = cmd;
+	if (tmp && tmp->start != NULL)
+		free_lex(tmp->start);
+	while (tmp)
+	{
+		if (tmp->arg != NULL)
+			tmp->arg = safe_free(tmp->arg);
+		if (tmp->here != NULL)
+			tmp->here = safe_free(tmp->here);
+		tmp = tmp->next;
+	}
+	return (safe_free(cmd));
+}
+/*
 void	free_cmd(t_cmd *cmd)
 {
 	int		i;
+	t_cmd	*tmp;
 
-	i = 0;
-	if (cmd->cmd)
-		cmd = safe_free(cmd->cmd);
-	while(i < cmd->num[ARG])
-		free(cmd->arg[i++]);
-	i = 0;
-	while(i < cmd->num[HERE])
-		free(cmd->here[i++]);
-	if (cmd->arg)
-		cmd->arg = safe_free(cmd->arg);
-	if (cmd->here)
-		cmd->here = safe_free(cmd->here);
+	tmp = cmd;
+	while (tmp)
+	{
+		i = -1;
+		if (tmp->cmd != NULL)
+			tmp->cmd = safe_free(tmp->cmd);
+		while(tmp->arg[++i] != NULL)
+			free(tmp->arg[i]);
+		i = -1;
+		while(tmp->here[++i] != NULL)
+			free(tmp->here[i]);
+		if (tmp->arg != NULL)
+			tmp->arg = safe_free(tmp->arg);
+		if (tmp->here != NULL)
+			tmp->here = safe_free(tmp->here);
+		tmp = tmp->next;
+	}
+	free(cmd);
 }
+*/
 
 //frees lexer list node by node
-void	free_lex(t_lexer *lex)
+t_lexer	*free_lex(t_lexer *lex)
 {
 	t_lexer	*tmp;
 
 	tmp = lex;
 	while (tmp)
 	{
-		if (tmp->str)
-			free(tmp->str);
-		tmp = lex->next;
-		free(lex);		
+		if (tmp->str != NULL)
+			tmp->str = safe_free(tmp->str);
+		tmp = tmp->next;		
 	}
+	return (safe_free(lex));
 }
