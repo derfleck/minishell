@@ -2,7 +2,7 @@
 
 /* Checks the first arg of the input for the correct command and sends
 the rest of the args towards the right builtin */
-void	builtin_pathfinder(t_env **env, t_cmd *cmd)
+void	builtin_pathfinder(t_env *env, t_cmd *cmd)
 {
 	char	**args;
 

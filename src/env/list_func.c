@@ -1,16 +1,16 @@
 #include "../../inc/minishell.h"
 /* appends list by adding a node to the end of the list */
-void	add_node_to_list(t_env **head, t_env *new)
+void	add_node_to_list(t_env *head, t_env *new)
 {
 	t_env	*end;
 
 	if (head)
 	{
-		if (*head == NULL)
-			*head = new;
+		if (head == NULL)
+			head = new;
 		else
 		{
-			end = returnlast_env(*head);
+			end = returnlast_env(head);
 			end->next = new;
 		}
 	}
@@ -33,13 +33,13 @@ t_env	*returnlast_env(t_env *lst)
 
 /* finds and returns env node based on key string received. 
 If not found, or no env list, it returns NULL */
-t_env	*find_env_node(t_env **head, char *key)
+t_env	*find_env_node(t_env *head, char *key)
 {
 	t_env	*node;
 
-	if (*head == NULL)
+	if (head == NULL)
 		return (NULL);
-	node = *head;
+	node = head;
 	while (node)
 	{
 		if (ft_strlen(key) == ft_strlen(split_env_key(node->key_value)))
