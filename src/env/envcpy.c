@@ -76,6 +76,7 @@ void	print_env(t_env **env)
 	node = *env;
 	while (node != NULL)
 	{
+		//ft_putendl_fd(node->key_value, STDOUT_FILENO);
 		printf("%s\n", node->key_value);
 		node = node->next;
 	}

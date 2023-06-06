@@ -32,12 +32,17 @@ char	*prompt_line(void)
 char	*get_input()
 {
 	char	*line;
+	char	*prompt;
 
-	line = readline(prompt_line());
+	prompt = prompt_line();
+	if (prompt == NULL)
+		return (ft_strdup("exit"));
+	line = readline(prompt);
 	if (line == NULL)
 		return (ft_strdup("exit"));
 	else if (line[0] == 0)
-		return (safe_free(line));
+		return (safe_free(line), safe_free(prompt));
+	prompt = safe_free(prompt);
 	return (line);
 }
 
@@ -54,18 +59,15 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_sigaction(PARENT);
-		//s = readline(prompt_line());
 		s = get_input();
 		if (s == NULL)
 			continue ;
-		//if (s == NULL)
-		//	return (write(2, "exit\n", 5));
 		lex = start_lexer(s);
 		add_history(s);
 		if (lex)
 			cmd = create_parse_list(lex);
-		if (cmd)
-			builtin_pathfinder(&env, cmd);
+		if (cmd != NULL && env != NULL)
+			init_shell(cmd, &env);
 	}
 	return (0);
 }

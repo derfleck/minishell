@@ -2,6 +2,8 @@
 
 /* Checks the first arg of the input for the correct command and sends
 the rest of the args towards the right builtin */
+//commented out for now, currently not needed
+/*
 void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 {
 	char	**args;
@@ -28,6 +30,7 @@ void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 	else
 		return ;
 }
+*/
 
 /* gets the current working directory and prints it on the screen */
 void	builtin_pwd(void)
