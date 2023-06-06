@@ -51,5 +51,5 @@ t_shell	*init_shell(t_cmd *cmd, t_env **head)
 		exec_single_cmd(cmd, shell);
 	cmd->start = free_lex(cmd->start);
 	cmd = free_cmd(cmd);
-	return (shell);
+	return (safe_free(shell));
 }

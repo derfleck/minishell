@@ -1,7 +1,5 @@
 #include "../../inc/minishell.h"
 
-//pid_t   *create_children()
-
 //this function ensures that the value of the pointer is overwritten with NULL after freeing it
 void	*safe_free(void	*ptr)
 {
@@ -11,6 +9,7 @@ void	*safe_free(void	*ptr)
 }
 
 //waits for children to exit and sets status code
+//frees pid_t struct for all created processes
 pid_t   *wait_children(t_shell *shell, int cmd)
 {
 	int	i;
@@ -24,8 +23,15 @@ pid_t   *wait_children(t_shell *shell, int cmd)
 	}
 	if (WIFEXITED(shell->wstatus))
 		g_stat = WEXITSTATUS(shell->wstatus);
-	shell->pid = safe_free(shell->pid);
-	return (shell->pid);
+	i = 0;
+	while (shell->envp[i])
+		free(shell->envp[i++]);
+	i = 0;
+	while (shell->paths[i])
+		free(shell->paths[i++]);
+	shell->envp = safe_free(shell->envp);
+	shell->paths = safe_free(shell->paths);
+	return (safe_free(shell->pid));
 }
 
 //frees t_cmd struct, checks if values exist before freeing
@@ -46,32 +52,6 @@ t_cmd	*free_cmd(t_cmd *cmd)
 	}
 	return (safe_free(cmd));
 }
-/*
-void	free_cmd(t_cmd *cmd)
-{
-	int		i;
-	t_cmd	*tmp;
-
-	tmp = cmd;
-	while (tmp)
-	{
-		i = -1;
-		if (tmp->cmd != NULL)
-			tmp->cmd = safe_free(tmp->cmd);
-		while(tmp->arg[++i] != NULL)
-			free(tmp->arg[i]);
-		i = -1;
-		while(tmp->here[++i] != NULL)
-			free(tmp->here[i]);
-		if (tmp->arg != NULL)
-			tmp->arg = safe_free(tmp->arg);
-		if (tmp->here != NULL)
-			tmp->here = safe_free(tmp->here);
-		tmp = tmp->next;
-	}
-	free(cmd);
-}
-*/
 
 //frees lexer list node by node
 t_lexer	*free_lex(t_lexer *lex)
