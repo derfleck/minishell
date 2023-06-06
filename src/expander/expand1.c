@@ -1,5 +1,8 @@
 #include "../../inc/minishell.h"
 
+//TODO: -if element after $sign is invalid for key, that should be excised and the rest kept. 
+//TODO: echo 'jj'"o" invalid pointer!!! check this next
+
 /* Makes sure expander can handle all incoming strings */
 char	**expander_start(char **args, t_env **head)
 {
@@ -89,7 +92,6 @@ char	*deal_with_quotes(char *input, t_env **head)
 /* Checks if expansion is needed for the quoted part of the strings. */
 char	*expand_parts(char *input, t_env **head, int start, int end)
 {
-	char	*new;
 	int		i;
 
 	(void)end;
@@ -97,14 +99,15 @@ char	*expand_parts(char *input, t_env **head, int start, int end)
 	while (input[++i])
 	{
 		if (input[i] == '$')
-			new = replace_string(input, head, &input[i]);
+			input = replace_string(input, head, &input[i]);
 	}
 	if (!new || new[0] == '\0')
 		return (input);
 	return (new);
 }
 
-/* Removes quotes from an incoming string, sends new string back */
+/* Removes quotes (at positions start and end) from an incoming string,
+ sends new string back */
 char	*remove_quotes(char *input, int start, int end)
 {
 	char	*new;

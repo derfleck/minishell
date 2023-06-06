@@ -1,10 +1,17 @@
 #include "../../inc/minishell.h"
 
+// do we need env here?
 void	builtin_echo(char **args, t_env **head)
 {
 	int	flag;
 	int	i;
 
+	if (!args[0])
+	{
+		write(1, "\n", 1);
+		g_stat = 0;
+		return ;
+	}
 	(void)head;
 	i = -1;
 	flag = look_for_nflag(args[0]);
