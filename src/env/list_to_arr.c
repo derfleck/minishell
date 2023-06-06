@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 
 /* Counts list size, allocates and fills in new array to be returned */
-char	**create_env_arr(t_env **head)
+char	**create_env_arr(t_env *head)
 {
 	int		size;
 	char	**env_arr;
@@ -15,14 +15,14 @@ char	**create_env_arr(t_env **head)
 }
 
 /* Copier to add strings to array one by one */
-void	copy_list_to_arr(t_env **head, char **env_arr)
+void	copy_list_to_arr(t_env *head, char **env_arr)
 {
 	t_env	*node;
 	int		i;
 
 	if (!head)
 		return ;
-	node = (*head);
+	node = head;
 	i = 0;
 	while (node)
 	{
@@ -36,7 +36,7 @@ void	copy_list_to_arr(t_env **head, char **env_arr)
 }
 
 /* Counts nodes of list, returns it as int */
-int	return_list_size(t_env **head)
+int	return_list_size(t_env *head)
 {
 	t_env	*node;
 	int		i;
@@ -44,7 +44,7 @@ int	return_list_size(t_env **head)
 	if (!head)
 		return (0);
 	i = 0;
-	node = (*head);
+	node = head;
 	while (node)
 	{
 		i++;

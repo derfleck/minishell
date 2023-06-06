@@ -2,7 +2,7 @@
 
 /* removes node - used for builtin UNSET 
 TODO: if head id removed, I get a segfault!!!! */
-void	remove_node(t_env **head, char *key)
+void	remove_node(t_env *head, char *key)
 {
 	t_env	*temp;
 	t_env	*prev;
@@ -10,7 +10,7 @@ void	remove_node(t_env **head, char *key)
 	if (head == NULL || !key)
 		return ;
 	prev = NULL;
-	temp = *head;
+	temp = head;
 	while (ft_strncmp(key, split_env_key(temp->key_value), ft_strlen(key)))
 	{
 		prev = temp;
@@ -19,7 +19,7 @@ void	remove_node(t_env **head, char *key)
 	if (temp == NULL)
 		return ;
 	if (prev == NULL)
-		(*head) = (*head)->next;
+		head = head->next;
 	else
 		prev->next = temp->next;
 	free_ptr(temp->key_value);
