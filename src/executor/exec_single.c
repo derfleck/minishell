@@ -8,6 +8,7 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell)
 	else
 		return ;
 	shell->pid[0] = fork();
+	set_sigaction(shell->pid[0]);
 	if (shell->pid[0] == CHILD)
 	{
 		if (dup2(cmd->fd[IN], STDIN_FILENO) == -1)

@@ -51,6 +51,7 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 			return (0);
 	}
 	shell->pid[i] = fork();
+	set_sigaction(shell->pid[i]);
 	if (shell->pid[i] < 0)
 		return (0);
 	if (shell->pid[i] == CHILD)
