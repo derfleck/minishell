@@ -59,7 +59,7 @@ int	return_key_len(char *str)
 
 /* Check if string after dollarsign is a valid env var and
 returns the value if found. Returns NULL if not found or no key  */
-char	*check_key_exist(t_env **head, char *i)
+char	*check_key_exist(t_env *head, char *i)
 {	
 	char	*key;
 	t_env	*node;

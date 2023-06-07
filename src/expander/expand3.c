@@ -38,7 +38,7 @@ char	*return_post_str(char *key_end)
 }
 
 /* Creates new HOME env node in case HOME was unset. */
-t_env	*create_home(char *str, t_env **head)
+t_env	*create_home(char *str, t_env *head)
 {
 	t_env	*node;
 

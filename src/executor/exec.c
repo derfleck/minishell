@@ -8,6 +8,7 @@ static int	is_builtin(t_cmd *cmd)
 		ft_strncmp(cmd->cmd, "cd", 2) == 0 || \
 		ft_strncmp(cmd->cmd, "export", 6) == 0 || \
 		ft_strncmp(cmd->cmd, "unset", 5) == 0 || \
+		ft_strncmp(cmd->cmd, "exit", 4) == 0 || \
 		ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		return (1);
 	else
@@ -15,7 +16,7 @@ static int	is_builtin(t_cmd *cmd)
 }
 
 //TODO: set correct status code
-static void	mini_pathfinder(t_cmd *cmd, t_env **env)
+static void	mini_pathfinder(t_cmd *cmd, t_env *env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
 		builtin_pwd();
@@ -29,11 +30,14 @@ static void	mini_pathfinder(t_cmd *cmd, t_env **env)
 		builtin_unset(&cmd->arg[1], env);
 	else if(ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		builtin_echo(&cmd->arg[1], env);
-	exit(0);
+	else if(ft_strncmp(cmd->cmd, "exit", 4) == 0)
+		builtin_exit(&cmd->arg[1], env, mode);
+	if (mode == CHILD)
+		exit(0);
 }
 
 //checks if command path is absolute or relative
-void	execute_cmd(t_cmd *cmd, t_shell *shell)
+void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 {
 	char	*tmp;
 
@@ -55,7 +59,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell)
 	else
 	{
 		if (is_builtin(cmd))
-			mini_pathfinder(cmd, shell->env);
+			mini_pathfinder(cmd, shell->env, mode);
 		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("execve");
 	}
@@ -63,7 +67,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell)
 
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
-t_shell	*init_shell(t_cmd *cmd, t_env **head)
+t_shell	*init_shell(t_cmd *cmd, t_env *head)
 {
 	t_shell	*shell;
 

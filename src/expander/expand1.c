@@ -4,7 +4,7 @@
 //TODO: echo 'jj'"o" invalid pointer!!! check this next
 
 /* Makes sure expander can handle all incoming strings */
-char	**expander_start(char **args, t_env **head)
+char	**expander_start(char **args, t_env *head)
 {
 	int	i;
 
@@ -20,7 +20,7 @@ char	**expander_start(char **args, t_env **head)
 }
 
 /* deals with each incoming arg from expander_start one by one */
-char	*expander(char *input, t_env **head)
+char	*expander(char *input, t_env *head)
 {
 	char	*new;
 
@@ -61,7 +61,7 @@ iterates through it to find first occurence.
 if single: just continues.
 if double: sends inner str for expansion check.
 Then continues */
-char	*deal_with_quotes(char *input, t_env **head)
+char	*deal_with_quotes(char *input, t_env *head)
 {
 	int		i;
 	int		end;
@@ -90,7 +90,7 @@ char	*deal_with_quotes(char *input, t_env **head)
 }
 
 /* Checks if expansion is needed for the quoted part of the strings. */
-char	*expand_parts(char *input, t_env **head, int start, int end)
+char	*expand_parts(char *input, t_env *head, int start, int end)
 {
 	int		i;
 
@@ -175,7 +175,7 @@ int	found_quotes(char *input)
 }
 
 /* Checks incoming str if expansion is needed  */
-char	*do_expansion(char *input, t_env **head)
+char	*do_expansion(char *input, t_env *head)
 {
 	int	i;
 

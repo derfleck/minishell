@@ -38,7 +38,7 @@ int	child_redir(int *pip, t_cmd *cmd, t_shell *shell)
 	if (cmd->out != NULL)
 		close(cmd->fd[OUT]);
 	close(shell->stdin_cpy);
-	execute_cmd(cmd, shell);
+	execute_cmd(cmd, shell, CHILD);
 	return (1);
 }
 

@@ -13,7 +13,7 @@ typedef struct s_shell
 	char	**envp;
 	char	**paths;
 	int		stdin_cpy;
-	t_env	**env;
+	t_env	*env;
 }	t_shell;
 
 //exec multiple
@@ -23,7 +23,7 @@ int		child_redir(int *pip, t_cmd *cmd, t_shell *shell);
 int		parent_redir(int *pip, t_cmd *cmd);
 
 //exec
-void	execute_cmd(t_cmd *cmd, t_shell *shell);
+void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode);
 t_shell	*init_shell(t_cmd *cmd, t_env *head);
 
 //utils
