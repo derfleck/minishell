@@ -21,14 +21,15 @@ typedef enum s_fd {
 typedef struct s_cmd {
 	char			*cmd;
 	char			**arg;
-	int				num[3];
+	char			**here;
+	char			*here_file;
 	t_lexer			*in;
 	t_lexer			*out;
-	char			**here;
-	struct s_cmd	*next;
 	t_lexer			*start;
+	int				num[3];
 	int				fd[2];
 	int				i;
+	struct s_cmd	*next;
 }	t_cmd;
 
 //init functions for parser

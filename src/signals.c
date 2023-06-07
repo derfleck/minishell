@@ -10,7 +10,7 @@ void	handle_ctrlc(int signum)
 		write(2, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		rl_redisplay();
+		//rl_redisplay();
 	}
 }
 
@@ -37,14 +37,14 @@ For this we need to keep track what's going on -> id them or use pid? */
 void	set_sigaction(int i)
 
 {
-	if (i == PARENT)
-	{
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, handle_ctrlc);
-	}
 	if (i == CHILD)
 	{
 		signal(SIGINT, handle_signals_child);
 		signal(SIGQUIT, handle_signals_child);
+	}
+	else if (i > CHILD)
+	{
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, handle_ctrlc);
 	}
 }

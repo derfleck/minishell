@@ -15,14 +15,14 @@ static int	try_open(t_lexer *lex)
 {
 	int fd;
 
-	fd = 0;
+	fd = -2;
 	if (lex->token == LESS && lex->next)
 		fd = open(lex->next->str, O_RDONLY);
 	else if (lex->token == GREAT && lex->next)
-		fd = open(lex->next->str, O_CREAT | O_WRONLY | O_TRUNC);
+		fd = open(lex->next->str, O_CREAT | O_WRONLY | O_TRUNC, 0664);
 	else if (lex->token == GREAT_GREAT && lex->next)
-		fd = open(lex->next->str, O_CREAT | O_APPEND);
-	if (fd)
+		fd = open(lex->next->str, O_CREAT | O_APPEND, 0644);
+	if (fd >= 0)
 		close(fd);
 	return (fd);
 }
@@ -31,11 +31,12 @@ static int	try_open(t_lexer *lex)
 //throws an error on first input file that can't be opened (in order)
 //creates files which don't exist yet for output
 //returns 1 on success, 0 on error, stops at error in list
-int	open_files(t_lexer *lex)
+//TODO: add heredoc unlink if opening fails
+int		open_files(t_cmd *cmd)
 {
 	t_lexer *tmp;
 
-	tmp = lex;
+	tmp = cmd->start;
 	while (tmp && tmp->token != PIPE)
 	{
 		while (tmp && !is_redir(tmp))
@@ -55,21 +56,24 @@ int	open_files(t_lexer *lex)
 //opens last in and out files and assigns fd to cmd struct
 void	open_in_out(t_cmd *cmd)
 {
+	char *filename;
+
+	filename = NULL;
 	if (cmd->in != NULL)
 	{
 		if (cmd->in->token == LESS)
 			cmd->fd[IN] = open(cmd->in->next->str, O_RDONLY);
 		else if (cmd->in->token == LESS_LESS)
-			cmd->fd[IN] = start_heredoc(cmd);
+			cmd->fd[IN] = open(cmd->here_file, O_RDONLY);
 		else
 			cmd->fd[IN] = STDIN_FILENO;
 	}
 	if (cmd->out != NULL)
 	{
 		if (cmd->out->token == GREAT)
-			cmd->fd[OUT] = open(cmd->out->next->str, O_CREAT | O_WRONLY | O_TRUNC);
-		else if (cmd->in->token == GREAT_GREAT)
-			cmd->fd[OUT] = open(cmd->out->next->str, O_CREAT | O_APPEND);
+			cmd->fd[OUT] = open(cmd->out->next->str, O_WRONLY | O_TRUNC, 0644);
+		else if (cmd->out->token == GREAT_GREAT)
+			cmd->fd[OUT] = open(cmd->out->next->str, O_WRONLY | O_APPEND, 0644);
 		else
 			cmd->fd[OUT] = STDOUT_FILENO;
 	}
