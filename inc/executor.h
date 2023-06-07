@@ -24,7 +24,7 @@ int		parent_redir(int *pip, t_cmd *cmd);
 
 //exec
 void	execute_cmd(t_cmd *cmd, t_shell *shell);
-t_shell	*init_shell(t_cmd *cmd, t_env **head);
+t_shell	*init_shell(t_cmd *cmd, t_env *head);
 
 //utils
 void	*safe_free(void	*ptr);

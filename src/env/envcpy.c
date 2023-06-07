@@ -14,7 +14,7 @@ t_env	*init_env(char **envp)
 	t_env	*head;
 
 	size = get_list_size(envp);
-	head = malloc (sizeof (t_env *));
+	head = malloc (sizeof (t_env));
 	if (!head)
 		perror_exit("Malloc failed\n");
 	i = 0;
@@ -28,7 +28,7 @@ t_env	*init_env(char **envp)
 		perror_exit("Malloc failed\n");
 	head->next = NULL;
 	while (i < size)
-		add_node_to_list(&head, create_node(envp[i++]));
+		add_node_to_list(head, create_node(envp[i++]));
 	return (head);
 }
 
@@ -40,7 +40,7 @@ t_env	*create_node(char *str)
 
 	if (!str)
 		return (NULL);
-	temp = malloc (sizeof (t_env *));
+	temp = malloc (sizeof (t_env));
 	if (!temp)
 		perror_exit("Malloc failed\n");
 	temp->key_value = ft_strdup(str);
@@ -69,11 +69,11 @@ int	get_list_size(char **envp)
 }
 
 /* prints the environment line by line */
-void	print_env(t_env **env)
+void	print_env(t_env *env)
 {
 	t_env	*node;
 
-	node = *env;
+	node = env;
 	while (node != NULL)
 	{
 		//ft_putendl_fd(node->key_value, STDOUT_FILENO);

@@ -2,7 +2,7 @@
 
 /* removes node - used for builtin UNSET 
 TODO: if head id removed, I get a segfault!!!! */
-void	remove_node(t_env **head, char *key)
+void	remove_node(t_env *head, char *key)
 {
 	t_env	*temp;
 	t_env	*prev;
@@ -10,7 +10,7 @@ void	remove_node(t_env **head, char *key)
 	if (head == NULL || !key)
 		return ;
 	prev = NULL;
-	temp = *head;
+	temp = head;
 	while (ft_strncmp(key, split_env_key(temp->key_value), ft_strlen(key)))
 	{
 		prev = temp;
@@ -19,7 +19,7 @@ void	remove_node(t_env **head, char *key)
 	if (temp == NULL)
 		return ;
 	if (prev == NULL)
-		(*head) = (*head)->next;
+		head = head->next;
 	else
 		prev->next = temp->next;
 	free_ptr(temp->key_value);
@@ -27,7 +27,7 @@ void	remove_node(t_env **head, char *key)
 }
 
 /* Allow only alphanumericals and the '_' in the key received.
-If true, it returns 1. If false, it returns 0. Also returns 0 if key is only nrs.
+If true, it returns 1. If false, it returns 0. Also returns 0 if key is only nrs OR starts with digit.
 If the last element before the null is +, returns -1 (important for export) */
 int	key_validity_check(char *key)
 {
@@ -38,6 +38,8 @@ int	key_validity_check(char *key)
 	i = -1;
 	nrs = 0;
 	len = ft_strlen(key) - 1;
+	if (ft_isnum((int)key[0]))
+		return (0);
 	while (key[++i])
 	{
 		if (!ft_isalnum(key[i]) && key[i] != '_')

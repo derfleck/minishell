@@ -26,6 +26,10 @@ int	return_key_len(char *str)
 	int	len;
 
 	len = 0;
+	if (!str)
+		return (0);
+	if (ft_isnum(str[0]) || (!ft_isalnum(str[0]) && str[0] != '_'))
+		return (1);
 	while (ft_isalnum(str[len]) || str[len] == '_' || \
 	str[len] == '(' || str[len] == ')')
 		len++;
@@ -61,7 +65,7 @@ char	*check_key_exist(t_env **head, char *i)
 	t_env	*node;
 
 	key = return_key(i);
-	if (!key)
+	if (!key || ft_isnum(key[0]))
 		return (NULL);
 	node = find_env_node(head, key);
 	if (!node)

@@ -1,5 +1,8 @@
 #include "../../inc/minishell.h"
 
+//TODO: -if element after $sign is invalid for key, that should be excised and the rest kept. 
+//TODO: echo 'jj'"o" invalid pointer!!! check this next
+
 /* Makes sure expander can handle all incoming strings */
 char	**expander_start(char **args, t_env **head)
 {
@@ -24,49 +27,71 @@ char	*expander(char *input, t_env **head)
 	if (!input || !head)
 		return (NULL);
 	if (found_quotes(input))
+	{
 		new = deal_with_quotes(input, head);
+		new = kill_quotes(new);
+	}
 	else
 		new = do_expansion(input, head);
 	return (new);
 }
 
+char	*kill_quotes(char *expanded)
+{
+	char	*str;
+	int		i;
+	int		end;
+
+	i = -1;
+	while (expanded[++i])
+	{
+		if (expanded[i] == '"' || expanded[i] == '\'')
+		{
+			end = i + return_quote_len(&expanded[i], expanded[i]);
+			str = remove_quotes(expanded, i, end);
+			i = end + 1;
+		}
+	}
+	// free(expanded);
+	return (str);
+}
+
 /* gets string with surely a quote in it.
 iterates through it to find first occurence.
-if single - removes them and continues.
-if double: removes them and sends inner str for expansion check.
+if single: just continues.
+if double: sends inner str for expansion check.
 Then continues */
 char	*deal_with_quotes(char *input, t_env **head)
 {
 	int		i;
 	int		end;
+	char	*check;
+	char	*post;
 
+	check = ft_strdup(input);
 	i = -1;
-	while (input[++i])
+	while (check[++i])
 	{
-		if (input[i] == '\'')
+		if (check[i] == '\'')
+			i += return_quote_len(&check[i], check[i]);
+		else if (check[i] == '"') //need to expand!! NOT WORKING
 		{
-			end = i + return_quote_len(&input[i], input[i]);
-			input = remove_quotes(input, i, end);
-			i = end;
+			end = i + return_quote_len(&check[i], check[i]);
+			post = return_post_str(&check[end]);
+			check = expand_parts(check, head, i, end);
+			check = ft_strjoin(check, post);
+			i = (int)ft_strlen(check);
 		}
-		else if (input[i] == '"')
-		{
-			end = i + return_quote_len(&input[i], input[i]);
-			input = remove_quotes(input, i, end);
-			input = expand_parts(input, head, i, end - 2);
-			//save the leftoverstr ?? then do it and return here? cause i is untrackable...
-			i = end; //not true if expanded. TODO!
-		}
-		else if (input[i] == '$' || input[i] == '~')
-			input = replace_string(input, head, &input[i]);
+		else if (check[i] == '$' || check[i] == '~')
+			check = replace_string(check, head, &check[i]);
 	}
-	return (input);
+	free (input);
+	return (check);
 }
 
 /* Checks if expansion is needed for the quoted part of the strings. */
 char	*expand_parts(char *input, t_env **head, int start, int end)
 {
-	char	*new;
 	int		i;
 
 	(void)end;
@@ -74,13 +99,13 @@ char	*expand_parts(char *input, t_env **head, int start, int end)
 	while (input[++i])
 	{
 		if (input[i] == '$')
-			new = replace_string(input, head, &input[i]);
+			input = replace_string(input, head, &input[i]);
 	}
-	free(input);
-	return (new);
+	return (input);
 }
 
-/* Removes quotes from an incoming string, sends new string back */
+/* Removes quotes (at positions start and end) from an incoming string,
+ sends new string back */
 char	*remove_quotes(char *input, int start, int end)
 {
 	char	*new;
@@ -95,11 +120,10 @@ char	*remove_quotes(char *input, int start, int end)
 	if (!new)
 		perror_exit("Malloc failed\n");
 	free(pre);
-	post = return_post_str(&input[end -1]);
+	post = return_post_str(&input[end]);
 	new = ft_strjoin(new, post);
 	if (!new)
 		perror_exit("Malloc failed\n");
-	free(input);
 	free(post);
 	return (new);
 }
@@ -110,7 +134,7 @@ char	*create_quote_free_str(char *input, int start, int end)
 	char	*new;
 	char	*quoted_str;
 
-	quoted_str = ft_substr(input, start, (size_t)end - start);
+	quoted_str = ft_substr(input, start, (size_t)end - start + 1);
 	if (!quoted_str)
 		perror_exit("Malloc failed\n");
 	new = ft_strtrim(quoted_str, "'\"");

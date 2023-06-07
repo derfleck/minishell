@@ -2,7 +2,7 @@
 
 /* changes the current working directory and updates env */
 //TODO check how args come in from parser
-void	builtin_cd(char **args, t_env **env)
+void	builtin_cd(char **args, t_env *env)
 {
 	char	*oldpath;
 	int		argc;
@@ -28,7 +28,7 @@ void	builtin_cd(char **args, t_env **env)
 }
 
 /* Helper for cd to change working directory to HOME based on env */
-void	cd_go_home(t_env **env, char *str)
+void	cd_go_home(t_env *env, char *str)
 {
 	char	*home;
 	t_env	*node;
@@ -40,7 +40,7 @@ void	cd_go_home(t_env **env, char *str)
 }
 
 /* updates env variables PWD and OLDPWD after cd was called */
-void	update_pwds(t_env **env, char *oldpath)
+void	update_pwds(t_env *env, char *oldpath)
 {
 	t_env	*node1;
 	t_env	*node2;

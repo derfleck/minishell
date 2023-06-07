@@ -4,7 +4,7 @@
 node in env, if not found it creates it. If found, it replaces
 value with new value or nothing if nothing is specified
 TODO: if no args?? declare -x $(env_var) shit */
-void	builtin_export(char **args, t_env **env)
+void	builtin_export(char **args, t_env *env)
 {
 	t_env	*node;
 	char	*key;
@@ -39,12 +39,18 @@ void	builtin_export(char **args, t_env **env)
 }
 
 /* Checks for an arg coming in without value OR (=)
---> if 1, export should return */
+--> if 1, and key is valid, export should just return */
 int	export_isequal(char *arg)
 {
 	int		i;
 
 	i = -1;
+	if (!key_validity_check(split_env_key(arg)))
+	{
+		ft_putstr_fd("Minishell: export: `", 2);
+		ft_putstr_fd(arg, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
+	}
 	while (arg[++i])
 	{
 		if (arg[i] == '=')
@@ -55,19 +61,14 @@ int	export_isequal(char *arg)
 				return (0);
 		}
 	}
-	if (!key_validity_check(split_env_key(arg)))
-	{
-		ft_putstr_fd("Minishell: export: `", 2);
-		ft_putstr_fd(arg, 2);
-		ft_putendl_fd("': not a valid identifier", 2);
-	}
+	g_stat = 1;
 	return (1);
 }
 
 /* Helper for export: in case of an arg like this: XXX+=555
 where '+' is accepted as appending the string if exists - or
 creating XXX=555 as new env variable */
-void	export_append_helper(char *key, char *str, t_env **env)
+void	export_append_helper(char *key, char *str, t_env *env)
 {
 	char	*realkey;
 	t_env	*node;
@@ -93,7 +94,7 @@ writes bash: unset: `STR': not a valid identifier if not found
 Unsetting a variable or function that was not previously set
 shall not be considered an error and does not cause the shell to abort.
 TODO: multiple KEYs to unset in one command */
-void	builtin_unset(char **args, t_env **env)
+void	builtin_unset(char **args, t_env *env)
 {
 	t_env	*node;
 

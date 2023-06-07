@@ -46,25 +46,25 @@ typedef struct s_env
 t_env		*init_env(char **envp);
 t_env		*create_node(char *str);
 int			get_list_size(char **envp);
-void		print_env(t_env **env);
+void		print_env(t_env *env);
 char		*create_env(void);
-char		**create_env_arr(t_env **head);
-void		copy_list_to_arr(t_env **head, char **env_arr);
-int			return_list_size(t_env **head);
+char		**create_env_arr(t_env *head);
+void		copy_list_to_arr(t_env *head, char **env_arr);
+int			return_list_size(t_env *head);
 
 /* list functions */
 t_env		*returnlast_env(t_env *lst);
-t_env		*find_env_node(t_env **head, char *key);
+t_env		*find_env_node(t_env *head, char *key);
 char		*split_env_value(char *str);
 char		*split_env_key(const char *str);
 void		replace_node_value(t_env *node, char *new_value);
 void		append_node_value(t_env *node, char *value2);
-void		remove_node(t_env **head, char *key);
-void		add_node_to_list(t_env **head, t_env *new);
+void		remove_node(t_env *head, char *key);
+void		add_node_to_list(t_env *head, t_env *new);
 int			key_validity_check(char *key);
 
 /* env tester */
-void		env_tester(char *key, t_env **env);
+void		env_tester(char *key, t_env *env);
 
 /* exit */
 void		*free_ptr(void *ptr);
@@ -75,22 +75,21 @@ int			ft_strcmp(char *s1, char *s2);
 int			ft_isnum(int c);
 
 /* Builtins */
-void		builtin_pathfinder(t_env **env, t_cmd *cmd);
+void		builtin_pathfinder(t_env *env, t_cmd *cmd);
 void		builtin_pwd(void);
 int			helper_get_arg_count(char **args);
-void		builtin_export(char **args, t_env **env);
+void		builtin_export(char **args, t_env *env);
 int			export_isequal(char *arg);
-void		export_append_helper(char *key, char *str, t_env **env);
-void		builtin_unset(char **args, t_env **env);
-void		builtin_cd(char **args, t_env **env);
-void		cd_go_home(t_env **env, char *str);
-void		update_pwds(t_env **env, char *oldpath);
-int			builtin_exit(t_cmd *cmd, t_env **env, int process);
-void		exit_parent(t_env **head, int argc);
-void		*free_env_list(t_env **head);
+void		export_append_helper(char *key, char *str, t_env *env);
+void		builtin_unset(char **args, t_env *env);
+void		builtin_cd(char **args, t_env *env);
+void		cd_go_home(t_env *env, char *str);
+void		update_pwds(t_env *env, char *oldpath);
+int			builtin_exit(char **args, t_env *env, int process);
+void		exit_parent(char **args, t_env *head, int argc);
+void		*free_env_list(t_env *head);
 void		*free_env_node(t_env *node);
-void		builtin_echo(char **args, t_env **head);
-int			look_for_nflag(char *str);
+void		builtin_echo(char **args, t_env *head);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);
