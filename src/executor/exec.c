@@ -28,7 +28,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell)
 
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
-t_shell	*init_shell(t_cmd *cmd, t_env **head)
+t_shell	*init_shell(t_cmd *cmd, t_env *head)
 {
 	t_shell	*shell;
 

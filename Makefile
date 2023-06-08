@@ -18,7 +18,6 @@ SRCSLIST		:=	main.c \
 					env/envcpy.c \
 					env/list_func.c \
 					env/list_func2.c \
-					env/list_func3.c \
 					env/list_to_arr.c \
 					signals.c \
 					builtins/1_pwd.c \
@@ -43,7 +42,9 @@ SRCSLIST		:=	main.c \
 					expander/expand1.c \
 					expander/expand2.c \
 					expander/expand3.c \
-					expander/expand4.c 
+					expander/expand4.c \
+					expander/expand5.c \
+					expander/expand6.c
 										
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/
@@ -80,7 +81,7 @@ ${OBJSDIR}:
 				mkdir -p ${OBJSDIR} ${SUBDIRS}
 
 
-.PHONY:			all clean fclean re
+.PHONY:			all clean fclean re val
 
 all:			${NAME}
 
@@ -93,3 +94,6 @@ fclean:			clean
 				make -C ${LIBFTDIR} fclean
 
 re:				fclean all
+
+val:			re
+	valgrind --leak-check=full --show-leak-kinds=all --suppressions=vg_ignore ./minishell

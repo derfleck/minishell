@@ -1,6 +1,6 @@
 #include "../inc/minishell.h"
 
-void	env_tester(char *key, t_env **env)
+void	env_tester(char *key, t_env *env)
 {
 	t_env	*node;
 	char	*p1;
