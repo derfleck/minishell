@@ -30,43 +30,53 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 
 //starts the heredoc mode, iterates through all stopwords
 //IMPORTANT: should always be started if heredoc stopwords provided
-int	start_heredoc(t_cmd *cmd)
+static char	*start_heredoc(t_cmd *cmd)
 {
 	int		fd;
 	int		i;
 	char	*input;
-	char	*filename;
 	char	*number;
 
 	number = ft_itoa(cmd->i);
-	filename = ft_strjoin("here_", number);
+	cmd->here_file = ft_strjoin("here_", number);
 	i = 0;
 	input = NULL;
-	fd = open(filename, O_CREAT | O_EXCL | O_WRONLY, 0600);
-	free(filename);
+	fd = open(cmd->here_file, O_CREAT | O_RDWR, 0644);
 	free(number);
 	if (fd == -1)
-		return (-1);
+		return (NULL);
 	heredoc_loop(cmd, i, fd, input);
-	return (fd);
+	close(fd);
+	return (cmd->here_file);
 }
 
-/*
-//reads heredoc, closes and writes it to a string and returns it
-char	*read_heredoc(int fd, char *filename)
+//runs heredoc in the beginning for all command groups
+void	run_heredoc(t_cmd *cmd)
 {
-	char	*tmp;
-	char	*out;
+	t_cmd	*tmp;
 
-	out = "";
-	tmp = get_next_line(fd);
+	tmp = cmd;
 	while (tmp)
 	{
-		out = ft_strjoin(out, tmp);
-		tmp = get_next_line(fd);
+		if (tmp->num[HERE] > 0)
+			start_heredoc(tmp);
+		tmp = tmp->next;
 	}
-	if (close(fd) == -1 || unlink(filename) == -1)
-		return (NULL);
-	return (tmp);
 }
-*/
+
+//closes and unlinks temporary heredoc
+//therefore removing it from the disk
+int		unlink_heredoc(t_cmd *cmd)
+{
+	if (cmd->num[HERE] > 0)
+	{
+		if (cmd->fd[IN])
+			close(cmd->fd[IN]);
+		if (unlink(cmd->here_file) == -1)
+		{
+			perror("Error while unlinking");
+			return (0);
+		}
+	}
+	return (1);
+}

@@ -12,6 +12,8 @@ typedef struct s_shell
 	int		wstatus;
 	char	**envp;
 	char	**paths;
+	int		stdin_cpy;
+	t_env	**env;
 }	t_shell;
 
 //exec multiple
@@ -27,15 +29,22 @@ t_shell	*init_shell(t_cmd *cmd, t_env *head);
 //utils
 void	*safe_free(void	*ptr);
 pid_t   *wait_children(t_shell *shell, int cmd);
-void	free_cmd(t_cmd *cmd);
-void	free_lex(t_lexer *lex);
+t_cmd	*free_cmd(t_cmd *cmd);
+t_lexer	*free_lex(t_lexer *lex);
 
 //open check
-int		open_files(t_lexer *lex);
+int		open_files(t_cmd *cmd);
 void	open_in_out(t_cmd *cmd);
 
 //search path
 char	**get_paths(char **envp);
 char    *get_cmd_with_path(t_cmd *cmd, char **path);
+
+//single cmd
+void	exec_single_cmd(t_cmd *cmd, t_shell *shell);
+
+//heredoc
+void	run_heredoc(t_cmd *cmd);
+int		unlink_heredoc(t_cmd *cmd);
 
 #endif

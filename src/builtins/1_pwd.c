@@ -2,7 +2,9 @@
 
 /* Checks the first arg of the input for the correct command and sends
 the rest of the args towards the right builtin */
-void	builtin_pathfinder(t_env *env, t_cmd *cmd)
+//commented out for now, currently not needed
+/*
+void	builtin_pathfinder(t_env **env, t_cmd *cmd)
 {
 	char	**args;
 
@@ -13,23 +15,22 @@ void	builtin_pathfinder(t_env *env, t_cmd *cmd)
 	else if (ft_strcmp(cmd->cmd, "exit"))
 		builtin_exit(cmd->arg, env, PARENT);
 	else if (!ft_strncmp(cmd->cmd, "cd", 2))
-		builtin_cd(cmd->arg, env);
+		builtin_cd(&cmd->arg[1], env);
 	else if (!ft_strncmp(cmd->cmd, "export", 6))
-		builtin_export(cmd->arg, env);
+		builtin_export(&cmd->arg[1], env);
 	else if (!ft_strncmp(cmd->cmd, "unset", 5))
-		builtin_unset(cmd->arg, env);
+		builtin_unset(&cmd->arg[1], env);
 	else if (!ft_strncmp(cmd->cmd, "echo", 4))
 	{
 		args = expander_start(cmd->arg, env);
 		builtin_echo(args, env);
 	}
-	else if (!ft_strncmp(cmd->cmd, "heredoc", 7))
-		start_heredoc(cmd);
 	else if (cmd->cmd != NULL)
 		init_shell(cmd, env);
 	else
 		return ;
 }
+*/
 
 /* gets the current working directory and prints it on the screen */
 void	builtin_pwd(void)

@@ -42,8 +42,6 @@ typedef struct s_env
 # include "executor.h"
 # include "expander.h"
 
-int			start_heredoc(t_cmd *cmd);
-
 /* functions env */
 t_env		*init_env(char **envp);
 t_env		*create_node(char *str);

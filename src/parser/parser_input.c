@@ -15,7 +15,7 @@ static int	move_to_empty(char **str)
 //TODO: add error for malloc fail
 static void	init_cmd_struct(t_cmd *cmd)
 {
-	cmd->arg = ft_calloc(cmd->num[ARG] + 1, sizeof(char *));
+	cmd->arg = ft_calloc(cmd->num[ARG] + 2, sizeof(char *));
 	if (!cmd->arg)
 		return ;
 	cmd->in = NULL;
@@ -32,7 +32,10 @@ static void	init_cmd_struct(t_cmd *cmd)
 static void	assign_word(t_cmd *cmd, t_lexer *lex)
 {
 	if (!(lex->token) && cmd->cmd == NULL)
+	{
 		cmd->cmd = lex->str;
+		cmd->arg[move_to_empty(cmd->arg)] = lex->str;
+	}
 	else if (!(lex->token) && cmd->cmd != NULL)
 		cmd->arg[move_to_empty(cmd->arg)] = lex->str;
 	else if (lex->token == GREAT || lex->token == GREAT_GREAT)
