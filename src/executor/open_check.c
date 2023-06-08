@@ -56,9 +56,9 @@ int		open_files(t_cmd *cmd)
 //opens last in and out files and assigns fd to cmd struct
 void	open_in_out(t_cmd *cmd)
 {
-	char *filename;
+	// char *filename;
 
-	filename = NULL;
+	// filename = NULL;
 	if (cmd->in != NULL)
 	{
 		if (cmd->in->token == LESS)

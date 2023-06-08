@@ -15,7 +15,7 @@ static int	is_builtin(t_cmd *cmd)
 }
 
 //TODO: set correct status code
-static void	mini_pathfinder(t_cmd *cmd, t_env **env)
+static void	mini_pathfinder(t_cmd *cmd, t_env *env)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
 		builtin_pwd();

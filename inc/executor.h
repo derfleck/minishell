@@ -13,7 +13,7 @@ typedef struct s_shell
 	char	**envp;
 	char	**paths;
 	int		stdin_cpy;
-	t_env	**env;
+	t_env	*env;
 }	t_shell;
 
 //exec multiple
