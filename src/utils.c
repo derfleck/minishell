@@ -21,7 +21,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (1);
 }
 
-void	increase_shell_level(t_env **env)
+void	increase_shell_level(t_env *env)
 {
 	t_env	*node;
 	char	*new_slvl;

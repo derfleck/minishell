@@ -51,4 +51,3 @@ void	builtin_echo(char **args, t_env *head)
 		write(1, "\n", 1);
 	g_stat = 0;
 }
-

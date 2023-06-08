@@ -6,7 +6,7 @@ choses what to do of the following 3 functions:
  - expand_home
  - expand_env_var
  - remove_var_reference  */
-char	*replace_string(char *input, t_env **head, char *spec)
+char	*replace_string(char *input, t_env *head, char *spec)
 {
 	char	*value;
 	char	*new_str;
@@ -31,7 +31,7 @@ char	*replace_string(char *input, t_env **head, char *spec)
 
 /* tilde position arrives as char*. Replace it with value of home. 
 rejoin str together. Return new str */
-char	*expand_home(char *input, t_env **head, char *tilde)
+char	*expand_home(char *input, t_env *head, char *tilde)
 {
 	char	*home_value;
 	char	*new_str;
