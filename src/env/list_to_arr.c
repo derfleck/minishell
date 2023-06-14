@@ -7,7 +7,7 @@ char	**create_env_arr(t_env *head)
 	char	**env_arr;
 
 	size = return_list_size(head);
-	env_arr = malloc (sizeof (char *) * size + 1);
+	env_arr = ft_calloc(size + 1, sizeof (char *));
 	if (!env_arr)
 		perror_exit("Malloc failed\n");
 	copy_list_to_arr(head, env_arr);

@@ -81,6 +81,8 @@ t_shell	*init_shell(t_cmd *cmd, t_env *head)
 		return (NULL);
 	shell->env = head;
 	shell->wstatus = 0;
+	cmd->arg = expander_start(cmd->arg, head);
+	cmd->cmd = cmd->arg[0];
 	if (cmd->num[CMD] > 1)
 	{
 		if (!cmd_with_pipes(shell, cmd))

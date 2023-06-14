@@ -104,7 +104,8 @@ char	*expand_env_var(char *input, char *dollar, char *value)
 		new_str = ft_strjoin(pre, value);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free(pre);
+	if (pre)
+		free(pre);
 	key_len = return_key_len(dollar + 1);
 	post = return_post_str(dollar + key_len);
 	if (!post)
@@ -112,7 +113,7 @@ char	*expand_env_var(char *input, char *dollar, char *value)
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free(post);
-	free(input);
+	if (post)
+		free(post);
 	return (new_str);
 }
