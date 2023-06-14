@@ -45,6 +45,7 @@ int		open_files(t_cmd *cmd)
 		{
 			write(STDOUT_FILENO, "minishell: ", 11);
 			perror(tmp->next->str);
+			g_stat = 1;
 			return (0);
 		}
 		if (tmp)

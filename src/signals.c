@@ -7,10 +7,11 @@ void	handle_ctrlc(int signum)
 	if (signum == SIGINT)
 	{
 		g_stat = 130;
-		write(2, "\n", 1);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		//write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
-		//rl_redisplay();
+		rl_redisplay();
 	}
 }
 
@@ -20,14 +21,15 @@ void	handle_signals_child(int signum)
 {
 	if (signum == SIGINT)
 	{
-		write(2, "\n", 1);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		//write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		g_stat = 130;
 	}
 	if (signum == SIGQUIT)
 	{
-		ft_putstr_fd("Quit (core dumped)\n", 2);
+		ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
 		g_stat = 131;
 	}
 }
