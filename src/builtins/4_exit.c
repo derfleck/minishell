@@ -3,14 +3,14 @@
 /* Based on process lvl it terminates a process 
 Make sure to know if parent or child process is being terminated
 ONLY: if (process == PARENT) later have child process too!! */
-int	builtin_exit(char **args, t_env *env, int process)
+int	builtin_exit(t_shell *sh, char **args, t_env *env, int process)
 {
 	int	argc;
 
 	argc = helper_get_arg_count(args);
 	ft_putendl_fd("exit", STDERR_FILENO);
 	if (argc == 0 || argc == 1)
-		exit_parent(args, env, argc);
+		exit_parent(sh, args, env, argc);
 	if (argc > 1 && process != 0)
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
@@ -33,13 +33,13 @@ static int	exit_stat_valid(char *str)
 }
 
 /* Exits parent process */
-void	exit_parent(char **args, t_env *head, int argc)
+void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 {
 	(void)head;
 	if (argc == 1)
 	{
 		free_env_list(head);
-		// free_cmd_structs(cmd);
+		free_shell(sh);
 		if (exit_stat_valid(args[0]))
 		{
 			g_stat = (unsigned char)ft_atoi(args[0]);

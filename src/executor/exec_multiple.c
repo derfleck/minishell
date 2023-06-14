@@ -87,6 +87,7 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 	}
 	dup2(shell->stdin_cpy, STDIN_FILENO);
 	close(shell->stdin_cpy);
-	shell->pid = wait_children(shell, i);
+	wait_children(shell, i);
+	shell = free_shell(shell);
 	return (1);
 }

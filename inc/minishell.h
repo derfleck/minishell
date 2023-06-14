@@ -39,6 +39,20 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+//struct for the whole shell, which points to essential values
+//process list, wait status information and environment variables
+typedef struct s_shell
+{
+	pid_t	*pid;
+	int		wstatus;
+	char	**envp;
+	char	**paths;
+	int		stdin_cpy;
+	t_env	*env;
+	t_cmd	*cmd_start;
+	char	*s;
+}	t_shell;
+
 # include "executor.h"
 # include "expander.h"
 
@@ -85,8 +99,8 @@ void		builtin_unset(char **args, t_env *env);
 void		builtin_cd(char **args, t_env *env);
 void		cd_go_home(t_env *env, char *str);
 void		update_pwds(t_env *env, char *oldpath);
-int			builtin_exit(char **args, t_env *env, int process);
-void		exit_parent(char **args, t_env *head, int argc);
+int			builtin_exit(t_shell *sh, char **args, t_env *env, int process);
+void		exit_parent(t_shell *sh, char **args, t_env *head, int argc);
 void		*free_env_list(t_env *head);
 void		*free_env_node(t_env *node);
 void		builtin_echo(char **args, t_env *head);

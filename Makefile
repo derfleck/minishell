@@ -39,7 +39,7 @@ SRCSLIST		:=	main.c \
 					executor/open_check.c \
 					executor/search_path.c \
 					executor/exec_multiple.c \
-          executor/exec_single.c \
+          			executor/exec_single.c \
 					expander/expand1.c \
 					expander/expand2.c \
 					expander/expand3.c \
@@ -98,4 +98,4 @@ fclean:			clean
 re:				fclean all
 
 val:			re
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=vg_ignore ./minishell
+	valgrind -s --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=vg_ignore ./minishell

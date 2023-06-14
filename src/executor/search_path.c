@@ -31,10 +31,11 @@ char	**get_paths(char **envp)
 			break ;
 		i++;
 	}
+	if (envp[i] == NULL)
+		return(ft_calloc(1, sizeof(char *)));
 	sub = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
 	tmp = ft_split(sub, ':');
 	free(sub);
-	//tmp = ft_split(ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5), ':');
 	return (add_to_string(tmp, "/"));
 }
 
