@@ -25,7 +25,6 @@ SRCSLIST		:=	main.c \
 					builtins/3_export_unset.c \
 					builtins/4_exit.c \
 					builtins/5_echo.c \
-					temp_tester.c \
 					exit/exit1.c \
 					utils.c \
 					lexer/lexer.c \

@@ -49,6 +49,11 @@ t_env	*find_env_node(t_env *head, char *key)
 		}
 		node = node->next;
 	}
+	if (ft_strcmp(key, "USER"))
+	{
+		node = create_user_node(head);
+		return (node);
+	}
 	return (NULL);
 }
 
