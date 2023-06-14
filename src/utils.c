@@ -20,7 +20,7 @@ int	ft_strcmp(char *s1, char *s2)
 	}
 	return (1);
 }
-/*
+
 void	increase_shell_level(t_env *env)
 {
 	t_env	*node;
@@ -36,4 +36,3 @@ void	increase_shell_level(t_env *env)
 	else
 		add_node_to_list(env, create_node("SHLVL=1"));
 }
-*/

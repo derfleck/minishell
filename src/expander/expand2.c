@@ -36,27 +36,6 @@ int	return_key_len(char *str)
 	return (len);
 }
 
-// /* Returns length of value from key_value string 
-// Currently not used */
-// int	return_value_len(char *str)
-// {
-// 	int	i;
-// 	int	j;
-
-// 	i = 0;
-// 	j = 0;
-// 	while (str[i++])
-// 	{
-// 		if (str[i] == '=')
-// 		{
-// 			i++;
-// 			while (str[i++])
-// 				j++;
-// 		}
-// 	}
-// 	return (j);
-// }
-
 /* Check if string after dollarsign is a valid env var and
 returns the value if found. Returns NULL if not found or no key  */
 char	*check_key_exist(t_env *head, char *i)

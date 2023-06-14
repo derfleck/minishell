@@ -30,7 +30,7 @@ char	*return_post_str(char *key_end)
 	while (key_end[len])
 		len++;
 	if (len == 0)
-		return ("");
+		return (ft_strdup(""));
 	post = ft_substr(key_end, 1, len);
 	if (!post)
 		perror_exit("Malloc_failed\n");
