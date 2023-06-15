@@ -98,3 +98,6 @@ re:				fclean all
 
 val:			re
 	valgrind --leak-check=full --show-leak-kinds=all --suppressions=vg_ignore ./minishell
+
+norm:
+	norminette -R CheckForbiddenSourceHeaders $(SRCSDIR) $(HEADDIR)

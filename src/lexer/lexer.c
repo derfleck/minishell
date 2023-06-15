@@ -52,8 +52,8 @@ int	syntax_check(char *str)
 	{
 		while (str[i] && (str[i] != '\'' && str[i] != '"'))
 		{
-			if (str[i] == ';' || str[i] == '\\')
-				return (0);
+			// if (str[i] == ';' || str[i] == '\\')
+			// 	return (0);
 			i++;
 		}
 		if (!str[i])

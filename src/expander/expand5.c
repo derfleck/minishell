@@ -23,7 +23,6 @@ char	*kill_quotes(char *expanded)
 		i++;
 		j++;
 	}
-	free(expanded);
 	return (str);
 }
 
@@ -49,7 +48,6 @@ char	*remove_quotes(char *input, int start, int end, char c)
 	if (!new)
 		perror_exit("Malloc failed\n");
 	free_ptr(post);
-	free_ptr(input);
 	return (new);
 }
 
@@ -88,13 +86,16 @@ char	*create_quote_free_str(char *input, int start, int end, char c)
 {
 	char	*new;
 	char	*quoted_str;
+	char	quote_type[2];
 
+	quote_type[0] = c;
+	quote_type[1] = '\0';
 	quoted_str = ft_substr(input, start, (size_t)end - start + 1);
 	if (!quoted_str)
 		perror_exit("Malloc failed\n");
-	new = ft_strtrim(quoted_str, &c);
+	new = ft_strtrim(quoted_str, quote_type);
 	if (!new)
 		perror_exit("Malloc failed\n");
-	free(quoted_str);
+	free_ptr(quoted_str);
 	return (new);
 }

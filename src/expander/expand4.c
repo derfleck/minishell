@@ -56,7 +56,6 @@ char	*expand_home(char *input, t_env *head, char *tilde)
 		perror_exit("Malloc failed\n");
 	free_ptr(pre);
 	free_ptr(post);
-	free_ptr(input);
 	return (new_str);
 }
 
@@ -76,7 +75,7 @@ char	*remove_var_reference(char *input, char *dollar)
 		new_str = ft_strjoin(pre, "");
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free(pre);
+	free_ptr(pre);
 	key_len = return_key_len(dollar + 1);
 	post = return_post_str(dollar + key_len);
 	if (!post)
@@ -84,8 +83,7 @@ char	*remove_var_reference(char *input, char *dollar)
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free(post);
-	free(input);
+	free_ptr(post);
 	return (new_str);
 }
 
@@ -104,8 +102,7 @@ char	*expand_env_var(char *input, char *dollar, char *value)
 		new_str = ft_strjoin(pre, value);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	if (pre)
-		free(pre);
+	free_ptr(pre);
 	key_len = return_key_len(dollar + 1);
 	post = return_post_str(dollar + key_len);
 	if (!post)
@@ -113,7 +110,17 @@ char	*expand_env_var(char *input, char *dollar, char *value)
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	if (post)
-		free(post);
+	free_ptr(post);
 	return (new_str);
+}
+
+/* Creates new HOME env node in case HOME was unset. */
+t_env	*create_home(char *str, t_env *head)
+{
+	t_env	*node;
+
+	node = create_node(str);
+	add_node_to_list(head, node);
+	node->next = NULL;
+	return (node);
 }
