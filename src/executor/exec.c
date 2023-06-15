@@ -34,6 +34,7 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env *env, int mode)
 		builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
 	{
+		free_env_list(env);
 		free_shell(sh);
 		exit(0);
 	}
@@ -54,7 +55,6 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 		{
 			printf("%s: command not found\n", cmd->cmd);
 			free_shell(shell);
-			//return ;
 			exit(127);
 		}
 		if (execve(tmp, cmd->arg, shell->envp) == -1)

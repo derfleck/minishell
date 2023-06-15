@@ -77,6 +77,8 @@ int		unlink_heredoc(t_cmd *cmd)
 			perror("Error while unlinking");
 			return (0);
 		}
+		if (cmd->here_file)
+			free(cmd->here_file);
 	}
 	return (1);
 }

@@ -38,9 +38,14 @@ void	builtin_pwd(void)
 	char	*buf;
 
 	buf = getcwd(NULL, 0);
-	printf("%s\n", buf);
-	free(buf);
-	g_stat = 0;
+	if (buf)
+	{
+		printf("%s\n", buf);
+		free(buf);
+		g_stat = 0;
+	}
+	else
+		g_stat = 1;
 }
 
 /* Counts how many arguments are in the token to deal with */
