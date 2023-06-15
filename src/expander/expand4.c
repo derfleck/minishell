@@ -19,7 +19,8 @@ char	*replace_string(char *input, t_env *head, char *spec)
 		value = check_key_exist(head, spec + 1);
 		if (!value)
 		{
-			new_str = remove_var_reference(input, spec);
+			if (spec[1] == '?')
+				new_str = expand_status(input, spec);
 			return (new_str);
 		}
 		else

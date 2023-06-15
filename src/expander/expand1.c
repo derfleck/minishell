@@ -47,7 +47,11 @@ char	*deal_with_expansion(char *input, t_env *head)
 	i = -1;
 	if (!need_to_expand(input))
 		return (input);
-	//Check for invalid keychar after $
+	if (check_invalid_follow(input))
+	{
+		input = remove_dollarsign_bef_quotes(input);
+		return (input);
+	}
 	arr = split_by_quotes(input, head);
 	while (arr[++i])
 	{
@@ -62,7 +66,7 @@ char	*deal_with_expansion(char *input, t_env *head)
 	return (input);
 }
 
-/* Checks incoming str if expansion is needed  */
+/* Checks incoming str if expansion is needed */
 char	*do_expansion(char *input, t_env *head)
 {
 	int	i;
@@ -71,7 +75,7 @@ char	*do_expansion(char *input, t_env *head)
 	while (input[++i])
 	{
 		if ((input[i] == '$' && (ft_isalnum(input[i + 1]) || \
-		input[i + 1] == '_')) || input[i] == '~')
+		input[i + 1] == '_' || input[i + 1] == '?')) || input[i] == '~')
 			input = replace_string(input, head, &input[i]);
 	}
 	return (input);
@@ -92,4 +96,3 @@ char	**split_by_quotes(char *input, t_env *head)
 	arr = ft_quotesplitter(arr, input, count);
 	return (arr);
 }
-

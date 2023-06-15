@@ -6,7 +6,7 @@
 /*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 14:48:15 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/06/15 12:30:01 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/06/15 16:44:58 by rmocsai          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,8 @@ int		return_quote_len(char *start, char c);
 int		found_quotes(char *input);
 
 /* expander 6 - Splitting by quotes */
+char	*remove_dollarsign_bef_quotes(char *str);
+int		check_invalid_follow(char *str);
+char	*expand_status(char *input, char *spec);
 
 #endif
