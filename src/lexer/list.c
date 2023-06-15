@@ -38,7 +38,11 @@ t_lexer	*start_lexer(char *str)
 
 	i = 0;
 	if (!syntax_check(str))
-		return(perror("Syntax error"), free(str), NULL);
+	{
+		printf("Syntax error\n");
+		free(str);
+		return (NULL);
+	}
 	split = ft_split_set(str, set);
 	if (!split)
 		return (NULL);

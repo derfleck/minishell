@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mleitner <mleitner@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/22 14:48:15 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/06/08 12:22:17 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/06/15 15:25:45 by mleitner         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 # include "minishell.h"
 
 /* expander 1 */
-char	**expander_start(char **args, t_env *head);
+//char	**expander_start(char **args, t_env *head);
+void	expander_start(t_lexer *lex, t_env *head);
 char	*expander(char *input, t_env *head);
 char	*deal_with_expansion(char *input, t_env *head);
 char	*expand_parts(char *input, t_env *head, int start, int end);

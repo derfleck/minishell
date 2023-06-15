@@ -56,14 +56,18 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	env = init_env(envp);
+	lex = NULL;
+	cmd = NULL;
 	while (1)
 	{
 		set_sigaction(PARENT);
 		s = get_input();
 		if (s == NULL)
 			continue ;
-		lex = start_lexer(s);
 		add_history(s);
+		lex = start_lexer(s);
+		if (lex)
+			expander_start(lex, env);
 		if (lex)
 			cmd = create_parse_list(lex);
 		if (cmd != NULL && env != NULL)

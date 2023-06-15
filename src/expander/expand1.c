@@ -1,6 +1,7 @@
 #include "../../inc/minishell.h"
 
-/* Makes sure expander can handle all incoming strings */
+//Makes sure expander can handle all incoming strings
+/*
 char	**expander_start(char **args, t_env *head)
 {
 	int	i;
@@ -14,6 +15,29 @@ char	**expander_start(char **args, t_env *head)
 		i++;
 	}
 	return (args);
+}
+*/
+
+void	expander_start(t_lexer *lex, t_env *head)
+{
+	t_lexer	*lex_tmp;
+
+	lex_tmp = lex;
+	while (lex_tmp)
+	{
+		if (lex_tmp->token == LESS_LESS && lex_tmp->next)
+		{
+			lex_tmp = lex_tmp->next->next;
+			continue ;
+		}
+		else if (lex_tmp->token)
+			lex_tmp = lex_tmp->next;
+		if (lex_tmp)
+		{
+			lex_tmp->str = expander(lex_tmp->str, head);
+			lex_tmp = lex_tmp->next;
+		}
+	}
 }
 
 /* deals with each incoming arg from expander_start one by one */

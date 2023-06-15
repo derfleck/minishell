@@ -88,7 +88,6 @@ t_shell	*init_shell(char *s, t_cmd *cmd, t_env *head)
 	shell->env = head;
 	shell->wstatus = 0;
 	shell->s = s;
-	cmd->arg = expander_start(cmd->arg, head);
 	cmd->cmd = cmd->arg[0];
 	if (cmd->num[CMD] > 1)
 	{
