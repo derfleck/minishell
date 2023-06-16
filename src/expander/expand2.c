@@ -14,7 +14,7 @@ char	*return_key(char *str)
 		return (NULL);
 	key = malloc (sizeof (char) * (len + 1));
 	if (!key)
-		perror_exit("MALLOC failed\n");
+		perror_exit("Malloc failed\n");
 	ft_memmove(key, str, len);
 	key[len] = '\0';
 	return (key);
@@ -93,6 +93,8 @@ char	*return_post_str(char *key_end)
 	if (len == 0)
 		return (ft_strdup(""));
 	post = ft_substr(key_end, 1, len);
+	if (post[0] == '?' && key_end[0] == '$')
+		post++;
 	if (!post)
 		perror_exit("Malloc_failed\n");
 	return (post);

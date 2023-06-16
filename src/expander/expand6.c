@@ -31,7 +31,6 @@ char	*expand_status(char *input, char *dollar)
 	char	*status;
 
 	status = ft_itoa(g_stat);
-	printf("itoa: %s  g_stat: %d\n", status, g_stat);
 	if (!status)
 		perror_exit("Malloc failed\n");
 	pre = return_pre_str(input, dollar);
@@ -42,13 +41,11 @@ char	*expand_status(char *input, char *dollar)
 	if (!new_str)
 		perror_exit("Malloc failed\n");
 	free_ptr(pre);
-	post = return_post_str(dollar + ft_strlen(status) - 1);
-	printf("post: %s  \n", post);
+	post = return_post_str(dollar + 1);
 	if (!post)
 		return (new_str);
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free_ptr(post);
 	return (new_str);
 }

@@ -26,7 +26,7 @@ char	*ft_strdup(const char *s)
 	}
 	tab = malloc((sizeof(char) * i) + 1);
 	if (!tab)
-		return (0);
+		return (NULL);
 	while (s[j] != '\0')
 	{
 		*(tab + j) = *(s + j);
