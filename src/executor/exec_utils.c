@@ -23,15 +23,16 @@ pid_t   *wait_children(t_shell *shell, int cmd)
 	}
 	if (WIFEXITED(shell->wstatus))
 		g_stat = WEXITSTATUS(shell->wstatus);
-	i = 0;
-	while (shell->envp[i])
-		free(shell->envp[i++]);
-	i = 0;
-	while (shell->paths[i])
-		free(shell->paths[i++]);
-	shell->envp = safe_free(shell->envp);
-	shell->paths = safe_free(shell->paths);
-	return (safe_free(shell->pid));
+	//i = 0;
+	//while (shell->envp[i])
+	//	free(shell->envp[i++]);
+	//i = 0;
+	//while (shell->paths[i])
+	//	free(shell->paths[i++]);
+	//shell->envp = safe_free(shell->envp);
+	//shell->paths = safe_free(shell->paths);
+	//return (safe_free(shell->pid));
+	return (NULL);
 }
 
 //frees t_cmd struct, checks if values exist before freeing
@@ -66,4 +67,23 @@ t_lexer	*free_lex(t_lexer *lex)
 		tmp = tmp->next;		
 	}
 	return (safe_free(lex));
+}
+
+t_shell	*free_shell(t_shell *sh)
+{
+	int	i;
+
+	if (sh->cmd_start->start != NULL)
+		sh->cmd_start->start = free_lex(sh->cmd_start->start);
+	if (sh->cmd_start != NULL)
+		sh->cmd_start = free_cmd(sh->cmd_start);
+	i = -1;
+	while (sh->envp[++i] != NULL)
+		sh->envp[i] = safe_free(sh->envp[i]);
+	i = -1;
+	while (sh->paths[++i] != NULL)
+		sh->envp[i] = safe_free(sh->paths[i]);
+	sh->pid = safe_free(sh->pid);
+	sh->s = safe_free(sh->s);
+	return (safe_free(sh));
 }

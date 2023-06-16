@@ -3,19 +3,13 @@
 //skips quotes in string, returns value how many characters to skip
 int	skip_quotes(char *str)
 {
-	int	i;
+	int		i;
+	char	tmp;
 
 	i = 0;
-	if (str[i] == '\'')
-	{
-		while (str[++i] && str[i] != '\'')
-			;
-	}
-	if (str[i] == '"')
-	{
-		while (str[++i] && str[i] != '"')
-			;
-	}
+	tmp = str[i];
+	while (str[++i] && str[i] != tmp)
+		;
 	return (i + 1);
 }
 
@@ -51,11 +45,7 @@ int	syntax_check(char *str)
 	while (str[i])
 	{
 		while (str[i] && (str[i] != '\'' && str[i] != '"'))
-		{
-			// if (str[i] == ';' || str[i] == '\\')
-			// 	return (0);
 			i++;
-		}
 		if (!str[i])
 			break ;
 		else

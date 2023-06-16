@@ -16,7 +16,7 @@ static int	is_builtin(t_cmd *cmd)
 }
 
 //TODO: set correct status code
-static void	mini_pathfinder(t_cmd *cmd, t_env *env, int mode)
+static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env *env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
 		builtin_pwd();
@@ -31,9 +31,13 @@ static void	mini_pathfinder(t_cmd *cmd, t_env *env, int mode)
 	else if(ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		builtin_echo(&cmd->arg[1], env);
 	else if(ft_strncmp(cmd->cmd, "exit", 4) == 0)
-		builtin_exit(&cmd->arg[1], env, mode);
+		builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
+	{
+		free_env_list(env);
+		free_shell(sh);
 		exit(0);
+	}
 }
 
 //checks if command path is absolute or relative
@@ -50,6 +54,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 		if (!tmp)
 		{
 			printf("%s: command not found\n", cmd->cmd);
+			free_shell(shell);
 			g_stat = 127;
 			return ;
 		}
@@ -60,7 +65,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 	else
 	{
 		if (is_builtin(cmd))
-			mini_pathfinder(cmd, shell->env, mode);
+			mini_pathfinder(shell, cmd, shell->env, mode);
 		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("execve");
 	}
@@ -68,7 +73,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
-t_shell	*init_shell(t_cmd *cmd, t_env *head)
+t_shell	*init_shell(char *s, t_cmd *cmd, t_env *head)
 {
 	t_shell	*shell;
 
@@ -77,12 +82,13 @@ t_shell	*init_shell(t_cmd *cmd, t_env *head)
 		return (NULL);
 	shell->envp = create_env_arr(head);
 	shell->paths = get_paths(shell->envp);
-	shell->pid = ft_calloc(cmd->num[CMD], sizeof(pid_t));
+	shell->pid = ft_calloc(cmd->num[CMD] + 1, sizeof(pid_t));
 	if (!shell->pid)
 		return (NULL);
+	shell->cmd_start = cmd;
 	shell->env = head;
 	shell->wstatus = 0;
-	cmd->arg = expander_start(cmd->arg, head);
+	shell->s = s;
 	cmd->cmd = cmd->arg[0];
 	if (cmd->num[CMD] > 1)
 	{
@@ -91,7 +97,5 @@ t_shell	*init_shell(t_cmd *cmd, t_env *head)
 	}
 	else
 		exec_single_cmd(cmd, shell);
-	cmd->start = free_lex(cmd->start);
-	cmd = free_cmd(cmd);
-	return (safe_free(shell));
+	return (NULL);
 }

@@ -23,6 +23,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell)
 		if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
 			return ;
 		execute_cmd(cmd, shell, CHILD);
+		free_shell(shell);
 	}
 	else
 	{
@@ -32,6 +33,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell)
 			close(cmd->fd[OUT]);
 		shell->pid = wait_children(shell, 1);
 		unlink_heredoc(cmd);
+		shell = free_shell(shell);
 	}
 }
 

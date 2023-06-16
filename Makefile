@@ -82,7 +82,7 @@ ${OBJSDIR}:
 				mkdir -p ${OBJSDIR} ${SUBDIRS}
 
 
-.PHONY:			all clean fclean re val
+.PHONY:			all clean fclean re val norm
 
 all:			${NAME}
 
@@ -96,8 +96,8 @@ fclean:			clean
 
 re:				fclean all
 
-val:			re
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=vg_ignore ./minishell
+val:			${NAME}
+	valgrind -s --leak-check=full --show-leak-kinds=definite --track-origins=yes --suppressions=vg_ignore ./minishell
 
 norm:
 	norminette -R CheckForbiddenSourceHeaders $(SRCSDIR) $(HEADDIR)
