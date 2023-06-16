@@ -109,14 +109,13 @@ void	builtin_unset(char **args, t_env *env)
 	}
 	else
 	{
+		g_stat = 0;
 		node = find_env_node(env, args[0]);
 		if (node == NULL)
-		{
-			g_stat = 0;
 			return ;
-		}
+		else if (ft_strcmp(args[0], "SHLVL"))
+			return ;
 		else
 			remove_node(env, args[0]);
 	}
-	g_stat = 0;
 }

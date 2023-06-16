@@ -50,6 +50,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 		if (!tmp)
 		{
 			printf("%s: command not found\n", cmd->cmd);
+			g_stat = 127;
 			return ;
 		}
 		if (execve(tmp, cmd->arg, shell->envp) == -1)

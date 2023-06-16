@@ -27,7 +27,8 @@ void	remove_node(t_env *head, char *key)
 }
 
 /* Allow only alphanumericals and the '_' in the key received.
-If true, it returns 1. If false, it returns 0. Also returns 0 if key is only nrs OR starts with digit.
+If true, it returns 1. If false, it returns 0. 
+Also returns 0 if key is only nrs OR starts with digit.
 If the last element before the null is +, returns -1 (important for export) */
 int	key_validity_check(char *key)
 {

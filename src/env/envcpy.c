@@ -17,18 +17,18 @@ t_env	*init_env(char **envp)
 	head = malloc (sizeof (t_env));
 	if (!head)
 		perror_exit("Malloc failed\n");
-	i = 0;
 	if (!size)
-	{
-		head->key_value = create_env();
-		return (head);
-	}
+		return (create_env(head));
+	i = 0;
 	head->key_value = ft_strdup(envp[i++]);
 	if (head->key_value == NULL)
 		perror_exit("Malloc failed\n");
 	head->next = NULL;
 	while (i < size)
 		add_node_to_list(head, create_node(envp[i++]));
+	if (!find_env_node(head, "USER"))
+		create_user_node(head);
+	increase_shell_level(head);
 	return (head);
 }
 
@@ -76,8 +76,7 @@ void	print_env(t_env *env)
 	node = env;
 	while (node != NULL)
 	{
-		//ft_putendl_fd(node->key_value, STDOUT_FILENO);
-		printf("%s\n", node->key_value);
+		ft_putendl_fd(node->key_value, STDOUT_FILENO);
 		node = node->next;
 	}
 	g_stat = 0;
@@ -85,7 +84,7 @@ void	print_env(t_env *env)
 
 /* Helps creating a dummy env list with a single element (PWD)
 it simply returns a key=value string to add to the node later */
-char	*create_env(void)
+static char	*create_env_helper(void)
 {
 	char	*pwd;
 	char	*cwd;
@@ -98,4 +97,32 @@ char	*create_env(void)
 		perror_exit("Malloc failed\n");
 	free (cwd);
 	return (pwd);
+}
+
+t_env	*create_user_node(t_env *head)
+{
+	t_env	*node;
+
+	node = malloc (sizeof (t_env));
+	node->key_value = ft_strdup("USER=anonymus");
+	if (!node->key_value)
+		perror_exit("Malloc failed\n");
+	add_node_to_list(head, node);
+	return (node);
+}
+
+t_env	*create_env(t_env *head)
+{
+	t_env	*node2;
+
+	head->key_value = create_env_helper();
+	head->next = NULL;
+	create_user_node(head);
+	node2 = malloc (sizeof (t_env));
+	if (!node2)
+		perror_exit("Malloc_failed");
+	node2->key_value = ft_strdup("SHLVL=0");
+	add_node_to_list(head, node2);
+	node2->next = NULL;
+	return (head);
 }
