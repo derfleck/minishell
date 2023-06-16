@@ -11,6 +11,7 @@ char	*replace_string(char *input, t_env *head, char *spec)
 	char	*value;
 	char	*new_str;
 
+	new_str = ft_strdup("");
 	if ((input[0] == '~' && input[1] == '\0') || \
 	(input[0] == '~' && input[1] == '/'))
 		return (expand_home(input, head, spec));
