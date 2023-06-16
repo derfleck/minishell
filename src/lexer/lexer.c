@@ -45,9 +45,7 @@ int	syntax_check(char *str)
 	while (str[i])
 	{
 		while (str[i] && (str[i] != '\'' && str[i] != '"'))
-		{
 			i++;
-		}
 		if (!str[i])
 			break ;
 		else

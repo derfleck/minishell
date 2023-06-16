@@ -61,7 +61,8 @@ t_env		*init_env(char **envp);
 t_env		*create_node(char *str);
 int			get_list_size(char **envp);
 void		print_env(t_env *env);
-char		*create_env(void);
+t_env		*create_env(t_env *head);
+t_env		*create_user_node(t_env *head);
 char		**create_env_arr(t_env *head);
 void		copy_list_to_arr(t_env *head, char **env_arr);
 int			return_list_size(t_env *head);
@@ -77,9 +78,6 @@ void		remove_node(t_env *head, char *key);
 void		add_node_to_list(t_env *head, t_env *new);
 int			key_validity_check(char *key);
 
-/* env tester */
-void		env_tester(char *key, t_env *env);
-
 /* exit */
 void		*free_ptr(void *ptr);
 void		perror_exit(char *message);
@@ -87,6 +85,7 @@ void		perror_exit(char *message);
 /* utils */
 int			ft_strcmp(char *s1, char *s2);
 int			ft_isnum(int c);
+void		increase_shell_level(t_env *env);
 
 /* Builtins */
 void		builtin_pathfinder(t_env *env, t_cmd *cmd);

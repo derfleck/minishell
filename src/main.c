@@ -2,15 +2,15 @@
 
 int	g_stat = 0;
 
-char	*prompt_line(void)
+char	*prompt_line(t_env *head)
 {
 	char	*tmp;
 	char	*tmp2;
 	char	*tmp3;
+	t_env	*node;
 
-	tmp = ft_strjoin(getenv("USER"), "@minishell:");
-	if (!tmp)
-		perror_exit("Malloc failed\n");
+	node = find_env_node(head, "USER");
+	tmp = ft_strjoin(split_env_value(node->key_value), "@minishell:");
 	tmp2 = getcwd(NULL, 0);
 	if (ft_strcmp(tmp2, getenv("HOME")))
 	{
@@ -29,12 +29,12 @@ char	*prompt_line(void)
 	return (tmp);
 }
 
-char	*get_input()
+char	*get_input(t_env *head)
 {
 	char	*line;
 	char	*prompt;
 
-	prompt = prompt_line();
+	prompt = prompt_line(head);
 	if (prompt == NULL)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
@@ -61,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		set_sigaction(PARENT);
-		s = get_input();
+		s = get_input(env);
 		if (s == NULL)
 			continue ;
 		add_history(s);

@@ -25,7 +25,6 @@ SRCSLIST		:=	main.c \
 					builtins/3_export_unset.c \
 					builtins/4_exit.c \
 					builtins/5_echo.c \
-					temp_tester.c \
 					exit/exit1.c \
 					utils.c \
 					lexer/lexer.c \
@@ -39,7 +38,7 @@ SRCSLIST		:=	main.c \
 					executor/open_check.c \
 					executor/search_path.c \
 					executor/exec_multiple.c \
-          			executor/exec_single.c \
+          executor/exec_single.c \
 					expander/expand1.c \
 					expander/expand2.c \
 					expander/expand3.c \
@@ -83,7 +82,7 @@ ${OBJSDIR}:
 				mkdir -p ${OBJSDIR} ${SUBDIRS}
 
 
-.PHONY:			all clean fclean re val
+.PHONY:			all clean fclean re val norm
 
 all:			${NAME}
 
@@ -97,5 +96,8 @@ fclean:			clean
 
 re:				fclean all
 
-val:			re
-	valgrind -s --leak-check=full --show-leak-kinds=all --track-origins=yes --suppressions=vg_ignore ./minishell
+val:			${NAME}
+	valgrind -s --leak-check=full --show-leak-kinds=definite --track-origins=yes --suppressions=vg_ignore ./minishell
+
+norm:
+	norminette -R CheckForbiddenSourceHeaders $(SRCSDIR) $(HEADDIR)

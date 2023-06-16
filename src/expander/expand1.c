@@ -71,6 +71,11 @@ char	*deal_with_expansion(char *input, t_env *head)
 	i = -1;
 	if (!need_to_expand(input))
 		return (input);
+	if (check_invalid_follow(input))
+	{
+		input = remove_dollarsign_bef_quotes(input);
+		return (input);
+	}
 	arr = split_by_quotes(input, head);
 	while (arr[++i])
 	{
@@ -82,6 +87,21 @@ char	*deal_with_expansion(char *input, t_env *head)
 	while (arr[++i])
 		free(arr[i]);
 	free(arr);
+	return (input);
+}
+
+/* Checks incoming str if expansion is needed */
+char	*do_expansion(char *input, t_env *head)
+{
+	int	i;
+
+	i = -1;
+	while (input[++i])
+	{
+		if ((input[i] == '$' && (ft_isalnum(input[i + 1]) || \
+		input[i + 1] == '_' || input[i + 1] == '?')) || input[i] == '~')
+			input = replace_string(input, head, &input[i]);
+	}
 	return (input);
 }
 
@@ -98,46 +118,5 @@ char	**split_by_quotes(char *input, t_env *head)
 	if (!arr)
 		perror_exit("Malloc failed\n");
 	arr = ft_quotesplitter(arr, input, count);
-	free (input);
-	return (arr);
-}
-
-/* Gets input, tries to split it to **arr according to:
-characters not enclosed in quotes, quoted blocks bordered by
-single quotes, and quoted blocks bordered by double quotes. */
-char	**ft_quotesplitter(char **arr, char *input, int count)
-{
-	int		i;
-	int		len;
-	int		element;
-	char	q;
-
-	i = 0;
-	element = -1;
-	while (++element < count)
-	{
-		len = 0;
-		if (input[i] && (input[i] != '"' && input[i] != '\''))
-		{
-			while (input[i] && input[i] != '"' && input[i] != '\'')
-			{
-				i++;
-				len++;
-			}
-		}
-		else if (input[i] && (input[i] == '"' || input[i] == '\''))
-		{	
-			q = input[i++];
-			len = 2;
-			while (input[i] != q)
-			{
-				i++;
-				len++;
-			}
-			i++;
-		}
-		arr[element] = ft_substr(input, i - len, len);
-	}
-	arr[element] = NULL;
 	return (arr);
 }

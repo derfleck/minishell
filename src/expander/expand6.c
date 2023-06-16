@@ -1,85 +1,51 @@
 #include "../../inc/minishell.h"
 
-/* Pre - checks if there's need at all for expansion
-Returns 1 if expansion is needed. 0 if not */
-int	need_to_expand(char *input)
+int	check_invalid_follow(char *str)
 {
 	int	i;
 
 	i = -1;
-	while (input[++i])
+	while (str[++i])
 	{
-		if (input[i] == '$' || (input[i] == '~' && (input[i + 1] == '\0' || \
-		input[i + 1] == '/')))
+		if (str[i] == '$' && (str[i + 1] == '"' || str[i + 1] == '\''))
 			return (1);
 	}
 	return (0);
 }
 
-/* Counts how many strings need to be allocated */
-int	ft_count_elements(char *input, char s)
+char	*remove_dollarsign_bef_quotes(char *str)
 {
-	int		count;
-	int		i;
+	char	*new;
 
-	count = 0;
-	i = -1;
-	while (input[++i])
-	{
-		if (input[i] && (input[i] == '\'' || input[i] == '"'))
-		{
-			count++;
-			s = input[i];
-			i++;
-			while (input[i] != s)
-				i++;
-		}
-		else if (input[i])
-		{
-			count++;
-			while (input[i] && (input[i] != '"' && input[i] != '\''))
-				i++;
-			i--;
-		}
-	}
-	return (count);
-}
-
-/* Checks incoming str if expansion is needed  */
-char	*do_expansion(char *input, t_env *head)
-{
-	int	i;
-
-	i = -1;
-	while (input[++i])
-	{
-		if (input[i] == '$' || input[i] == '~')
-		{
-			input = replace_string(input, head, &input[i]);
-			if (input[i] == '~')
-				i++;
-			else
-				i = -1; //might get stuck!!!inf loop? just   i++?
-		}
-	}
-	return (input);
-}
-
-/* joins together any size of char arrays into one str */
-char	*ft_strjoin_multiple(char **arr)
-{
-	char	*str;
-	int		i;
-
-	i = 0;
-	str = ft_strjoin("", arr[0]);
 	if (!str)
+		return (NULL);
+	new = ft_strdup(&str[1]);
+	return (new);
+}
+
+char	*expand_status(char *input, char *dollar)
+{
+	char	*new_str;
+	char	*pre;
+	char	*post;
+	char	*status;
+
+	status = ft_itoa(g_stat);
+	if (!status)
 		perror_exit("Malloc failed\n");
-	while (arr[++i])
-	{
-		str = ft_strjoin(str, arr[i]);
-		if (!str)
-			perror_exit("Malloc failed\n");
-	}
-	return (str);
+	pre = return_pre_str(input, dollar);
+	if (!pre)
+		new_str = ft_strdup(status);
+	else
+		new_str = ft_strjoin(pre, status);
+	if (!new_str)
+		perror_exit("Malloc failed\n");
+	free_ptr(pre);
+	post = return_post_str(dollar + 1);
+	if (!post)
+		return (new_str);
+	new_str = ft_strjoin(new_str, post);
+	if (!new_str)
+		perror_exit("Malloc failed\n");
+	return (new_str);
 }
