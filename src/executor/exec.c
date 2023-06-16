@@ -56,7 +56,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 			printf("%s: command not found\n", cmd->cmd);
 			free_shell(shell);
 			g_stat = 127;
-			return ;
+			exit(g_stat);
 		}
 		if (execve(tmp, cmd->arg, shell->envp) == -1)
 			perror("execve");

@@ -7,7 +7,9 @@ void	handle_ctrlc(int signum)
 	if (signum == SIGINT)
 	{
 		g_stat = 130;
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		//ft_putstr_fd("^C\n", STDOUT_FILENO);
+		//rl_replace_line("^\n", STDOUT_FILENO);
+		write(STDOUT_FILENO, "^C\n", 3);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
@@ -21,7 +23,6 @@ void	handle_signals_child(int signum)
 	if (signum == SIGINT)
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
-		//write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		g_stat = 130;

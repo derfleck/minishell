@@ -23,15 +23,6 @@ pid_t   *wait_children(t_shell *shell, int cmd)
 	}
 	if (WIFEXITED(shell->wstatus))
 		g_stat = WEXITSTATUS(shell->wstatus);
-	//i = 0;
-	//while (shell->envp[i])
-	//	free(shell->envp[i++]);
-	//i = 0;
-	//while (shell->paths[i])
-	//	free(shell->paths[i++]);
-	//shell->envp = safe_free(shell->envp);
-	//shell->paths = safe_free(shell->paths);
-	//return (safe_free(shell->pid));
 	return (NULL);
 }
 

@@ -38,6 +38,8 @@ char	*get_input(t_env *head)
 	if (prompt == NULL)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
+	rl_catch_signals = 0;
+	rl_done = 1;
 	if (line == NULL)
 		return (ft_strdup("exit"));
 	else if (line[0] == 0)

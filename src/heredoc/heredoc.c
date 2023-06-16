@@ -36,16 +36,24 @@ static char	*start_heredoc(t_cmd *cmd)
 	int		i;
 	char	*input;
 	char	*number;
+	char	buf[3];
 
 	number = ft_itoa(cmd->i);
 	cmd->here_file = ft_strjoin("here_", number);
+	free(number);
 	i = 0;
 	input = NULL;
 	fd = open(cmd->here_file, O_CREAT | O_RDWR, 0644);
-	free(number);
 	if (fd == -1)
 		return (NULL);
 	heredoc_loop(cmd, i, fd, input);
+	if (read(fd, buf, 1) <= 0)
+	{
+		ft_putstr_fd("minishell: warning : here-document deli", STDOUT_FILENO);
+		ft_putstr_fd("mited by end-of-file (wanted `here`)\n", STDOUT_FILENO);
+		unlink_heredoc(cmd);
+		cmd->here_file = NULL;
+	}
 	close(fd);
 	return (cmd->here_file);
 }
@@ -72,7 +80,7 @@ int		unlink_heredoc(t_cmd *cmd)
 	{
 		if (cmd->fd[IN])
 			close(cmd->fd[IN]);
-		if (unlink(cmd->here_file) == -1)
+		if (cmd->here_file && unlink(cmd->here_file) == -1)
 		{
 			perror("Error while unlinking");
 			return (0);
