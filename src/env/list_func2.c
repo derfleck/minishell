@@ -11,7 +11,7 @@ void	remove_node(t_env *head, char *key)
 		return ;
 	prev = NULL;
 	temp = head;
-	while (ft_strncmp(key, split_env_key(temp->key_value), ft_strlen(key)))
+	while (ft_strncmp(key, split_env_key(temp->key_value, head), ft_strlen(key)))
 	{
 		prev = temp;
 		temp = temp->next;
@@ -77,7 +77,7 @@ char	*split_env_value(char *str)
 /* receives key=value string, splits the key off (everything before
 the (=) sign, and returns it as an allocated new str
 TODO: free key somewhere!!! */
-char	*split_env_key(const char *str)
+char	*split_env_key(const char *str, t_env *head)
 {
 	size_t		i;
 	char		*key;
@@ -89,7 +89,7 @@ char	*split_env_key(const char *str)
 		i++;
 	key = ft_substr(str, 0, i);
 	if (!key)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	return (key);
 }
 

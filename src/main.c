@@ -2,6 +2,7 @@
 
 int	g_stat = 0;
 
+
 char	*prompt_line(t_env *head)
 {
 	char	*tmp;
@@ -11,6 +12,8 @@ char	*prompt_line(t_env *head)
 
 	node = find_env_node(head, "USER");
 	tmp = ft_strjoin(split_env_value(node->key_value), "@minishell:");
+	if (!tmp)
+		perror_exit_free_env("Malloc failed\n", head);
 	tmp2 = getcwd(NULL, 0);
 	if (ft_strcmp(tmp2, getenv("HOME")))
 	{
@@ -19,12 +22,12 @@ char	*prompt_line(t_env *head)
 	}
 	tmp3 = ft_strjoin(tmp, tmp2);
 	if (!tmp3)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	free(tmp);
 	free(tmp2);
 	tmp = ft_strjoin(tmp3, "$ ");
 	if (!tmp)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	free(tmp3);
 	return (tmp);
 }

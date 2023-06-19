@@ -39,10 +39,10 @@ void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 	if (argc == 1)
 	{
 		free_env_list(head);
-		free_shell(sh);
 		if (exit_stat_valid(args[0]))
 		{
 			g_stat = (unsigned char)ft_atoi(args[0]);
+			free_shell(sh);
 			exit(g_stat);
 		}
 		else
@@ -50,13 +50,14 @@ void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 			ft_putstr_fd("Minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(args[0], STDERR_FILENO);
 			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+			free_shell(sh);
 			exit (2);
 		}
 	}
 	if (argc == 0)
 	{
 		free_env_list(head);
-		// free_cmd_structs(cmd);
+		free_shell(sh);
 		exit(0);
 	}
 }

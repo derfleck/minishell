@@ -19,7 +19,7 @@ static int	is_builtin(t_cmd *cmd)
 static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env *env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
-		builtin_pwd();
+		builtin_pwd(env);
 	else if(ft_strncmp(cmd->cmd, "env", 3) == 0)
 		print_env(env);
 	else if(ft_strncmp(cmd->cmd, "cd", 2) == 0)

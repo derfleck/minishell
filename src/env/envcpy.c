@@ -16,16 +16,16 @@ t_env	*init_env(char **envp)
 	size = get_list_size(envp);
 	head = malloc (sizeof (t_env));
 	if (!head)
-		perror_exit("Malloc failed\n");
+		perror("Malloc failed\n");
 	if (!size)
 		return (create_env(head));
 	i = 0;
 	head->key_value = ft_strdup(envp[i++]);
 	if (head->key_value == NULL)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	head->next = NULL;
 	while (i < size)
-		add_node_to_list(head, create_node(envp[i++]));
+		add_node_to_list(head, create_node(envp[i++], head));
 	if (!find_env_node(head, "USER"))
 		create_user_node(head);
 	increase_shell_level(head);
@@ -34,7 +34,7 @@ t_env	*init_env(char **envp)
 
 /* Receives a str as "key=value". If not, it returns NULL.
 Creates a single node and sets next pointer to NULL. Returns the node */
-t_env	*create_node(char *str)
+t_env	*create_node(char *str, t_env *head)
 {
 	t_env	*temp;
 
@@ -42,13 +42,13 @@ t_env	*create_node(char *str)
 		return (NULL);
 	temp = malloc (sizeof (t_env));
 	if (!temp)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	temp->key_value = ft_strdup(str);
 	if (temp->key_value == NULL)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	temp->key_value = ft_strjoin(temp->key_value, "");
 	if (temp->key_value == NULL)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	temp->next = NULL;
 	return (temp);
 }
@@ -69,32 +69,38 @@ int	get_list_size(char **envp)
 }
 
 /* prints the environment line by line */
-void	print_env(t_env *env)
+int	print_env(t_env *env)
 {
 	t_env	*node;
 
+	g_stat = 0;
+	if (!env)
+	{
+		g_stat = 1;
+		return (g_stat);
+	}
 	node = env;
 	while (node != NULL)
 	{
 		ft_putendl_fd(node->key_value, STDOUT_FILENO);
 		node = node->next;
 	}
-	g_stat = 0;
+	return (g_stat);
 }
 
 /* Helps creating a dummy env list with a single element (PWD)
 it simply returns a key=value string to add to the node later */
-static char	*create_env_helper(void)
+static char	*create_env_helper(t_env *head)
 {
 	char	*pwd;
 	char	*cwd;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		perror_exit("getcwd failed\n");
+		perror_exit_free_env("getcwd failed\n", head);
 	pwd = ft_strjoin("PWD=", cwd);
 	if (!pwd)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	free (cwd);
 	return (pwd);
 }
@@ -106,7 +112,7 @@ t_env	*create_user_node(t_env *head)
 	node = malloc (sizeof (t_env));
 	node->key_value = ft_strdup("USER=anonymus");
 	if (!node->key_value)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	add_node_to_list(head, node);
 	return (node);
 }
@@ -115,13 +121,15 @@ t_env	*create_env(t_env *head)
 {
 	t_env	*node2;
 
-	head->key_value = create_env_helper();
+	head->key_value = create_env_helper(head);
 	head->next = NULL;
 	create_user_node(head);
 	node2 = malloc (sizeof (t_env));
 	if (!node2)
-		perror_exit("Malloc_failed");
+		perror_exit_free_env("Malloc failed\n", head);
 	node2->key_value = ft_strdup("SHLVL=0");
+	if (node2->key_value == NULL)
+		perror_exit_free_env("Malloc failed\n", head);
 	add_node_to_list(head, node2);
 	node2->next = NULL;
 	return (head);
