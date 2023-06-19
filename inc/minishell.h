@@ -74,7 +74,7 @@ char		*split_env_value(char *str);
 char		*split_env_key(const char *str, t_env *head);
 void		replace_node_value(t_env *node, char *new_value, t_env *head);
 void		append_node_value(t_env *node, char *value2, t_env *head);
-void		remove_node(t_env *head, char *key);
+void		remove_node(t_env **head, char *key);
 void		add_node_to_list(t_env *head, t_env *new);
 int			key_validity_check(char *key);
 
@@ -93,7 +93,7 @@ int			builtin_pwd(t_env *head);
 void		set_env_command(t_env *head);
 int			helper_get_arg_count(char **args);
 int			builtin_export(char **args, t_env *env);
-int			builtin_unset(char **args, t_env *env);
+int			builtin_unset(char **args, t_env **env);
 int			builtin_cd(char **args, t_env *env);
 int			builtin_exit(t_shell *sh, char **args, t_env *env, int process);
 void		exit_parent(t_shell *sh, char **args, t_env *head, int argc);

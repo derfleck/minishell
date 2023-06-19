@@ -20,17 +20,20 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env *env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
 		builtin_pwd(env);
-	else if(ft_strncmp(cmd->cmd, "env", 3) == 0)
+	else if (ft_strncmp(cmd->cmd, "env", 3) == 0)
 		print_env(env);
-	else if(ft_strncmp(cmd->cmd, "cd", 2) == 0)
+	else if (ft_strncmp(cmd->cmd, "cd", 2) == 0)
 		builtin_cd(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "export", 6) == 0)
+	else if (ft_strncmp(cmd->cmd, "export", 6) == 0)
 		builtin_export(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "unset", 5) == 0)
-		builtin_unset(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "echo", 4) == 0)
+	else if (ft_strncmp(cmd->cmd, "unset", 5) == 0)
+	{
+		builtin_unset(&cmd->arg[1], &env);
+		sh->env = env;
+	}
+	else if (ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		builtin_echo(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "exit", 4) == 0)
+	else if (ft_strncmp(cmd->cmd, "exit", 4) == 0)
 		builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
 	{

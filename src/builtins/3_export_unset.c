@@ -107,7 +107,7 @@ writes bash: unset: `STR': not a valid identifier if not found
 Unsetting a variable or function that was not previously set
 shall not be considered an error and does not cause the shell to abort.
 TODO: multiple KEYs to unset in one command */
-int	builtin_unset(char **args, t_env *env)
+int	builtin_unset(char **args, t_env **env)
 {
 	t_env	*node;
 
@@ -118,7 +118,7 @@ int	builtin_unset(char **args, t_env *env)
 		builtin_unset_helper(args[0]);
 	else
 	{
-		node = find_env_node(env, args[0]);
+		node = find_env_node(*env, args[0]);
 		if (node == NULL)
 			return (g_stat);
 		else if (ft_strcmp(args[0], "SHLVL"))

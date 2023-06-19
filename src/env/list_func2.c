@@ -1,29 +1,34 @@
 #include "../../inc/minishell.h"
 
 /* removes node - used for builtin UNSET 
-TODO: if head id removed, I get a segfault!!!! */
-void	remove_node(t_env *head, char *key)
+TODO: LEAKS!!!  */
+void	remove_node(t_env **head, char *key)
 {
 	t_env	*temp;
 	t_env	*prev;
+	char	*str;
 
-	if (head == NULL || !key)
+	if (*head == NULL || !key)
 		return ;
 	prev = NULL;
-	temp = head;
-	while (ft_strncmp(key, split_env_key(temp->key_value, head), ft_strlen(key)))
+	temp = *head;
+	str = split_env_key(temp->key_value, *head);
+	while (ft_strncmp(key, str, ft_strlen(key)))
 	{
 		prev = temp;
 		temp = temp->next;
+		str = split_env_key(temp->key_value, *head);
 	}
+	free(str);
 	if (temp == NULL)
 		return ;
 	if (prev == NULL)
-		head = head->next;
+		*head = (*head)->next;
 	else
 		prev->next = temp->next;
 	free_ptr(temp->key_value);
 	free_ptr(temp);
+
 }
 
 /* Allow only alphanumericals and the '_' in the key received.
