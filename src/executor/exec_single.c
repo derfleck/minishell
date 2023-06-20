@@ -31,7 +31,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 			close(cmd->fd[IN]);
 		if (cmd->out)
 			close(cmd->fd[OUT]);
-		shell->pid = wait_children(shell, 1);
+		wait_children(shell, 1);
 		unlink_heredoc(cmd);
 		shell = free_shell(shell);
 	}

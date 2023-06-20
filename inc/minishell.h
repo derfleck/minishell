@@ -1,9 +1,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "parser.h"
-# include "lexer.h"
-
 # include "../libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
@@ -18,41 +15,9 @@
 # include <readline/history.h>
 # include <string.h>
 
-/* Macros */
-# ifndef PARENT
-#  define PARENT 1
-# endif
-# ifndef CHILD
-#  define CHILD 0
-# endif
-# ifndef HOME
-#  define HOME ".."
-# endif
-
-/* global variable for exit status */
-extern int	g_stat;
-
-/* List for env */
-typedef struct s_env
-{
-	char			*key_value;
-	struct s_env	*next;
-}	t_env;
-
-//struct for the whole shell, which points to essential values
-//process list, wait status information and environment variables
-typedef struct s_shell
-{
-	pid_t	*pid;
-	int		wstatus;
-	char	**envp;
-	char	**paths;
-	int		stdin_cpy;
-	t_env	*env;
-	t_cmd	*cmd_start;
-	char	*s;
-}	t_shell;
-
+# include "types.h"
+# include "parser.h"
+# include "lexer.h"
 # include "executor.h"
 # include "expander.h"
 
@@ -80,6 +45,11 @@ int			key_validity_check(char *key);
 
 /* exit */
 void		*free_ptr(void *ptr);
+void		perror_exit(char *message);
+void		perror_lexer(char *message, char *s, t_env *env, t_lexer *lex);
+void		perror_cmd(char *message, t_cmd *cmd, t_env *head);
+void		perror_shell(char *message, t_shell *sh);
+void		perror_shell_no_env(char *message, t_shell *sh);
 void		perror_exit_free_env(char *message, t_env *head);
 
 /* utils */

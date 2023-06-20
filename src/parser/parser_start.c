@@ -40,7 +40,8 @@ static t_lexer	*create_parse_node(t_lexer *lex, int n_cmd, t_cmd *cmd, int j)
 	cmd->num[CMD] = n_cmd;
 	cmd->i = j;
 	count_arg_redir(lex, cmd);
-	create_words(cmd, lex);
+	if (create_words(cmd, lex))
+		return (NULL);
 	while (tmp && tmp->token != PIPE)
 		tmp = tmp->next;
 	if (tmp && tmp->token == PIPE)
@@ -66,11 +67,13 @@ t_cmd	*create_parse_list(t_lexer *lex)
 	tmp = lex;
 	n_cmd = parse_check(lex);
 	if (!n_cmd)
-		return (NULL);
+		return ((t_cmd *)free_lex(lex));
 	cmd = ft_calloc(n_cmd, sizeof(t_cmd));
 	if (!cmd)
-		return (NULL);
-	while (++j < n_cmd)
+		return ((t_cmd *)free_lex(lex));
+	while (++j < n_cmd && tmp)
 		tmp = create_parse_node(tmp, n_cmd, cmd + j, j);
+	if (j != n_cmd && tmp == NULL)
+		free_cmd(cmd);
 	return (cmd);
 }

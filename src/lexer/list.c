@@ -27,30 +27,67 @@ static t_lexer	*new_lexer_list(char **cmd, int i)
 	}
 	return (lex);
 }
+//helper, removes set characters from beginning and end of string
+//required to split safely
+static char	*trim_string(char *str, char *set)
+{
+	char	*tmp;
+
+	tmp = ft_strtrim(str, set);
+	if (!tmp)
+	{
+		perror("Error trimming string\n");
+		return (NULL);
+	}
+	else if (tmp && tmp[0] == '\0')
+	{
+		safe_free(tmp);
+		return (NULL);
+	}
+	return (tmp);
+}
+
+static char	*syntax_trimming_helper(char *str, char *set)
+{
+	char	*tmp;
+
+	if (!syntax_check(str))
+	{
+		ft_putendl_fd("Syntax error\n", STDOUT_FILENO);
+		free(str);
+		return (NULL);
+	}
+	tmp = trim_string(str, set);
+	if (!tmp)
+	{
+		free(str);
+		return (NULL);
+	}
+	return (tmp);
+}
 
 //starts the lexer
-t_lexer	*start_lexer(char *str)
+t_lexer	*start_lexer(char *str, t_env *env)
 {
 	int			i;
 	char		**split;
+	char		*tmp;
 	t_lexer		*lex;
 	static char	set[6] = " \t\n\v\f\r";
 
 	i = 0;
-	if (!syntax_check(str))
-	{
-		printf("Syntax error\n");
-		free(str);
+	tmp = syntax_trimming_helper(str, set);
+	if (!tmp)
 		return (NULL);
-	}
-	split = ft_split_set(str, set);
+	split = ft_split_set(tmp, set);
+	free(tmp);
 	if (!split)
-		return (NULL);
+		perror_lexer("Error splitting string\n", str, env, NULL);
 	while (split[i])
 		i++;
 	lex = new_lexer_list(split, i);
+	split = safe_free(split);
 	if (!lex)
-		return (NULL);
-	//empty_set(split);
+		perror_lexer("Error creating lexer list\n", str, env, lex);
 	return (lex);
 }

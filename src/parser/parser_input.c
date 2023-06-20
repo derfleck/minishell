@@ -13,18 +13,19 @@ static int	move_to_empty(char **str)
 
 //allocates memory for the pieces of the t_cmd struct
 //TODO: add error for malloc fail
-static void	init_cmd_struct(t_cmd *cmd)
+static int	init_cmd_struct(t_cmd *cmd)
 {
 	cmd->arg = ft_calloc(cmd->num[ARG] + 2, sizeof(char *));
 	if (!cmd->arg)
-		return ;
+		return (1);
 	cmd->in = NULL;
 	cmd->out = NULL;
 	cmd->fd[IN] = STDIN_FILENO;
 	cmd->fd[OUT] = STDOUT_FILENO;
 	cmd->here = ft_calloc(cmd->num[HERE] + 1, sizeof(char *));
 	if (!cmd->here)
-		return ;
+		return (1);
+	return (0);
 }
 
 //assigns cmd/arg/here stopwords to string arrays in cmd struct
@@ -74,12 +75,13 @@ void	count_arg_redir(t_lexer *lex, t_cmd *cmd)
 
 //iterates through lexer list and allocates words
 //to command structure as needed
-void	create_words(t_cmd *cmd, t_lexer *lex)
+int	create_words(t_cmd *cmd, t_lexer *lex)
 {
 	t_lexer	*tmp;
 
 	tmp = lex;
-	init_cmd_struct(cmd);
+	if (init_cmd_struct(cmd))
+		return (1);
 	if (tmp->token == PIPE)
 		tmp = tmp->next;
 	while (tmp)
@@ -97,4 +99,5 @@ void	create_words(t_cmd *cmd, t_lexer *lex)
 		if (tmp)
 			tmp = tmp->next;
 	}
+	return (0);
 }

@@ -58,11 +58,10 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 		{
 			printf("%s: command not found\n", cmd->cmd);
 			free_shell(shell);
-			g_stat = 127;
-			return ;
+			exit(g_stat = 127);
 		}
 		if (execve(tmp, cmd->arg, shell->envp) == -1)
-			perror("execve");
+			perror("Error when executing\n");
 		free(tmp);
 	}
 	else
@@ -70,35 +69,32 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 		if (is_builtin(cmd))
 			mini_pathfinder(shell, cmd, head, mode);
 		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
-			perror("execve");
+			perror("Error when executing\n");
 	}
 }
 
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
+//TODO: remove t_shell return type, change to void
 t_shell	*init_shell(char *s, t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
+	cmd->cmd = cmd->arg[0];
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
-		return (NULL);
-	shell->envp = create_env_arr(*head);
+		perror_cmd("Error initializing shell\n", cmd, head);
+	shell->cmd_start = cmd;
+	shell->head = *head;
+	shell->wstatus = 0;
+	shell->s = s;
+	shell->envp = create_env_arr(head);
 	shell->paths = get_paths(shell->envp);
 	shell->pid = ft_calloc(cmd->num[CMD] + 1, sizeof(pid_t));
 	if (!shell->pid)
-		return (NULL);
-	shell->cmd_start = cmd;
-	shell->env = *head;
-	shell->wstatus = 0;
-	shell->s = s;
-	cmd->cmd = cmd->arg[0];
+		perror_shell("Error initializing shell\n", shell);
 	if (cmd->num[CMD] > 1)
-	{
-		if (!cmd_with_pipes(shell, cmd, head))
-			return (NULL);
-	}
+		cmd_with_pipes(shell, cmd, head);
 	else
 		exec_single_cmd(cmd, shell, head);
-	return (NULL);
 }

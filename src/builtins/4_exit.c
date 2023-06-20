@@ -51,7 +51,7 @@ void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 			ft_putstr_fd(args[0], STDERR_FILENO);
 			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
 			free_shell(sh);
-			exit (2);
+			exit(2);
 		}
 	}
 	if (argc == 0)

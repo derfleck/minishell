@@ -1,4 +1,4 @@
-#include "../../inc/executor.h"
+#include "../../inc/minishell.h"
 
 //closes custom redirections and redirect read end
 //of shared pipe to STDIN of parent process

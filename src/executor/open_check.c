@@ -45,6 +45,7 @@ int		open_files(t_cmd *cmd)
 		{
 			write(STDOUT_FILENO, "minishell: ", 11);
 			perror(tmp->next->str);
+			unlink_heredoc(cmd);
 			g_stat = 1;
 			return (0);
 		}
@@ -57,9 +58,6 @@ int		open_files(t_cmd *cmd)
 //opens last in and out files and assigns fd to cmd struct
 void	open_in_out(t_cmd *cmd)
 {
-	// char *filename;
-
-	// filename = NULL;
 	if (cmd->in != NULL)
 	{
 		if (cmd->in->token == LESS)

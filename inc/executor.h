@@ -1,8 +1,7 @@
 #ifndef EXECUTOR_H
 # define EXECUTOR_H
 
-# include <unistd.h>
-# include "minishell.h"
+# include "types.h"
 
 //exec multiple
 int		cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env);
