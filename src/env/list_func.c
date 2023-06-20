@@ -94,3 +94,8 @@ void	append_node_value(t_env *node, char *value2, t_env *head)
 	replace_node_value(node, new_value, head);
 	free(new_value);
 }
+
+// size_t	ft_strlen_till_equal(char *str)
+// {
+
+// }

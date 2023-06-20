@@ -76,6 +76,7 @@ int	builtin_export(char **args, t_env *env)
 		if (key_validity_check(key) == -1)
 		{
 			export_append_helper(key, args[i], env);
+			free(key);
 			return (g_stat);
 		}
 		node = find_env_node(env, key);

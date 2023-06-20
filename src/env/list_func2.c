@@ -97,7 +97,7 @@ char	*split_env_key(const char *str, t_env *head)
 	return (key);
 }
 
-//or alternatively a no-malloc option:
+// or alternatively a no-malloc option:
 // char	*split_env_key(const char *str)
 // {
 // 	size_t			i;
