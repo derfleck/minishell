@@ -32,6 +32,13 @@ static int	exit_stat_valid(char *str)
 	return (1);
 }
 
+static void	exit_helper(t_shell *sh, t_env *head, int err)
+{
+	free_env_list(head);
+	free_shell(sh);
+	exit(err);
+}
+
 /* Exits parent process */
 void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 {
@@ -40,26 +47,17 @@ void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 	{
 		free_env_list(head);
 		if (exit_stat_valid(args[0]))
-		{
-			g_stat = (unsigned char)ft_atoi(args[0]);
-			free_shell(sh);
-			exit(g_stat);
-		}
+			exit_helper(sh, head, (unsigned char)ft_atoi(args[0]));
 		else
 		{
 			ft_putstr_fd("Minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(args[0], STDERR_FILENO);
 			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-			free_shell(sh);
-			exit(2);
+			exit_helper(sh, head, 2);
 		}
 	}
 	if (argc == 0)
-	{
-		free_env_list(head);
-		free_shell(sh);
-		exit(0);
-	}
+		exit_helper(sh, head, 0);
 }
 
 /* Frees totality of env list */
