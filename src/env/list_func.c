@@ -39,22 +39,21 @@ t_env	*find_env_node(t_env *head, char *key)
 	char	*str;
 	size_t	len;
 
-	if (head == NULL)
-		return (NULL);
 	node = head;
 	while (node)
 	{
 		str = split_env_key(node->key_value, head);
 		len = ft_strlen(str);
-		if (ft_strlen(key) == len)
+		if (ft_strlen(key) == len && \
+			!ft_strncmp(node->key_value, key, ft_strlen(key)))
 		{
-			if (!ft_strncmp(node->key_value, key, ft_strlen(key)))
-				return (node);
+			free(str);
+			return (node);
 		}
 		free(str);
 		node = node->next;
 	}
-	if (ft_strcmp(key, "USER"))
+	if (head != NULL && ft_strcmp(key, "USER"))
 	{
 		node = create_user_node(head);
 		return (node);

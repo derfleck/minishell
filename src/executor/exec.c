@@ -34,10 +34,10 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 	else if (ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		builtin_echo(&cmd->arg[1], *env);
 	else if (ft_strncmp(cmd->cmd, "exit", 4) == 0)
-		builtin_exit(sh, &cmd->arg[1], *env, mode);
+		builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
 	{
-		free_env_list(*env);
+		free_env_list(env);
 		free_shell(sh);
 		exit(0);
 	}

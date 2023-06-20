@@ -40,15 +40,15 @@ t_env	*create_node(char *str, t_env *head)
 
 	if (!str)
 		return (NULL);
-	temp = malloc (sizeof (t_env));
+	temp = malloc(sizeof(t_env));
 	if (!temp)
 		perror_exit_free_env("Malloc failed\n", head);
 	temp->key_value = ft_strdup(str);
 	if (temp->key_value == NULL)
 		perror_exit_free_env("Malloc failed\n", head);
-	temp->key_value = ft_strjoin(temp->key_value, "");
-	if (temp->key_value == NULL)
-		perror_exit_free_env("Malloc failed\n", head);
+	//temp->key_value = ft_strjoin(temp->key_value, "");
+	//if (temp->key_value == NULL)
+	//	perror_exit_free_env("Malloc failed\n", head);
 	temp->next = NULL;
 	return (temp);
 }

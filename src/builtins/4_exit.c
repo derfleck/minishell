@@ -3,7 +3,7 @@
 /* Based on process lvl it terminates a process 
 Make sure to know if parent or child process is being terminated
 ONLY: if (process == PARENT) later have child process too!! */
-int	builtin_exit(t_shell *sh, char **args, t_env *env, int process)
+int	builtin_exit(t_shell *sh, char **args, t_env **env, int process)
 {
 	int	argc;
 
@@ -32,48 +32,45 @@ static int	exit_stat_valid(char *str)
 	return (1);
 }
 
+static void	exit_helper(t_shell *sh, t_env **head, int err)
+{
+	free_env_list(head);
+	free_shell(sh);
+	exit(err);
+}
+
 /* Exits parent process */
-void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
+void	exit_parent(t_shell *sh, char **args, t_env **head, int argc)
 {
 	(void)head;
 	if (argc == 1)
 	{
 		free_env_list(head);
 		if (exit_stat_valid(args[0]))
-		{
-			g_stat = (unsigned char)ft_atoi(args[0]);
-			free_shell(sh);
-			exit(g_stat);
-		}
+			exit_helper(sh, head, (unsigned char)ft_atoi(args[0]));
 		else
 		{
 			ft_putstr_fd("Minishell: exit: ", STDERR_FILENO);
 			ft_putstr_fd(args[0], STDERR_FILENO);
 			ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-			free_shell(sh);
-			exit(2);
+			exit_helper(sh, head, 2);
 		}
 	}
 	if (argc == 0)
-	{
-		free_env_list(head);
-		free_shell(sh);
-		exit(0);
-	}
+		exit_helper(sh, head, 0);
 }
 
 /* Frees totality of env list */
-void	*free_env_list(t_env *head)
+void	*free_env_list(t_env **head)
 {
 	t_env	*node;
 
 	if (head == NULL)
 		return (NULL);
-	node = head;
+	node = *head;
 	while (node)
 		node = free_env_node(node);
-	if (head)
-		head = NULL;
+	head = NULL;
 	return (NULL);
 }
 
