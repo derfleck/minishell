@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 
 //checks if command is a builtin
-static int	is_builtin(t_cmd *cmd)
+int	is_builtin(t_cmd *cmd)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0 || \
 		ft_strncmp(cmd->cmd, "env", 3) == 0 || \

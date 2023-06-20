@@ -11,6 +11,29 @@ static int	check_builtins(t_cmd *cmd)
 	return (0);
 }
 
+//updates last cmd path in environment variables (_)
+//TODO: check why it doesn't update afer first exec of env or pipes
+static void	set_last_cmd_path(t_cmd *cmd, t_shell *sh, t_env **head)
+{
+	char	**path;
+	char	*tmp;
+
+	tmp = NULL;
+	path = malloc(sizeof(char *) * 2);
+	if (is_builtin(cmd))
+		*path = ft_strjoin("_=/usr/bin/", cmd->cmd);
+	else
+	{
+		tmp = get_cmd_with_path(cmd, sh->paths);
+		*path = ft_strjoin("_=", tmp);
+		free(tmp);
+	}
+	path[1] = NULL;
+	builtin_export(path, *head);
+	free(path[0]);
+	free(path);
+}
+
 //helper, handles forking, redirection and execution
 static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 {
@@ -23,6 +46,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
 			return ;
 		execute_cmd(cmd, shell, head, CHILD);
+		free_env_list(head);
 		free_shell(shell);
 	}
 	else
@@ -32,6 +56,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		if (cmd->out)
 			close(cmd->fd[OUT]);
 		wait_children(shell, 1);
+		set_last_cmd_path(cmd, shell, head);
 		unlink_heredoc(cmd);
 		shell = free_shell(shell);
 	}
