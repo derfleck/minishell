@@ -3,7 +3,7 @@
 /* Based on process lvl it terminates a process 
 Make sure to know if parent or child process is being terminated
 ONLY: if (process == PARENT) later have child process too!! */
-int	builtin_exit(t_shell *sh, char **args, t_env *env, int process)
+int	builtin_exit(t_shell *sh, char **args, t_env **env, int process)
 {
 	int	argc;
 
@@ -32,7 +32,7 @@ static int	exit_stat_valid(char *str)
 	return (1);
 }
 
-static void	exit_helper(t_shell *sh, t_env *head, int err)
+static void	exit_helper(t_shell *sh, t_env **head, int err)
 {
 	free_env_list(head);
 	free_shell(sh);
@@ -40,7 +40,7 @@ static void	exit_helper(t_shell *sh, t_env *head, int err)
 }
 
 /* Exits parent process */
-void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
+void	exit_parent(t_shell *sh, char **args, t_env **head, int argc)
 {
 	(void)head;
 	if (argc == 1)
@@ -61,17 +61,16 @@ void	exit_parent(t_shell *sh, char **args, t_env *head, int argc)
 }
 
 /* Frees totality of env list */
-void	*free_env_list(t_env *head)
+void	*free_env_list(t_env **head)
 {
 	t_env	*node;
 
 	if (head == NULL)
 		return (NULL);
-	node = head;
+	node = *head;
 	while (node)
 		node = free_env_node(node);
-	if (head)
-		head = NULL;
+	head = NULL;
 	return (NULL);
 }
 

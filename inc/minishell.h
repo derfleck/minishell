@@ -65,9 +65,9 @@ int			helper_get_arg_count(char **args);
 int			builtin_export(char **args, t_env *env);
 int			builtin_unset(char **args, t_env **env);
 int			builtin_cd(char **args, t_env *env);
-int			builtin_exit(t_shell *sh, char **args, t_env *env, int process);
-void		exit_parent(t_shell *sh, char **args, t_env *head, int argc);
-void		*free_env_list(t_env *head);
+int			builtin_exit(t_shell *sh, char **args, t_env **env, int process);
+void		exit_parent(t_shell *sh, char **args, t_env **head, int argc);
+void		*free_env_list(t_env **head);
 void		*free_env_node(t_env *node);
 void		builtin_echo(char **args, t_env *head);
 
