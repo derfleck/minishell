@@ -38,16 +38,16 @@ char	*get_input(t_env *head)
 	if (prompt == NULL)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
-	rl_catch_signals = 0;
-	rl_done = 1;
+	//rl_catch_signals = 0;
+	//rl_done = 1;
+	prompt = safe_free(prompt);
 	if (line == NULL)
 		return (ft_strdup("exit"));
 	else if (line[0] == 0)
-		return (safe_free(line), safe_free(prompt));
-	prompt = safe_free(prompt);
+		return (safe_free(line));
 	return (line);
 }
-
+//TODO: s wiederherstellen, aktuell nur trimmed string -> start_lexer
 int	main(int argc, char **argv, char **envp)
 {
 	char	*s;
@@ -55,8 +55,8 @@ int	main(int argc, char **argv, char **envp)
 	t_lexer	*lex;
 	t_cmd	*cmd;
 
-	(void)argc;
-	(void)argv;
+	if (argc > 1)
+		printf("%s: no arguments allowed", argv[1]);
 	env = init_env(envp);
 	lex = NULL;
 	cmd = NULL;
@@ -67,13 +67,14 @@ int	main(int argc, char **argv, char **envp)
 		if (s == NULL)
 			continue ;
 		add_history(s);
-		lex = start_lexer(s);
-		if (lex)
-			expander_start(lex, env);
-		if (lex)
-			cmd = create_parse_list(lex);
+		lex = start_lexer(s, env);
+		if (!lex)
+			continue ;
+		expander_start(lex, env);
+		cmd = create_parse_list(lex);
 		if (cmd != NULL && env != NULL)
 			init_shell(s, cmd, env);
+		//free(s);
 	}
 	return (0);
 }

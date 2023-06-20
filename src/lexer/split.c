@@ -74,29 +74,27 @@ void	empty_set(char **str)
 //keeps tokens for bash parsing (<, > and |)
 char	**ft_split_set(char *str, char *set)
 {
-	char	*tmp;
 	char	**split;
 	int		len;
 	int		word;
 
 	word = 0;
-	tmp = ft_strtrim(str, set);
-	split = ft_calloc(cnt_with_token(tmp, set) + 1, sizeof(char *));
+	split = ft_calloc(cnt_with_token(str, set) + 1, sizeof(char *));
 	if (!split)
 		return (empty_set(split), NULL);
-	while (*tmp)
+	while (*str)
 	{
 		len = 0;
-		if (token_check(tmp, &len))
-			split[word++] = ft_substr(tmp, 0, len);
-		tmp += len;
-		len = get_sub(tmp, set);
+		if (token_check(str, &len))
+			split[word++] = ft_substr(str, 0, len);
+		str += len;
+		len = get_sub(str, set);
 		if (len)
-			split[word++] = ft_substr(tmp, 0, len);
-		while (tmp[len] && (ft_strchr(set, tmp[len]) != 0 && \
-				tmp[len] != '\'' && tmp[len] != '"'))
+			split[word++] = ft_substr(str, 0, len);
+		while (str[len] && (ft_strchr(set, str[len]) != 0 && \
+				str[len] != '\'' && str[len] != '"'))
 			len++;
-		tmp += len;
+		str += len;
 	}
 	return (split);
 }

@@ -27,6 +27,25 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		free(input);
 	}
 }
+/*
+static void	check_heredoc(t_cmd *cmd, int fd)
+{
+	char	buf[1];
+	ssize_t	ret;
+	off_t	size;
+
+	size = 0;
+	while ((ret = read(fd, buf, sizeof(buf))) > 0)
+		size += ret;
+	if (size == 0) {
+		ft_putstr_fd("minishell: warning : here-document deli", STDOUT_FILENO);
+		ft_putstr_fd("mited by end-of-file (wanted `here`)\n", STDOUT_FILENO);
+		unlink_heredoc(cmd);
+		cmd->here_file = NULL;
+	}
+
+}
+*/
 
 //starts the heredoc mode, iterates through all stopwords
 //IMPORTANT: should always be started if heredoc stopwords provided
@@ -36,7 +55,6 @@ static char	*start_heredoc(t_cmd *cmd)
 	int		i;
 	char	*input;
 	char	*number;
-	char	buf[3];
 
 	number = ft_itoa(cmd->i);
 	cmd->here_file = ft_strjoin("here_", number);
@@ -46,14 +64,12 @@ static char	*start_heredoc(t_cmd *cmd)
 	fd = open(cmd->here_file, O_CREAT | O_RDWR, 0644);
 	if (fd == -1)
 		return (NULL);
+
+	
 	heredoc_loop(cmd, i, fd, input);
-	if (read(fd, buf, 1) <= 0)
-	{
-		ft_putstr_fd("minishell: warning : here-document deli", STDOUT_FILENO);
-		ft_putstr_fd("mited by end-of-file (wanted `here`)\n", STDOUT_FILENO);
-		unlink_heredoc(cmd);
-		cmd->here_file = NULL;
-	}
+	//check_heredoc(cmd, fd);
+	
+	
 	close(fd);
 	return (cmd->here_file);
 }

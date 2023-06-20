@@ -64,17 +64,27 @@ t_shell	*free_shell(t_shell *sh)
 {
 	int	i;
 
-	if (sh->cmd_start->start != NULL)
-		sh->cmd_start->start = free_lex(sh->cmd_start->start);
-	if (sh->cmd_start != NULL)
-		sh->cmd_start = free_cmd(sh->cmd_start);
-	i = -1;
-	while (sh->envp[++i] != NULL)
-		sh->envp[i] = safe_free(sh->envp[i]);
-	i = -1;
-	while (sh->paths[++i] != NULL)
-		sh->envp[i] = safe_free(sh->paths[i]);
-	sh->pid = safe_free(sh->pid);
-	sh->s = safe_free(sh->s);
-	return (safe_free(sh));
+	if (sh)
+	{
+		if (sh->cmd_start != NULL && sh->cmd_start->start != NULL)
+			sh->cmd_start->start = free_lex(sh->cmd_start->start);
+		if (sh->cmd_start != NULL)
+			sh->cmd_start = free_cmd(sh->cmd_start);
+		i = -1;
+		while (sh->envp[++i] != NULL)
+			sh->envp[i] = safe_free(sh->envp[i]);
+		if (sh->envp)
+			sh->envp = safe_free(sh->envp);
+		i = -1;
+		while (sh->paths[++i] != NULL)
+			sh->paths[i] = safe_free(sh->paths[i]);
+		if (sh->paths)
+			sh->paths = safe_free(sh->paths);
+		if (sh->pid != NULL)
+			sh->pid = safe_free(sh->pid);
+		if (sh->s != NULL)
+			sh->s = safe_free(sh->s);
+		return (safe_free(sh));
+	}
+	return (NULL);
 }

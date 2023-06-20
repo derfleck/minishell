@@ -1,7 +1,7 @@
 #ifndef EXPANDER_H
 # define EXPANDER_H
 
-# include "minishell.h"
+# include "types.h"
 
 /* expander 1 */
 //char	**expander_start(char **args, t_env *head);
