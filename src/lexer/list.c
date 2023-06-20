@@ -39,6 +39,30 @@ static char	*trim_string(char *str, char *set)
 		perror("Error trimming string\n");
 		return (NULL);
 	}
+	else if (tmp && tmp[0] == '\0')
+	{
+		safe_free(tmp);
+		return (NULL);
+	}
+	return (tmp);
+}
+
+static char	*syntax_trimming_helper(char *str, char *set)
+{
+	char	*tmp;
+
+	if (!syntax_check(str))
+	{
+		ft_putendl_fd("Syntax error\n", STDOUT_FILENO);
+		free(str);
+		return (NULL);
+	}
+	tmp = trim_string(str, set);
+	if (!tmp)
+	{
+		free(str);
+		return (NULL);
+	}
 	return (tmp);
 }
 
@@ -52,13 +76,9 @@ t_lexer	*start_lexer(char *str, t_env *env)
 	static char	set[6] = " \t\n\v\f\r";
 
 	i = 0;
-	if (!syntax_check(str))
-	{
-		ft_putendl_fd("Syntax error\n", STDOUT_FILENO);
-		free(str);
+	tmp = syntax_trimming_helper(str, set);
+	if (!tmp)
 		return (NULL);
-	}
-	tmp = trim_string(str, set);
 	split = ft_split_set(tmp, set);
 	free(tmp);
 	if (!split)
