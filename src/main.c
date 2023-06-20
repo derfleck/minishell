@@ -74,7 +74,7 @@ int	main(int argc, char **argv, char **envp)
 		if (lex)
 			cmd = create_parse_list(lex);
 		if (cmd != NULL && env != NULL)
-			init_shell(s, cmd, env);
+			init_shell(s, cmd, &env);
 	}
 	return (0);
 }

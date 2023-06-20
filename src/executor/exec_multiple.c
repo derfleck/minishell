@@ -20,7 +20,7 @@ int	parent_redir(int *pip, t_cmd *cmd)
 
 //redirects write end of pipe to STDOUT if not last cmd
 //redirects in and out files to STDIN/STDOUT respectively
-int	child_redir(int *pip, t_cmd *cmd, t_shell *shell)
+int	child_redir(int *pip, t_cmd *cmd, t_shell *shell, t_env **env)
 {
  	if (cmd->next != NULL)
 	{
@@ -38,12 +38,12 @@ int	child_redir(int *pip, t_cmd *cmd, t_shell *shell)
 	if (cmd->out != NULL)
 		close(cmd->fd[OUT]);
 	close(shell->stdin_cpy);
-	execute_cmd(cmd, shell, CHILD);
+	execute_cmd(cmd, shell, env, CHILD);
 	return (1);
 }
 
 //creates fork of process and checks if parent/child process
-int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
+int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i, t_env **env)
 {
 	if (cmd->next != NULL)
 	{
@@ -55,7 +55,7 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 	if (shell->pid[i] < 0)
 		return (0);
 	if (shell->pid[i] == CHILD)
-		return(child_redir(pip, cmd, shell));
+		return (child_redir(pip, cmd, shell, env));
 	else
 		return (parent_redir(pip, cmd));
 	return (1);
@@ -64,7 +64,7 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 //executes piped commands and initializes redirects
 //returns 1 on success, 0 on failure
 //starting point for piped execution
-int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
+int	cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env)
 {
 	int		pip[2];
 	t_cmd	*tmp;
@@ -80,7 +80,7 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 			open_in_out(tmp);
 		else
 			break ;
-		if (!fork_and_exec(pip, tmp, shell, i++))
+		if (!fork_and_exec(pip, tmp, shell, i++, env))
 			break ;
 		unlink_heredoc(tmp);
 		tmp = tmp->next;

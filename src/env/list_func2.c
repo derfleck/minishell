@@ -28,7 +28,6 @@ void	remove_node(t_env **head, char *key)
 		prev->next = temp->next;
 	free_ptr(temp->key_value);
 	free_ptr(temp);
-
 }
 
 /* Allow only alphanumericals and the '_' in the key received.
