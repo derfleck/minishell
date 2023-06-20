@@ -1,25 +1,29 @@
 #include "../../inc/minishell.h"
 
 /* removes node - used for builtin UNSET 
-TODO: if head id removed, I get a segfault!!!! */
-void	remove_node(t_env *head, char *key)
+TODO: LEAKS!!!  */
+void	remove_node(t_env **head, char *key)
 {
 	t_env	*temp;
 	t_env	*prev;
+	char	*str;
 
-	if (head == NULL || !key)
+	if (*head == NULL || !key)
 		return ;
 	prev = NULL;
-	temp = head;
-	while (ft_strncmp(key, split_env_key(temp->key_value), ft_strlen(key)))
+	temp = *head;
+	str = split_env_key(temp->key_value, *head);
+	while (ft_strncmp(key, str, ft_strlen(key)))
 	{
 		prev = temp;
 		temp = temp->next;
+		str = split_env_key(temp->key_value, *head);
 	}
+	free(str);
 	if (temp == NULL)
 		return ;
 	if (prev == NULL)
-		head = head->next;
+		*head = (*head)->next;
 	else
 		prev->next = temp->next;
 	free_ptr(temp->key_value);
@@ -77,7 +81,7 @@ char	*split_env_value(char *str)
 /* receives key=value string, splits the key off (everything before
 the (=) sign, and returns it as an allocated new str
 TODO: free key somewhere!!! */
-char	*split_env_key(const char *str)
+char	*split_env_key(const char *str, t_env *head)
 {
 	size_t		i;
 	char		*key;
@@ -89,11 +93,11 @@ char	*split_env_key(const char *str)
 		i++;
 	key = ft_substr(str, 0, i);
 	if (!key)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	return (key);
 }
 
-//or alternatively a no-malloc option:
+// or alternatively a no-malloc option:
 // char	*split_env_key(const char *str)
 // {
 // 	size_t			i;

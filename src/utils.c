@@ -30,9 +30,11 @@ void	increase_shell_level(t_env *env)
 	if (node)
 	{
 		new_slvl = ft_itoa(ft_atoi(split_env_value(node->key_value)) + 1);
-		replace_node_value(node, new_slvl);
+		if (!new_slvl)
+			perror_exit_free_env("Malloc failed \n", env);
+		replace_node_value(node, new_slvl, env);
 		new_slvl = free_ptr(new_slvl);
 	}
 	else
-		add_node_to_list(env, create_node("SHLVL=1"));
+		add_node_to_list(env, create_node("SHLVL=1", env));
 }

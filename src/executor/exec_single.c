@@ -12,7 +12,7 @@ static int	check_builtins(t_cmd *cmd)
 }
 
 //helper, handles forking, redirection and execution
-static void	exec_child_single(t_cmd *cmd, t_shell *shell)
+static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 {
 	shell->pid[0] = fork();
 	set_sigaction(shell->pid[0]);
@@ -22,7 +22,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell)
 			return ;
 		if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
 			return ;
-		execute_cmd(cmd, shell, CHILD);
+		execute_cmd(cmd, shell, head, CHILD);
 		free_shell(shell);
 	}
 	else
@@ -37,7 +37,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell)
 	}
 }
 
-void	exec_single_cmd(t_cmd *cmd, t_shell *shell)
+void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head)
 {
 	run_heredoc(cmd);
 	if (open_files(cmd))
@@ -46,9 +46,9 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell)
 		return ;
 	if (check_builtins(cmd))
 	{
-		execute_cmd(cmd, shell, PARENT);
+		execute_cmd(cmd, shell, head, PARENT);
 		unlink_heredoc(cmd);
 	}
 	else
-		exec_child_single(cmd, shell);	
+		exec_child_single(cmd, shell, head);	
 }

@@ -11,7 +11,6 @@ char	*replace_string(char *input, t_env *head, char *spec)
 	char	*value;
 	char	*new_str;
 
-	new_str = ft_strdup("");
 	if ((input[0] == '~' && input[1] == '\0') || \
 	(input[0] == '~' && input[1] == '/'))
 		return (expand_home(input, head, spec));
@@ -20,6 +19,7 @@ char	*replace_string(char *input, t_env *head, char *spec)
 		value = check_key_exist(head, spec + 1);
 		if (!value)
 		{
+			new_str = ft_strdup(input);
 			if (spec[1] == '?')
 				new_str = expand_status(input, spec);
 			return (new_str);
@@ -121,7 +121,7 @@ t_env	*create_home(char *str, t_env *head)
 {
 	t_env	*node;
 
-	node = create_node(str);
+	node = create_node(str, head);
 	add_node_to_list(head, node);
 	node->next = NULL;
 	return (node);
