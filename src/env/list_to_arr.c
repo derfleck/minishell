@@ -9,7 +9,7 @@ char	**create_env_arr(t_env *head)
 	size = return_list_size(head);
 	env_arr = ft_calloc(size + 1, sizeof(char *));
 	if (!env_arr)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	copy_list_to_arr(head, env_arr);
 	return (env_arr);
 }
@@ -26,7 +26,7 @@ void	copy_list_to_arr(t_env *head, char **env_arr)
 	{
 		env_arr[i] = ft_strdup(node->key_value);
 		if (!env_arr[i])
-			perror_exit("Malloc failed\n");
+			perror_exit_free_env("Malloc failed\n", head);
 		i++;
 		node = node->next;
 	}
@@ -48,4 +48,3 @@ int	return_list_size(t_env *head)
 	}
 	return (i);
 }
-

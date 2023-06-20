@@ -16,32 +16,35 @@ static int	is_builtin(t_cmd *cmd)
 }
 
 //TODO: set correct status code
-static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env *env, int mode)
+static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
-		builtin_pwd();
-	else if(ft_strncmp(cmd->cmd, "env", 3) == 0)
-		print_env(env);
-	else if(ft_strncmp(cmd->cmd, "cd", 2) == 0)
-		builtin_cd(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "export", 6) == 0)
-		builtin_export(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "unset", 5) == 0)
+		builtin_pwd(*env);
+	else if (ft_strncmp(cmd->cmd, "env", 3) == 0)
+		print_env(*env);
+	else if (ft_strncmp(cmd->cmd, "cd", 2) == 0)
+		builtin_cd(&cmd->arg[1], *env);
+	else if (ft_strncmp(cmd->cmd, "export", 6) == 0)
+		builtin_export(&cmd->arg[1], *env);
+	else if (ft_strncmp(cmd->cmd, "unset", 5) == 0)
+	{
 		builtin_unset(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "echo", 4) == 0)
-		builtin_echo(&cmd->arg[1], env);
-	else if(ft_strncmp(cmd->cmd, "exit", 4) == 0)
-		builtin_exit(sh, &cmd->arg[1], env, mode);
+		sh->env = *env;
+	}
+	else if (ft_strncmp(cmd->cmd, "echo", 4) == 0)
+		builtin_echo(&cmd->arg[1], *env);
+	else if (ft_strncmp(cmd->cmd, "exit", 4) == 0)
+		builtin_exit(sh, &cmd->arg[1], *env, mode);
 	if (mode == CHILD)
 	{
-		free_env_list(env);
+		free_env_list(*env);
 		free_shell(sh);
 		exit(0);
 	}
 }
 
 //checks if command path is absolute or relative
-void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
+void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 {
 	char	*tmp;
 
@@ -64,7 +67,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 	else
 	{
 		if (is_builtin(cmd))
-			mini_pathfinder(shell, cmd, shell->head, mode);
+			mini_pathfinder(shell, cmd, head, mode);
 		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("Error when executing\n");
 	}
@@ -72,7 +75,8 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, int mode)
 
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
-void	init_shell(char *s, t_cmd *cmd, t_env *head)
+//TODO: remove t_shell return type, change to void
+t_shell	*init_shell(char *s, t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
@@ -81,7 +85,7 @@ void	init_shell(char *s, t_cmd *cmd, t_env *head)
 	if (!shell)
 		perror_cmd("Error initializing shell\n", cmd, head);
 	shell->cmd_start = cmd;
-	shell->head = head;
+	shell->head = *head;
 	shell->wstatus = 0;
 	shell->s = s;
 	shell->envp = create_env_arr(head);
@@ -90,7 +94,7 @@ void	init_shell(char *s, t_cmd *cmd, t_env *head)
 	if (!shell->pid)
 		perror_shell("Error initializing shell\n", shell);
 	if (cmd->num[CMD] > 1)
-		cmd_with_pipes(shell, cmd);
+		cmd_with_pipes(shell, cmd, head);
 	else
-		exec_single_cmd(cmd, shell);
+		exec_single_cmd(cmd, shell, head);
 }

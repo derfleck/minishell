@@ -36,17 +36,22 @@ If not found, or no env list, it returns NULL */
 t_env	*find_env_node(t_env *head, char *key)
 {
 	t_env	*node;
+	char	*str;
+	size_t	len;
 
 	if (head == NULL)
 		return (NULL);
 	node = head;
 	while (node)
 	{
-		if (ft_strlen(key) == ft_strlen(split_env_key(node->key_value)))
+		str = split_env_key(node->key_value, head);
+		len = ft_strlen(str);
+		if (ft_strlen(key) == len)
 		{
 			if (!ft_strncmp(node->key_value, key, ft_strlen(key)))
 				return (node);
 		}
+		free(str);
 		node = node->next;
 	}
 	if (ft_strcmp(key, "USER"))
@@ -59,33 +64,38 @@ t_env	*find_env_node(t_env *head, char *key)
 
 /* Gets env node and char* to replace the current value 
 (string after the first '=' sign ). */
-void	replace_node_value(t_env *node, char *new_value)
+void	replace_node_value(t_env *node, char *new_value, t_env *head)
 {
 	char	*k;
 	char	*key;
 
 	if (node == NULL)
 		return ;
-	k = split_env_key(node->key_value);
+	k = split_env_key(node->key_value, head);
 	key = ft_strjoin(k, "=");
 	if (!k || !key)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	free(k);
 	node->key_value = free_ptr(node->key_value);
 	node->key_value = ft_strjoin(key, new_value);
 	if (node->key_value == NULL)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed\n", head);
 	free(key);
 }
 
 /* Gets env node and str to append it to the existing value in that node. */
-void	append_node_value(t_env *node, char *value2)
+void	append_node_value(t_env *node, char *value2, t_env *head)
 {
 	char	*new_value;
 
 	new_value = ft_strjoin(split_env_value(node->key_value), value2);
 	if (!new_value)
-		perror_exit("Malloc failed\n");
-	replace_node_value(node, new_value);
+		perror_exit_free_env("Malloc failed\n", head);
+	replace_node_value(node, new_value, head);
 	free(new_value);
 }
+
+// size_t	ft_strlen_till_equal(char *str)
+// {
+
+// }

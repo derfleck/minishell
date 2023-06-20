@@ -25,6 +25,7 @@ SRCSLIST		:=	main.c \
 					builtins/3_export_unset.c \
 					builtins/4_exit.c \
 					builtins/5_echo.c \
+					free/free1.c \
 					utils.c \
 					lexer/lexer.c \
 					lexer/list.c \
@@ -37,7 +38,7 @@ SRCSLIST		:=	main.c \
 					executor/open_check.c \
 					executor/search_path.c \
 					executor/exec_multiple.c \
-          			executor/exec_single.c \
+         	executor/exec_single.c \
 					expander/expand1.c \
 					expander/expand2.c \
 					expander/expand3.c \
