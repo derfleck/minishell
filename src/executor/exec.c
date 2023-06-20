@@ -29,7 +29,7 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 	else if (ft_strncmp(cmd->cmd, "unset", 5) == 0)
 	{
 		builtin_unset(&cmd->arg[1], env);
-		sh->env = *env;
+		sh->head = *env;
 	}
 	else if (ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		builtin_echo(&cmd->arg[1], *env);
@@ -76,19 +76,19 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
 //TODO: remove t_shell return type, change to void
-t_shell	*init_shell(char *s, t_cmd *cmd, t_env **head)
+void	init_shell(char *s, t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
 	cmd->cmd = cmd->arg[0];
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
-		perror_cmd("Error initializing shell\n", cmd, head);
+		perror_cmd("Error initializing shell\n", cmd, *head);
 	shell->cmd_start = cmd;
 	shell->head = *head;
 	shell->wstatus = 0;
 	shell->s = s;
-	shell->envp = create_env_arr(head);
+	shell->envp = create_env_arr(*head);
 	shell->paths = get_paths(shell->envp);
 	shell->pid = ft_calloc(cmd->num[CMD] + 1, sizeof(pid_t));
 	if (!shell->pid)
