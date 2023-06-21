@@ -11,6 +11,9 @@
 # ifndef HOME
 #  define HOME ".."
 # endif
+# ifndef ARG_MAX
+#  define ARG_MAX 4096
+# endif
 
 /* global variable for exit status */
 extern int	g_stat;

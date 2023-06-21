@@ -20,7 +20,7 @@ static void	set_last_cmd_path(t_cmd *cmd, t_shell *sh, t_env **head)
 
 	tmp = NULL;
 	path = malloc(sizeof(char *) * 2);
-	if (is_builtin(cmd))
+	if (is_builtin(cmd->cmd))
 		*path = ft_strjoin("_=/usr/bin/", cmd->cmd);
 	else
 	{

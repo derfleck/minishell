@@ -59,7 +59,7 @@ int	main(int argc, char **argv, char **envp)
 	t_cmd	*cmd;
 
 	if (argc > 1)
-		printf("%s: no arguments allowed", argv[1]);
+		(void)argv;
 	env = init_env(envp);
 	lex = NULL;
 	cmd = NULL;

@@ -16,9 +16,12 @@ static int	parse_check(t_lexer *lex)
 		|| (tmp->next == NULL && tmp->token))
 		{
 			if (tmp->token == PIPE && tmp->prev == NULL)
-				printf("minishell: syntax error near unexpected token %s", tmp->str);
+			{
+				ft_putstr_fd("minishell: syntax error near unexpected token", STDERR_FILENO);
+				ft_putendl_fd(tmp->str, STDERR_FILENO);
+			}
 			else if (tmp->next == NULL && tmp->token)
-				printf("minishell: syntax error near unexpected token `newline'");
+				ft_putendl_fd("minishell: syntax error near unexpected token `newline'", STDERR_FILENO);
 			return (0);
 		}
 		while (tmp && tmp->token != PIPE)

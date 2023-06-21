@@ -14,6 +14,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <string.h>
+# include <limits.h>
 
 # include "types.h"
 # include "parser.h"
@@ -51,6 +52,8 @@ void		perror_cmd(char *message, t_cmd *cmd, t_env *head);
 void		perror_shell(char *message, t_shell *sh);
 void		perror_shell_no_env(char *message, t_shell *sh);
 void		perror_exit_free_env(char *message, t_env *head);
+void		perror_cmd_not_found(char *cmd, t_shell *sh);
+void		perror_env_too_big(char *cmd, t_shell *sh, t_env **head);
 
 /* utils */
 int			ft_strcmp(char *s1, char *s2);

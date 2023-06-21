@@ -1,15 +1,15 @@
 #include "../../inc/minishell.h"
 
 //checks if command is a builtin
-int	is_builtin(t_cmd *cmd)
+int	is_builtin(char *cmd)
 {
-	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0 || \
-		ft_strncmp(cmd->cmd, "env", 3) == 0 || \
-		ft_strncmp(cmd->cmd, "cd", 2) == 0 || \
-		ft_strncmp(cmd->cmd, "export", 6) == 0 || \
-		ft_strncmp(cmd->cmd, "unset", 5) == 0 || \
-		ft_strncmp(cmd->cmd, "exit", 4) == 0 || \
-		ft_strncmp(cmd->cmd, "echo", 4) == 0)
+	if (ft_strncmp(cmd, "pwd", 3) == 0 || \
+		ft_strncmp(cmd, "env", 3) == 0 || \
+		ft_strncmp(cmd, "cd", 2) == 0 || \
+		ft_strncmp(cmd, "export", 6) == 0 || \
+		ft_strncmp(cmd, "unset", 5) == 0 || \
+		ft_strncmp(cmd, "exit", 4) == 0 || \
+		ft_strncmp(cmd, "echo", 4) == 0)
 		return (1);
 	else
 		return (0);
@@ -43,6 +43,25 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 	}
 }
 
+static int check_environ_size(t_shell *shell, t_env **head, char *cmd)
+{
+	size_t	size;
+	t_env	*tmp;
+
+	size = 0;
+	if (is_builtin(cmd) && ft_strncmp(cmd, "env", 3))
+		return (1);
+	tmp = *head;
+	while (tmp)
+	{
+		size += ft_strlen(tmp->key_value + 1);
+		tmp = tmp->next;
+	}
+	if (size > ARG_MAX)
+		perror_env_too_big(cmd, shell, head);
+	return (1);
+}
+
 //checks if command path is absolute or relative
 void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 {
@@ -51,25 +70,21 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 	tmp = NULL;
 	if (cmd->cmd == NULL)
 		return ;
-	if (cmd->cmd && ft_strncmp("./", cmd->cmd, 2) != 0 && !is_builtin(cmd))
+	if (ft_strncmp("./", cmd->cmd, 2) != 0 && !is_builtin(cmd->cmd))
 	{
 		tmp = get_cmd_with_path(cmd, shell->paths);
 		if (!tmp)
-		{
-			printf("%s: command not found\n", cmd->cmd);
-			free_shell(shell);
-			exit(g_stat = 127);
-		}
-		if (execve(tmp, cmd->arg, shell->envp) == -1)
-			perror("Error when executing\n");
+			perror_cmd_not_found(cmd->cmd, shell);
+		if (check_environ_size(shell, head, tmp) && execve(tmp, cmd->arg, shell->envp) == -1)
+			perror("execve");
 		free(tmp);
 	}
-	else
+	else if (check_environ_size(shell, head, cmd->cmd))
 	{
-		if (is_builtin(cmd))
+		if (is_builtin(cmd->cmd))
 			mini_pathfinder(shell, cmd, head, mode);
 		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
-			perror("Error when executing\n");
+			perror("execve");
 	}
 }
 
