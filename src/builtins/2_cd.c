@@ -56,6 +56,7 @@ int	builtin_cd(char **args, t_env **env)
 	{
 		ft_putendl_fd("Minishell: cd:   : Too many arguments", STDERR_FILENO);
 		g_stat = 1;
+		free(oldpath);
 		return (g_stat);
 	}
 	else if (args[0][0] == '\0')
@@ -66,6 +67,7 @@ int	builtin_cd(char **args, t_env **env)
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 		g_stat = 1;
+		free(oldpath);
 		return (g_stat);
 	}
 	update_pwds(env, oldpath);

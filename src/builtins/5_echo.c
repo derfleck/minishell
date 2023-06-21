@@ -9,8 +9,6 @@ static int	look_for_nflag(char *str)
 	int	i;
 
 	i = 1;
-	if (!str)
-		return (-1);
 	if (!str[i])
 		return (0);
 	while (str[i])
@@ -37,8 +35,6 @@ int	builtin_echo(char **args, t_env *head)
 	(void)head;
 	i = -1;
 	flag = look_for_nflag(args[0]);
-	if (flag == -1)
-		return (g_stat);
 	if (flag == 1)
 		i++;
 	while (args[++i])

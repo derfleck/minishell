@@ -38,6 +38,7 @@ creating XXX=555 as new env variable */
 static void	export_append_helper(char *key, char *str, t_env **env)
 {
 	char	*realkey;
+	char	*realkey2;
 	t_env	*node;
 
 	realkey = ft_strtrim(key, "+");
@@ -47,8 +48,9 @@ static void	export_append_helper(char *key, char *str, t_env **env)
 	node = find_env_node(*env, realkey);
 	if (node == NULL)
 	{
-		realkey = ft_strjoin(realkey, "=");
-		node = create_node(ft_strjoin(realkey, split_env_value(str)), *env);
+		realkey2 = ft_strjoin(realkey, "=");
+		free(realkey);
+		node = create_node(ft_strjoin(realkey2, split_env_value(str)), *env);
 		add_node_to_list(env, node);
 	}	
 	else
