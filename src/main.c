@@ -28,6 +28,20 @@ static	char *expand_home_prompt(t_env *head)
 		return (cwd);
 }
 
+static char *safe_join(char *s1, char *s2, t_env *head)
+{
+	char *ret;
+
+	ret = ft_strjoin(s1, s2);
+	if (!ret)
+		perror_exit_free_env("Malloc failed\n", head);
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
+	return (ret);
+}
+
 //constructs the prompt line from the copy of the environment variables
 static char	*prompt_line(t_env *head)
 {
@@ -37,16 +51,17 @@ static char	*prompt_line(t_env *head)
 	t_env	*node;
 
 	node = find_env_node(head, "USER");
-	tmp = ft_strjoin(split_env_value(node->key_value), "@minishell:");
+	tmp = ft_strjoin("\x1b[36m", split_env_value(node->key_value));
 	if (!tmp)
 		perror_exit_free_env("Malloc failed\n", head);
-	tmp2 = expand_home_prompt(head);
-	tmp3 = ft_strjoin(tmp, tmp2);
-	if (!tmp3)
+	tmp2 = ft_strjoin(tmp, "@minishell");
+	if (!tmp2)
 		perror_exit_free_env("Malloc failed\n", head);
 	free(tmp);
-	free(tmp2);
-	tmp = ft_strjoin(tmp3, "$ ");
+	tmp = tmp2;
+	tmp2 = expand_home_prompt(head);
+	tmp3 = safe_join(tmp, tmp2, head);
+	tmp = ft_strjoin(tmp3, "$ \x1b[0m");
 	if (!tmp)
 		perror_exit_free_env("Malloc failed\n", head);
 	free(tmp3);

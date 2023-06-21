@@ -29,7 +29,7 @@ static void	set_last_cmd_path(t_cmd *cmd, t_shell *sh, t_env **head)
 		free(tmp);
 	}
 	path[1] = NULL;
-	builtin_export(path, *head);
+	builtin_export(path, head);
 	free(path[0]);
 	free(path);
 }
