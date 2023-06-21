@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 
 /* updates env variables PWD and OLDPWD after cd was called */
-static void	update_pwds(t_env *env, char *oldpath)
+static void	update_pwds(t_env **env, char *oldpath)
 {
 	t_env	*node1;
 	t_env	*node2;
@@ -12,10 +12,10 @@ static void	update_pwds(t_env *env, char *oldpath)
 	oldpwd = ft_strjoin("OLDPWD=", oldpath);
 	if (oldpwd == NULL)
 		perror_exit("Malloc failed\n");
-	node1 = find_env_node(env, "PWD");
-	node2 = find_env_node(env, "OLDPWD");
+	node1 = find_env_node(*env, "PWD");
+	node2 = find_env_node(*env, "OLDPWD");
 	if (node2 == NULL)
-		node2 = create_node(oldpwd, env);
+		node2 = create_node(oldpwd, *env);
 	else
 		replace_node_value(node2, oldpath, env);
 	free(oldpwd);
@@ -45,7 +45,7 @@ int	helper_get_arg_count(char **args)
 
 /* changes the current working directory and updates env */
 //TODO check how args come in from parser
-int	builtin_cd(char **args, t_env *env)
+int	builtin_cd(char **args, t_env **env)
 {
 	char	*oldpath;
 	int		argc;
@@ -56,6 +56,7 @@ int	builtin_cd(char **args, t_env *env)
 	{
 		ft_putendl_fd("Minishell: cd:   : Too many arguments", STDERR_FILENO);
 		g_stat = 1;
+		free(oldpath);
 		return (g_stat);
 	}
 	else if (args[0][0] == '\0')
@@ -66,6 +67,7 @@ int	builtin_cd(char **args, t_env *env)
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 		g_stat = 1;
+		free(oldpath);
 		return (g_stat);
 	}
 	update_pwds(env, oldpath);

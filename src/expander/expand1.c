@@ -1,23 +1,6 @@
 #include "../../inc/minishell.h"
 
 //Makes sure expander can handle all incoming strings
-/*
-char	**expander_start(char **args, t_env *head)
-{
-	int	i;
-
-	i = 0;
-	if (!args)
-		return (NULL);
-	while (args[i])
-	{
-		args[i] = expander(args[i], head);
-		i++;
-	}
-	return (args);
-}
-*/
-
 void	expander_start(t_lexer *lex, t_env *head)
 {
 	t_lexer	*lex_tmp;

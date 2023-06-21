@@ -95,3 +95,31 @@ void	perror_env_too_big(char *cmd, t_shell *sh, t_env **head)
 		free_shell(sh);
 	exit(126);
 }
+
+/* static helper of free_env_list
+Frees a single env node */
+static void	*free_env_node(t_env *node)
+{
+	t_env	*tmp;
+
+	if (!node)
+		return (NULL);
+	free_ptr(node->key_value);
+	tmp = node->next;
+	free_ptr(node);
+	return (tmp);
+}
+
+/* Frees totality of env list */
+void	*free_env_list(t_env **head)
+{
+	t_env	*node;
+
+	if (head == NULL)
+		return (NULL);
+	node = *head;
+	while (node)
+		node = free_env_node(node);
+	head = NULL;
+	return (NULL);
+}

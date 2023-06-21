@@ -1,35 +1,5 @@
 #include "../../inc/minishell.h"
 
-/* removes node - used for builtin UNSET 
-TODO: LEAKS!!!  */
-void	remove_node(t_env **head, char *key)
-{
-	t_env	*temp;
-	t_env	*prev;
-	char	*str;
-
-	if (*head == NULL || !key)
-		return ;
-	prev = NULL;
-	temp = *head;
-	str = split_env_key(temp->key_value, *head);
-	while (ft_strncmp(key, str, ft_strlen(key)))
-	{
-		prev = temp;
-		temp = temp->next;
-		str = split_env_key(temp->key_value, *head);
-	}
-	free(str);
-	if (temp == NULL)
-		return ;
-	if (prev == NULL)
-		*head = (*head)->next;
-	else
-		prev->next = temp->next;
-	free_ptr(temp->key_value);
-	free_ptr(temp);
-}
-
 /* Allow only alphanumericals and the '_' in the key received.
 If true, it returns 1. If false, it returns 0. 
 Also returns 0 if key is only nrs OR starts with digit.
@@ -61,6 +31,25 @@ int	key_validity_check(char *key)
 		return (0);
 	else
 		return (1);
+}
+
+/* Receives a str as "key=value". If not, it returns NULL.
+Creates a single node and sets next pointer to NULL. Returns the node 
+IMPORTANT: doesn't add created node to list!!! */
+t_env	*create_node(char *str, t_env *head)
+{
+	t_env	*temp;
+
+	if (!str)
+		return (NULL);
+	temp = malloc(sizeof(t_env));
+	if (!temp)
+		perror_exit_free_env("Malloc failed\n", head);
+	temp->key_value = ft_strdup(str);
+	if (temp->key_value == NULL)
+		perror_exit_free_env("Malloc failed\n", head);
+	temp->next = NULL;
+	return (temp);
 }
 
 /* receives key=value string, splits the value off (everything after
