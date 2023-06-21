@@ -1,24 +1,5 @@
 #include "../../inc/minishell.h"
 
-/* Based on process lvl it terminates a process 
-Make sure to know if parent or child process is being terminated
-ONLY: if (process == PARENT) later have child process too!! */
-int	builtin_exit(t_shell *sh, char **args, t_env **env, int process)
-{
-	int	argc;
-
-	argc = helper_get_arg_count(args);
-	ft_putendl_fd("exit", STDERR_FILENO);
-	if (argc == 0 || argc == 1)
-		exit_parent(sh, args, env, argc);
-	if (argc > 1 && process != 0)
-	{
-		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
-		return (1);
-	}
-	return (0);
-}
-
 static int	exit_stat_valid(char *str)
 {
 	int	i;
@@ -40,7 +21,7 @@ static void	exit_helper(t_shell *sh, t_env **head, int err)
 }
 
 /* Exits parent process */
-void	exit_parent(t_shell *sh, char **args, t_env **head, int argc)
+static void	exit_parent(t_shell *sh, char **args, t_env **head, int argc)
 {
 	(void)head;
 	if (argc == 1)
@@ -60,29 +41,22 @@ void	exit_parent(t_shell *sh, char **args, t_env **head, int argc)
 		exit_helper(sh, head, 0);
 }
 
-/* Frees totality of env list */
-void	*free_env_list(t_env **head)
+/* Based on process lvl it terminates a process 
+Make sure to know if parent or child process is being terminated
+ONLY: if (process == PARENT) later have child process too!! */
+int	builtin_exit(t_shell *sh, char **args, t_env **env, int process)
 {
-	t_env	*node;
+	int	argc;
 
-	if (head == NULL)
-		return (NULL);
-	node = *head;
-	while (node)
-		node = free_env_node(node);
-	head = NULL;
-	return (NULL);
-}
-
-/* Frees a single env node */
-void	*free_env_node(t_env *node)
-{
-	t_env	*tmp;
-
-	if (!node)
-		return (NULL);
-	free_ptr(node->key_value);
-	tmp = node->next;
-	free_ptr(node);
-	return (tmp);
+	argc = helper_get_arg_count(args);
+	ft_putendl_fd("exit", STDERR_FILENO);
+	if (argc == 0 || argc == 1)
+		exit_parent(sh, args, env, argc);
+	if (argc > 1 && process != 0)
+	{
+		ft_putendl_fd("minishell: exit: too many arguments", STDERR_FILENO);
+		g_stat = 1;
+		return (g_stat);
+	}
+	return (g_stat);
 }

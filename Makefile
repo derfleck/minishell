@@ -20,9 +20,9 @@ SRCSLIST		:=	main.c \
 					env/list_func2.c \
 					env/list_to_arr.c \
 					signals.c \
-					builtins/1_pwd.c \
+					builtins/1_pwd_env_unset.c \
 					builtins/2_cd.c \
-					builtins/3_export_unset.c \
+					builtins/3_export.c \
 					builtins/4_exit.c \
 					builtins/5_echo.c \
 					free/free1.c \

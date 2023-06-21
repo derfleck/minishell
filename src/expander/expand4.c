@@ -43,7 +43,7 @@ char	*expand_home(char *input, t_env *head, char *tilde)
 
 	node = find_env_node(head, "HOME");
 	if (!node)
-		node = create_home("HOME=/nfs/homes/", head);
+		node = create_home("HOME=/nfs/homes/", &head);
 	home_value = split_env_value(node->key_value);
 	pre = return_pre_str(input, tilde);
 	if (!pre)
@@ -117,11 +117,11 @@ char	*expand_env_var(char *input, char *dollar, char *value)
 }
 
 /* Creates new HOME env node in case HOME was unset. */
-t_env	*create_home(char *str, t_env *head)
+t_env	*create_home(char *str, t_env **head)
 {
 	t_env	*node;
 
-	node = create_node(str, head);
+	node = create_node(str, *head);
 	add_node_to_list(head, node);
 	node->next = NULL;
 	return (node);
