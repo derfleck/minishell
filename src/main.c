@@ -2,8 +2,34 @@
 
 int	g_stat = 0;
 
+//expands current directory so only path after home is shown
+static	char *expand_home_prompt(t_env *head)
+{
+	t_env	*node;
+	char	*home;
+	char	*cwd;
+	char	*str;
 
-char	*prompt_line(t_env *head)
+	node = find_env_node(head, "HOME");
+	home = split_env_value(node->key_value);
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		perror_exit_free_env("Malloc failed\n", head);
+	if (ft_strncmp(home, cwd, ft_strlen(home)) == 0 && \
+		home[ft_strlen(home) - 1] != '/')
+	{
+		str = ft_strjoin("~", cwd + ft_strlen(home));
+		if (!str)
+			perror_exit_free_env("Malloc failed\n", head);
+		free(cwd);
+		return (str);
+	}
+	else
+		return (cwd);
+}
+
+//constructs the prompt line from the copy of the environment variables
+static char	*prompt_line(t_env *head)
 {
 	char	*tmp;
 	char	*tmp2;
@@ -14,12 +40,7 @@ char	*prompt_line(t_env *head)
 	tmp = ft_strjoin(split_env_value(node->key_value), "@minishell:");
 	if (!tmp)
 		perror_exit_free_env("Malloc failed\n", head);
-	tmp2 = getcwd(NULL, 0);
-	if (ft_strcmp(tmp2, getenv("HOME")))
-	{
-		free(tmp2);
-		return (ft_strjoin(tmp, "~$ "));
-	}
+	tmp2 = expand_home_prompt(head);
 	tmp3 = ft_strjoin(tmp, tmp2);
 	if (!tmp3)
 		perror_exit_free_env("Malloc failed\n", head);
@@ -32,7 +53,7 @@ char	*prompt_line(t_env *head)
 	return (tmp);
 }
 
-char	*get_input(t_env *head)
+static char	*get_input(t_env *head)
 {
 	char	*line;
 	char	*prompt;
@@ -41,8 +62,6 @@ char	*get_input(t_env *head)
 	if (prompt == NULL)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
-	//rl_catch_signals = 0;
-	//rl_done = 1;
 	prompt = safe_free(prompt);
 	if (line == NULL)
 		return (ft_strdup("exit"));
@@ -50,7 +69,7 @@ char	*get_input(t_env *head)
 		return (safe_free(line));
 	return (line);
 }
-//TODO: s wiederherstellen, aktuell nur trimmed string -> start_lexer
+
 int	main(int argc, char **argv, char **envp)
 {
 	char	*s;
@@ -59,7 +78,7 @@ int	main(int argc, char **argv, char **envp)
 	t_cmd	*cmd;
 
 	if (argc > 1)
-		printf("%s: no arguments allowed", argv[1]);
+		(void)argv;
 	env = init_env(envp);
 	lex = NULL;
 	cmd = NULL;
