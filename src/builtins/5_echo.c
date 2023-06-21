@@ -9,8 +9,6 @@ static int	look_for_nflag(char *str)
 	int	i;
 
 	i = 1;
-	if (!str)
-		return (-1);
 	if (!str[i])
 		return (0);
 	while (str[i])
@@ -23,7 +21,7 @@ static int	look_for_nflag(char *str)
 }
 
 // do we need env here?
-void	builtin_echo(char **args, t_env *head)
+int	builtin_echo(char **args, t_env *head)
 {
 	int	flag;
 	int	i;
@@ -32,13 +30,11 @@ void	builtin_echo(char **args, t_env *head)
 	if (!args[0])
 	{
 		write(1, "\n", 1);
-		return ;
+		return (g_stat);
 	}
 	(void)head;
 	i = -1;
 	flag = look_for_nflag(args[0]);
-	if (flag == -1)
-		return ;
 	if (flag == 1)
 		i++;
 	while (args[++i])
@@ -49,4 +45,5 @@ void	builtin_echo(char **args, t_env *head)
 	}
 	if (flag == 0)
 		write(1, "\n", 1);
+	return (g_stat);
 }

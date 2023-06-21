@@ -68,3 +68,31 @@ void	perror_shell_no_env(char *message, t_shell *sh)
 		ft_putendl_fd(message, STDOUT_FILENO);
 	exit (1);
 }
+/* static helper of free_env_list
+Frees a single env node */
+static void	*free_env_node(t_env *node)
+{
+	t_env	*tmp;
+
+	if (!node)
+		return (NULL);
+	free_ptr(node->key_value);
+	tmp = node->next;
+	free_ptr(node);
+	return (tmp);
+}
+
+/* Frees totality of env list */
+void	*free_env_list(t_env **head)
+{
+	t_env	*node;
+
+	if (head == NULL)
+		return (NULL);
+	node = *head;
+	while (node)
+		node = free_env_node(node);
+	head = NULL;
+	return (NULL);
+}
+
