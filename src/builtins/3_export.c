@@ -49,7 +49,7 @@ static void	export_append_helper(char *key, char *str, t_env **env)
 	if (node == NULL)
 	{
 		realkey2 = ft_strjoin(realkey, "=");
-		free(realkey);
+		free_ptr(realkey);
 		node = create_node(ft_strjoin(realkey2, split_env_value(str)), *env);
 		add_node_to_list(env, node);
 	}	
@@ -82,7 +82,7 @@ static void	builtin_export_helper(char *arg, t_env **env)
 		if (key_validity_check(key) == 1)
 			replace_node_value(node, split_env_value(arg), env);
 	}
-	free(key);
+	free_ptr(key);
 	return ;
 }
 

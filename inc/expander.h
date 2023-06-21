@@ -26,7 +26,6 @@ char	*ft_strjoin_multiple(char **arr);
 
 /* expander 4 -helpers */
 char	*replace_string(char *input, t_env *head, char *speci);
-char	*remove_var_reference(char *input, char *i);
 char	*expand_home(char *input, t_env *head, char *i);
 char	*expand_env_var(char *input, char *dollar, char *value);
 t_env	*create_home(char *str, t_env **head);

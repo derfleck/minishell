@@ -2,10 +2,10 @@
 
 /* Gets everything to recreate new, expanded string.
 Spec is either ($) or (~) 
-choses what to do of the following 3 functions:
- - expand_home
- - expand_env_var
- - remove_var_reference  */
+choses what to do out of the following 3 functions:
+ - expand_home (if ~)
+ - expand status (if $?)
+ - expand_env_var (if $ ) */
 char	*replace_string(char *input, t_env *head, char *spec)
 {
 	char	*value;
@@ -19,7 +19,7 @@ char	*replace_string(char *input, t_env *head, char *spec)
 		value = check_key_exist(head, spec + 1);
 		if (!value)
 		{
-			new_str = ft_strdup(input);
+			new_str = NULL;
 			if (spec[1] == '?')
 				new_str = expand_status(input, spec);
 			return (new_str);
@@ -57,34 +57,6 @@ char	*expand_home(char *input, t_env *head, char *tilde)
 	if (!new_str)
 		perror_exit("Malloc failed\n");
 	free_ptr(pre);
-	free_ptr(post);
-	return (new_str);
-}
-
-/* Receives input and dollarsign position as char* 
-object: excise dollarsign and key, replace with empty str ("") */
-char	*remove_var_reference(char *input, char *dollar)
-{
-	char	*new_str;
-	char	*pre;
-	char	*post;
-	int		key_len;
-
-	pre = return_pre_str(input, dollar);
-	if (!pre)
-		new_str = ft_strdup("");
-	else
-		new_str = ft_strjoin(pre, "");
-	if (!new_str)
-		perror_exit("Malloc failed\n");
-	free_ptr(pre);
-	key_len = return_key_len(dollar + 1);
-	post = return_post_str(dollar + key_len);
-	if (!post)
-		return (new_str);
-	new_str = ft_strjoin(new_str, post);
-	if (!new_str)
-		perror_exit("Malloc failed\n");
 	free_ptr(post);
 	return (new_str);
 }

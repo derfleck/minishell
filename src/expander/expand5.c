@@ -41,7 +41,7 @@ char	*remove_quotes(char *input, int start, int end, char c)
 		new = ft_strjoin(pre, create_quote_free_str(input, start, end, c));
 	if (!new)
 		perror_exit("Malloc failed\n");
-	free(pre);
+	free_ptr(pre);
 	post = return_post_str(&input[end]);
 	if (post)
 		new = ft_strjoin(new, post);

@@ -38,14 +38,16 @@ char	*expand_status(char *input, char *dollar)
 		new_str = ft_strdup(status);
 	else
 		new_str = ft_strjoin(pre, status);
+	free_ptr(pre);
+	free_ptr(status);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
-	free_ptr(pre);
 	post = return_post_str(dollar + 1);
 	if (!post)
 		return (new_str);
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
 		perror_exit("Malloc failed\n");
+	free_ptr(post);
 	return (new_str);
 }
