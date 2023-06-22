@@ -1,5 +1,21 @@
 #include "../../inc/minishell.h"
 
+/* Pre - checks if there's need at all for expansion
+Returns 1 if expansion is needed. 0 if not */
+int	need_to_expand(char *input)
+{
+	int	i;
+
+	i = -1;
+	while (input[++i])
+	{
+		if (input[i] == '$' || (input[i] == '~' && (input[i + 1] == '\0' || \
+		input[i + 1] == '/')))
+			return (1);
+	}
+	return (0);
+}
+
 int	check_invalid_follow(char *str)
 {
 	int	i;

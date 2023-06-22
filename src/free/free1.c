@@ -8,6 +8,20 @@ void	*free_ptr(void *ptr)
 	return (NULL);
 }
 
+void	*free_charray(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free_ptr(arr[i]);
+		i++;
+	}
+	free_ptr(arr);
+	return (NULL);
+}
+
 void	perror_exit_free_env(char *message, t_env *head)
 {
 	if (message)

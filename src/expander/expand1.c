@@ -27,13 +27,19 @@ void	expander_start(t_lexer *lex, t_env *head)
 char	*expander(char *input, t_env *head)
 {
 	char	*new;
+	char	*new2;
 
+	new = NULL;
 	if (!input)
 		return (NULL);
 	if (found_quotes(input))
 	{
 		new = deal_with_expansion(input, head);
-		new = kill_quotes(new);
+		if (!new)
+			perror_exit_free_env("Malloc failed\n", head);
+		new2 = kill_quotes(new);
+		free_ptr(new);
+		return (new2);
 	}
 	else
 		new = do_expansion(input, head);
@@ -49,6 +55,7 @@ char	*deal_with_expansion(char *input, t_env *head)
 {
 	int		i;
 	char	**arr;
+	char	*str;
 
 	(void)head;
 	i = -1;
@@ -56,21 +63,20 @@ char	*deal_with_expansion(char *input, t_env *head)
 		return (input);
 	if (check_invalid_follow(input))
 	{
-		input = remove_dollarsign_bef_quotes(input);
-		return (input);
+		str = remove_dollarsign_bef_quotes(input);
+		return (str);
 	}
 	arr = split_by_quotes(input, head);
 	while (arr[++i])
 	{
 		if (arr[i][0] != '\'')
-			arr[i] = do_expansion(arr[i], head);
-	}	
-	input = ft_strjoin_multiple(arr);
-	i = -1;
-	while (arr[++i])
-		free(arr[i]);
-	free(arr);
-	return (input);
+			arr[i] = do_expansion_with_freeing(arr[i], head);
+	}
+	str = ft_strjoin_multiple(arr);
+	if (!str)
+		perror_exit_free_env("Malloc failed\n", head);
+	free_charray(arr);
+	return (str);
 }
 
 /* Checks incoming str if expansion is needed */
@@ -92,18 +98,23 @@ char	*do_expansion(char *input, t_env *head)
 	return (ft_strdup(input));
 }
 
-char	**split_by_quotes(char *input, t_env *head)
+/* Checks incoming str if expansion is needed
+ - but this time it frees the input */
+char	*do_expansion_with_freeing(char *input, t_env *head)
 {
-	char	**arr;
-	char	s;
-	int		count;
+	int		i;
+	char	*new_str;
 
-	(void)head;
-	s = '!';
-	count = ft_count_elements(input, s);
-	arr = malloc (sizeof(char *) * (count + 1));
-	if (!arr)
-		perror_exit("Malloc failed\n");
-	arr = ft_quotesplitter(arr, input, count);
-	return (arr);
+	i = -1;
+	while (input[++i])
+	{
+		if ((input[i] == '$' && (ft_isalnum(input[i + 1]) || \
+		input[i + 1] == '_' || input[i + 1] == '?')) || input[i] == '~')
+		{
+			new_str = replace_string(input, head, &input[i]);
+			free (input);
+			return (new_str);
+		}
+	}
+	return (input);
 }

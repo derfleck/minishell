@@ -1,19 +1,19 @@
 #include "../../inc/minishell.h"
 
-/* Pre - checks if there's need at all for expansion
-Returns 1 if expansion is needed. 0 if not */
-int	need_to_expand(char *input)
+char	**split_by_quotes(char *input, t_env *head)
 {
-	int	i;
+	char	**arr;
+	char	s;
+	int		count;
 
-	i = -1;
-	while (input[++i])
-	{
-		if (input[i] == '$' || (input[i] == '~' && (input[i + 1] == '\0' || \
-		input[i + 1] == '/')))
-			return (1);
-	}
-	return (0);
+	(void)head;
+	s = '!';
+	count = ft_count_elements(input, s);
+	arr = malloc (sizeof(char *) * (count + 1));
+	if (!arr)
+		perror_exit("Malloc failed\n");
+	arr = ft_quotesplitter(arr, input, count);
+	return (arr);
 }
 
 /* Counts how many strings need to be allocated */

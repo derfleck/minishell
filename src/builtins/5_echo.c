@@ -26,11 +26,10 @@ int	builtin_echo(char **args, t_env *head)
 	int	flag;
 	int	i;
 
-	g_stat = 0;
 	if (!args[0])
 	{
 		write(1, "\n", 1);
-		return (g_stat);
+		return (0);
 	}
 	(void)head;
 	i = -1;
@@ -45,5 +44,6 @@ int	builtin_echo(char **args, t_env *head)
 	}
 	if (flag == 0)
 		write(1, "\n", 1);
+	g_stat = 0;
 	return (g_stat);
 }

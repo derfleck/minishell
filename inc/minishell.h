@@ -40,6 +40,7 @@ void		increase_shell_level(t_env **env);
 
 /* free */
 void		*free_ptr(void *ptr);
+void		*free_charray(char **arr);
 void		perror_exit(char *message);
 void		perror_lexer(char *message, char *s, t_env *env, t_lexer *lex);
 void		perror_cmd(char *message, t_cmd *cmd, t_env *head);
