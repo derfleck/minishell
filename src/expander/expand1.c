@@ -76,16 +76,20 @@ char	*deal_with_expansion(char *input, t_env *head)
 /* Checks incoming str if expansion is needed */
 char	*do_expansion(char *input, t_env *head)
 {
-	int	i;
+	int		i;
+	char	*new_str;
 
 	i = -1;
 	while (input[++i])
 	{
 		if ((input[i] == '$' && (ft_isalnum(input[i + 1]) || \
 		input[i + 1] == '_' || input[i + 1] == '?')) || input[i] == '~')
-			input = replace_string(input, head, &input[i]);
+		{
+			new_str = replace_string(input, head, &input[i]);
+			return (new_str);
+		}
 	}
-	return (input);
+	return (ft_strdup(input));
 }
 
 char	**split_by_quotes(char *input, t_env *head)

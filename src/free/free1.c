@@ -78,6 +78,7 @@ void	perror_cmd_not_found(char *cmd, t_shell *sh)
 	}
 	if (sh)
 		free_shell(sh);
+	g_stat = 127;
 	exit(127);
 }
 

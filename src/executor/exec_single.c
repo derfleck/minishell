@@ -6,7 +6,8 @@ static int	check_builtins(t_cmd *cmd)
 	if (ft_strncmp(cmd->cmd, "cd", 2) == 0 || \
 		ft_strncmp(cmd->cmd, "exit", 4) == 0 || \
 		ft_strncmp(cmd->cmd, "export", 6) == 0 || \
-		ft_strncmp(cmd->cmd, "unset", 5) == 0)
+		ft_strncmp(cmd->cmd, "unset", 5) == 0 || \
+		ft_strncmp(cmd->cmd, "echo", 4) == 0)
 		return (1);
 	return (0);
 }

@@ -8,14 +8,14 @@ static int	look_for_nflag(char *str)
 {
 	int	i;
 
-	i = 1;
-	if (!str[i])
+	i = 0;
+	if (str[i] == '\0' || str[i] != '-' || \
+	(str[i] == '-' && str[1] == '\0'))
 		return (0);
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[0] != '-' || str[i] != 'n')
 			return (0);
-		i++;
 	}
 	return (1);
 }

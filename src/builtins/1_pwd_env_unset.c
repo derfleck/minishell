@@ -11,7 +11,7 @@ int	builtin_pwd(t_env *head)
 	if (buf)
 	{
 		printf("%s\n", buf);
-		free(buf);
+		free_ptr(buf);
 	}
 	else
 		g_stat = 1;

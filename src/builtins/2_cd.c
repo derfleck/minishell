@@ -18,8 +18,8 @@ static void	update_pwds(t_env **env, char *oldpath)
 		node2 = create_node(oldpwd, *env);
 	else
 		replace_node_value(node2, oldpath, env);
-	free(oldpwd);
-	free(oldpath);
+	free_ptr(oldpwd);
+	free_ptr(oldpath);
 	if (newpath == NULL)
 	{
 		if (chdir("/") != 0)
@@ -27,7 +27,7 @@ static void	update_pwds(t_env **env, char *oldpath)
 	}
 	else
 		replace_node_value(node1, newpath, env);
-	free(newpath);
+	free_ptr(newpath);
 }
 
 /* Counts how many arguments are in the array to deal with 
@@ -56,7 +56,7 @@ int	builtin_cd(char **args, t_env **env)
 	{
 		ft_putendl_fd("Minishell: cd:   : Too many arguments", STDERR_FILENO);
 		g_stat = 1;
-		free(oldpath);
+		free_ptr(oldpath);
 		return (g_stat);
 	}
 	else if (args[0][0] == '\0')
@@ -67,7 +67,7 @@ int	builtin_cd(char **args, t_env **env)
 		ft_putstr_fd(args[0], STDERR_FILENO);
 		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
 		g_stat = 1;
-		free(oldpath);
+		free_ptr(oldpath);
 		return (g_stat);
 	}
 	update_pwds(env, oldpath);

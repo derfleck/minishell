@@ -26,6 +26,7 @@ char	*remove_dollarsign_bef_quotes(char *str)
 char	*expand_status(char *input, char *dollar)
 {
 	char	*new_str;
+	char	*new_str2;
 	char	*pre;
 	char	*post;
 	char	*status;
@@ -41,11 +42,11 @@ char	*expand_status(char *input, char *dollar)
 	if (!new_str)
 		perror_exit("Malloc failed\n");
 	free_ptr(pre);
+	free_ptr(status);
 	post = return_post_str(dollar + 1);
-	if (!post)
-		return (new_str);
-	new_str = ft_strjoin(new_str, post);
-	if (!new_str)
+	new_str2 = ft_strjoin(new_str, post);
+	free_ptr(new_str);
+	if (!new_str2)
 		perror_exit("Malloc failed\n");
-	return (new_str);
+	return (new_str2);
 }
