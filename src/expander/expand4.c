@@ -20,16 +20,16 @@ char	*replace_string(char *input, t_env *head, char *spec)
 		if (!value)
 		{
 			if (spec[1] == '?')
-				new_str = expand_status(input, spec);
+				new_str = expand_status(input, spec, head);
 			else
-				new_str = remove_var_reference(input, spec);
+				new_str = remove_var_reference(input, spec, head);
 			return (new_str);
 		}
 		else
-			new_str = expand_env_var(input, spec, value);
+			new_str = expand_env_var(input, spec, value, head);
 		return (new_str);
 	}
-	return (input);
+	return (ft_strdup(input));
 }
 
 /* tilde position arrives as char*. Replace it with value of home. 
@@ -46,17 +46,17 @@ char	*expand_home(char *input, t_env *head, char *tilde)
 	if (!node)
 		node = create_home("HOME=/nfs/homes/", &head);
 	home_value = split_env_value(node->key_value);
-	pre = return_pre_str(input, tilde);
+	pre = return_pre_str(input, tilde, head);
 	if (!pre)
 		new_str = ft_strdup(home_value);
 	else
 		new_str = ft_strjoin(pre, home_value);
 	if (!new_str)
-		perror_exit("Malloc failed\n");
-	post = return_post_str(tilde + return_key_len(tilde + 1));
+		perror_exit_free_env("Malloc_failed\n", head);
+	post = return_post_str(tilde + return_key_len(tilde + 1), head);
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	free_ptr(pre);
 	free_ptr(post);
 	return (new_str);
@@ -64,7 +64,7 @@ char	*expand_home(char *input, t_env *head, char *tilde)
 
 /* Receives input and dollarsign position as char* 
 object: excise dollarsign and key, replace with empty str ("") */
-char	*remove_var_reference(char *input, char *dollar)
+char	*remove_var_reference(char *input, char *dollar, t_env *head)
 {
 	char	*new_str;
 	char	*new_str2;
@@ -72,49 +72,49 @@ char	*remove_var_reference(char *input, char *dollar)
 	char	*post;
 	int		key_len;
 
-	pre = return_pre_str(input, dollar);
+	pre = return_pre_str(input, dollar, head);
 	if (!pre)
 		new_str = ft_strdup("");
 	else
-		new_str = ft_strjoin(pre, "");
+		new_str = safe_join(pre, "", head);
 	if (!new_str)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	free_ptr(pre);
 	key_len = return_key_len(dollar + 1);
-	post = return_post_str(dollar + key_len);
+	post = return_post_str(dollar + key_len, head);
 	if (!post)
 		return (new_str);
-	new_str2 = ft_strjoin(new_str, post);
+	new_str2 = safe_join(new_str, post, head);
 	free_ptr(new_str);
 	free_ptr(post);
 	if (!new_str2)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	return (new_str2);
 }
 
 /* returns newly allocated string after expanding */
-char	*expand_env_var(char *input, char *dollar, char *value)
+char	*expand_env_var(char *input, char *dollar, char *value, t_env *head)
 {
 	char	*pre;
 	char	*post;
 	char	*new_str;
 	int		key_len;
 
-	pre = return_pre_str(input, dollar);
+	pre = return_pre_str(input, dollar, head);
 	if (!pre)
 		new_str = ft_strdup(value);
 	else
 		new_str = ft_strjoin(pre, value);
 	if (!new_str)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	free_ptr(pre);
 	key_len = return_key_len(dollar + 1);
-	post = return_post_str(dollar + key_len);
+	post = return_post_str(dollar + key_len, head);
 	if (!post)
 		return (new_str);
 	new_str = ft_strjoin(new_str, post);
 	if (!new_str)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	free_ptr(post);
 	return (new_str);
 }

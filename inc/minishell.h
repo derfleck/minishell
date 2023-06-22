@@ -54,6 +54,7 @@ void		*free_env_list(t_env **head);
 /* utils */
 int			ft_strcmp(char *s1, char *s2);
 int			ft_isnum(int c);
+char		*safe_join(char *s1, char *s2, t_env *head);
 
 /* Builtins */
 int			helper_get_arg_count(char **args);

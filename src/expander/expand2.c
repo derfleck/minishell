@@ -1,8 +1,8 @@
 #include "../../inc/minishell.h"
 
-/* Returns the keyword that is after the ($) -> at position i
-and before the next space character or end of string */
-char	*return_key(char *str)
+/* Mallocs the probable key after the $ sign
+Gets the pointer at first element right after */
+char	*return_key(char *str, t_env *head)
 {
 	char	*key;
 	int		len;
@@ -14,7 +14,7 @@ char	*return_key(char *str)
 		return (NULL);
 	key = malloc (sizeof (char) * (len + 1));
 	if (!key)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	ft_memmove(key, str, len);
 	key[len] = '\0';
 	return (key);
@@ -46,25 +46,29 @@ returns the value if found. Returns NULL if not found or no key  */
 char	*check_key_exist(t_env *head, char *i)
 {
 	char	*key;
+	char	*value;
 	t_env	*node;
 
-	key = return_key(i);
+	key = return_key(i, head);
 	if (!key || ft_isnum(key[0]))
 		return (NULL);
 	node = find_env_node(head, key);
 	if (!node)
 	{
-		free (key);
+		free_ptr(key);
 		return (NULL);
 	}
-	free (key);
-	return (split_env_value(node->key_value));
+	free_ptr(key);
+	value = ft_strdup(split_env_value(node->key_value));
+	if (!value)
+		perror_exit_free_env("Malloc_failed\n", head);
+	return (value);
 }
 
 /* gets input and pointer to dollarsign (speci),
 returns newly allocated pre-str that is from 
 the 0th element until (excluding) spec  */
-char	*return_pre_str(char *input, char *speci)
+char	*return_pre_str(char *input, char *speci, t_env *head)
 {
 	char	*pre;
 	int		i;
@@ -76,13 +80,13 @@ char	*return_pre_str(char *input, char *speci)
 		return (NULL);
 	pre = ft_substr(input, 0, (size_t)i);
 	if (!pre)
-		perror_exit("Malloc_failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	return (pre);
 }
 
 /* gets pointer to dollarsign + keylength (last char of the key),
 returns newly allocated str that is from end of key + 1 to endofstring */
-char	*return_post_str(char *key_end)
+char	*return_post_str(char *key_end, t_env *head)
 {
 	char	*post;
 	int		len;
@@ -96,6 +100,6 @@ char	*return_post_str(char *key_end)
 	if (post[0] == '?' && key_end[0] == '$')
 		post++;
 	if (!post)
-		perror_exit("Malloc_failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	return (post);
 }

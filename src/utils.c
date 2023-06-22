@@ -21,20 +21,16 @@ int	ft_strcmp(char *s1, char *s2)
 	return (1);
 }
 
-void	increase_shell_level(t_env **env)
+char	*safe_join(char *s1, char *s2, t_env *head)
 {
-	t_env	*node;
-	char	*new_slvl;
+	char	*ret;
 
-	node = find_env_node(*env, "SHLVL");
-	if (node)
-	{
-		new_slvl = ft_itoa(ft_atoi(split_env_value(node->key_value)) + 1);
-		if (!new_slvl)
-			perror_exit_free_env("Malloc failed \n", *env);
-		replace_node_value(node, new_slvl, env);
-		new_slvl = free_ptr(new_slvl);
-	}
-	else
-		add_node_to_list(env, create_node("SHLVL=1", *env));
+	ret = ft_strjoin(s1, s2);
+	if (!ret)
+		perror_exit_free_env("Malloc failed\n", head);
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
+	return (ret);
 }

@@ -6,13 +6,12 @@ char	**split_by_quotes(char *input, t_env *head)
 	char	s;
 	int		count;
 
-	(void)head;
 	s = '!';
 	count = ft_count_elements(input, s);
 	arr = malloc (sizeof(char *) * (count + 1));
 	if (!arr)
-		perror_exit("Malloc failed\n");
-	arr = ft_quotesplitter(arr, input, count);
+		perror_exit_free_env("Malloc_failed\n", head);
+	arr = ft_quotesplitter(arr, input, count, head);
 	return (arr);
 }
 
@@ -48,7 +47,7 @@ int	ft_count_elements(char *input, char s)
 /* Gets input, tries to split it to **arr according to:
 characters not enclosed in quotes, quoted blocks bordered by
 single quotes, and quoted blocks bordered by double quotes. */
-char	**ft_quotesplitter(char **arr, char *input, int count)
+char	**ft_quotesplitter(char **arr, char *input, int count, t_env *head)
 {
 	int		i;
 	int		len;
@@ -69,7 +68,7 @@ char	**ft_quotesplitter(char **arr, char *input, int count)
 			}
 		}
 		else if (input[i] && (input[i] == '"' || input[i] == '\''))
-		{	
+		{
 			q = input[i++];
 			len = 2;
 			while (input[i] != q)
@@ -80,13 +79,15 @@ char	**ft_quotesplitter(char **arr, char *input, int count)
 			i++;
 		}
 		arr[element] = ft_substr(input, i - len, len);
+		if (!arr[element])
+			perror_exit_free_env("Malloc_failed\n", head);
 	}
 	arr[element] = NULL;
 	return (arr);
 }
 
 /* joins together any size of char arrays into one str */
-char	*ft_strjoin_multiple(char **arr)
+char	*ft_strjoin_multiple(char **arr, t_env *head)
 {
 	char	*str;
 	int		i;
@@ -94,12 +95,12 @@ char	*ft_strjoin_multiple(char **arr)
 	i = 0;
 	str = ft_strjoin("", arr[0]);
 	if (!str)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	while (arr[++i])
 	{
 		str = ft_strjoin(str, arr[i]);
 		if (!str)
-			perror_exit("Malloc failed\n");
+			perror_exit_free_env("Malloc_failed\n", head);
 	}
 	return (str);
 }
