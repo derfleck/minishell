@@ -52,5 +52,5 @@ void	set_sigaction(int i)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, SIG_IGN);
-	}
+		}
 }

@@ -12,7 +12,7 @@ char	*do_expansion_pre(char *input, t_env *head);
 char	*do_expansion_pre_with_freeing(char *input, t_env *head);
 char	*do_expansion(char *input, t_env *head);
 char	*do_expansion_with_freeing(char *input, t_env *head);
-char	**split_by_dollars(char *input, t_env *head, int i);
+char	**split_by_dollars(char *input, t_env *head);
 
 /* expander 2 - expansion helpers */
 char	*return_key(char *str, t_env *head);

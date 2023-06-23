@@ -153,3 +153,15 @@ void	*free_env_list(t_env **head)
 	head = NULL;
 	return (NULL);
 }
+
+void	*free_2d_arr(void **ptr)
+{
+	int	i;
+
+	i = -1;
+	while (ptr[++i])
+		free_ptr(ptr[i]);
+	if (ptr)
+		free_ptr(ptr);
+	return (NULL);
+}

@@ -43,7 +43,6 @@ static void	check_heredoc(t_cmd *cmd, int fd)
 		unlink_heredoc(cmd);
 		cmd->here_file = NULL;
 	}
-
 }
 */
 
@@ -64,12 +63,8 @@ static char	*start_heredoc(t_cmd *cmd)
 	fd = open(cmd->here_file, O_CREAT | O_RDWR, 0644);
 	if (fd == -1)
 		return (NULL);
-
-	
 	heredoc_loop(cmd, i, fd, input);
 	//check_heredoc(cmd, fd);
-	
-	
 	close(fd);
 	return (cmd->here_file);
 }
