@@ -67,7 +67,8 @@ char	*check_key_exist(t_env *head, char *i)
 
 /* gets input and pointer to dollarsign (speci),
 returns newly allocated pre-str that is from 
-the 0th element until (excluding) spec  */
+the 0th element until (excluding) spec 
+returns allocated empty str if no pre str is present */
 char	*return_pre_str(char *input, char *speci, t_env *head)
 {
 	char	*pre;
@@ -77,7 +78,12 @@ char	*return_pre_str(char *input, char *speci, t_env *head)
 	while (input[i] && input + i != speci)
 		i++;
 	if (i == 0)
-		return (NULL);
+	{
+		pre = ft_strdup("");
+		if (!pre)
+			perror_exit_free_env("Malloc_failed\n", head);
+		return (pre);
+	}
 	pre = ft_substr(input, 0, (size_t)i);
 	if (!pre)
 		perror_exit_free_env("Malloc_failed\n", head);
@@ -85,7 +91,8 @@ char	*return_pre_str(char *input, char *speci, t_env *head)
 }
 
 /* gets pointer to dollarsign + keylength (last char of the key),
-returns newly allocated str that is from end of key + 1 to endofstring */
+returns newly allocated str that is from end of key + 1 to endofstring
+returns allocated empty str if no post str is present */
 char	*return_post_str(char *key_end, t_env *head)
 {
 	char	*post;
@@ -95,7 +102,12 @@ char	*return_post_str(char *key_end, t_env *head)
 	while (key_end[len])
 		len++;
 	if (len == 0)
-		return (ft_strdup(""));
+	{
+		post = ft_strdup("");
+		if (!post)
+			perror_exit_free_env("Malloc_failed\n", head);
+		return (post);
+	}
 	post = ft_substr(key_end, 1, len);
 	if (post[0] == '?' && key_end[0] == '$')
 		post++;

@@ -73,20 +73,13 @@ char	*remove_var_reference(char *input, char *dollar, t_env *head)
 	int		key_len;
 
 	pre = return_pre_str(input, dollar, head);
-	if (!pre)
-		new_str = ft_strdup("");
-	else
-		new_str = safe_join(pre, "", head);
+	new_str = ft_strdup(pre);
+	free_ptr(pre);
 	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
-	free_ptr(pre);
 	key_len = return_key_len(dollar + 1);
 	post = return_post_str(dollar + key_len, head);
-	if (!post)
-		return (new_str);
 	new_str2 = safe_join(new_str, post, head);
-	free_ptr(new_str);
-	free_ptr(post);
 	if (!new_str2)
 		perror_exit_free_env("Malloc_failed\n", head);
 	return (new_str2);
