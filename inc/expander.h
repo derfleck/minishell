@@ -36,8 +36,8 @@ t_env	*create_home(char *str, t_env **head);
 
 /* expander 5 -killing quotes */
 char	*kill_quotes(char *expanded, t_env *head);
-char	*remove_quotes(char *input, int start, int end, char c, t_env *head);
-char	*create_quote_free_str(char *input, int start, int end, char c, t_env *head);
+char	*remove_quotes(char *input, int start, int end, t_env *head);
+char	*create_quote_free_str(char *input, int start, int end, t_env *head);
 int		return_quote_len(char *start, char c);
 int		found_quotes(char *input);
 

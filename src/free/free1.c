@@ -2,7 +2,7 @@
 
 void	*free_ptr(void *ptr)
 {
-	if (ptr)
+	if (ptr != NULL)
 		free(ptr);
 	ptr = NULL;
 	return (NULL);

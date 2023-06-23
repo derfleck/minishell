@@ -53,17 +53,11 @@ char	*expand_status(char *input, char *dollar, t_env *head)
 	if (!status)
 		perror_exit_free_env("Malloc failed\n", head);
 	pre = return_pre_str(input, dollar, head);
-	if (!pre)
-		new_str = ft_strdup(status);
-	else
-		new_str = ft_strjoin(pre, status);
+	new_str = safe_join(pre, status, head);
 	if (!new_str)
 		perror_exit_free_env("Malloc failed\n", head);
-	free_ptr(pre);
-	free_ptr(status);
 	post = return_post_str(dollar + 1, head);
-	new_str2 = ft_strjoin(new_str, post);
-	free_ptr(new_str);
+	new_str2 = safe_join(new_str, post, head);
 	if (!new_str2)
 		perror_exit_free_env("Malloc failed\n", head);
 	return (new_str2);

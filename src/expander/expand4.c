@@ -45,20 +45,17 @@ char	*expand_home(char *input, t_env *head, char *tilde)
 	node = find_env_node(head, "HOME");
 	if (!node)
 		node = create_home("HOME=/nfs/homes/", &head);
-	home_value = split_env_value(node->key_value);
+	home_value = ft_strdup(split_env_value(node->key_value));
+	if (!home_value)
+		perror_exit_free_env("Malloc_failed\n", head);
 	pre = return_pre_str(input, tilde, head);
-	if (!pre)
-		new_str = ft_strdup(home_value);
-	else
-		new_str = ft_strjoin(pre, home_value);
+	new_str = safe_join(pre, home_value, head);
 	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
 	post = return_post_str(tilde + return_key_len(tilde + 1), head);
-	new_str = ft_strjoin(new_str, post);
+	new_str = safe_join(new_str, post, head);
 	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
-	free_ptr(pre);
-	free_ptr(post);
 	return (new_str);
 }
 
@@ -94,21 +91,14 @@ char	*expand_env_var(char *input, char *dollar, char *value, t_env *head)
 	int		key_len;
 
 	pre = return_pre_str(input, dollar, head);
-	if (!pre)
-		new_str = ft_strdup(value);
-	else
-		new_str = ft_strjoin(pre, value);
+	new_str = safe_join(pre, value, head);
 	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
-	free_ptr(pre);
 	key_len = return_key_len(dollar + 1);
 	post = return_post_str(dollar + key_len, head);
-	if (!post)
-		return (new_str);
-	new_str = ft_strjoin(new_str, post);
+	new_str = safe_join(new_str, post, head);
 	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
-	free_ptr(post);
 	return (new_str);
 }
 

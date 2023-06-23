@@ -94,7 +94,7 @@ int	builtin_unset(char **args, t_env **env)
 			if (node == NULL)
 				continue ;
 			else if (ft_strcmp(args[i], "SHLVL"))
-				continue ;
+				reset_shlvl(env);
 			else
 				remove_node(env, node);
 		}

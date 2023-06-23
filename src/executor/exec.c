@@ -40,7 +40,7 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 	}
 }
 
-static int check_environ_size(t_shell *shell, t_env **head, char *cmd)
+static int	check_environ_size(t_shell *shell, t_env **head, char *cmd)
 {
 	size_t	size;
 	t_env	*tmp;

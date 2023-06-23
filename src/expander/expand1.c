@@ -4,6 +4,7 @@
 void	expander_start(t_lexer *lex, t_env *head)
 {
 	t_lexer	*lex_tmp;
+	char	*temp;
 
 	lex_tmp = lex;
 	while (lex_tmp)
@@ -17,7 +18,9 @@ void	expander_start(t_lexer *lex, t_env *head)
 			lex_tmp = lex_tmp->next;
 		if (lex_tmp)
 		{
+			temp = lex_tmp->str;
 			lex_tmp->str = expander(lex_tmp->str, head);
+			free_ptr(temp);
 			lex_tmp = lex_tmp->next;
 		}
 	}
@@ -60,7 +63,7 @@ char	*deal_with_expansion(char *input, t_env *head)
 	(void)head;
 	i = -1;
 	if (!need_to_expand(input))
-		return (input);
+		return (ft_strdup(input));
 	if (check_invalid_follow(input))
 	{
 		str = remove_dollarsign_bef_quotes(input, head);
@@ -90,7 +93,7 @@ char	*do_expansion_pre(char *input, t_env *head)
 	char	*new_str;
 
 	i = count_dollars(input);
-	if (i < 1)
+	if (i < 1 && input[0] != '~')
 		return (ft_strdup(input));
 	else if (i > 1)
 	{
@@ -116,7 +119,7 @@ char	*do_expansion_pre_with_freeing(char *input, t_env *head)
 	char	*new_str;
 
 	i = count_dollars(input);
-	if (i < 1)
+	if (i < 1 && input[0] != '~')
 		return (ft_strdup(input));
 	else if (i > 1)
 	{
@@ -179,20 +182,24 @@ char	**split_by_dollars(char *input, t_env *head, int i)
 {
 	char	**arr;
 	int		l;
+	char	*dollar;
 
 	arr = malloc (sizeof (char *) * (i + 1));
 	if (!arr)
 		perror_exit_free_env("Malloc_failed\n", head);
+	dollar = ft_strdup("$");
 	arr = ft_split(input, '$');
 	if (!arr)
 		perror_exit_free_env("Malloc_failed\n", head);
 	l = -1;
 	while (++l < i)
 	{
-		arr[l] = ft_strjoin("$", arr[l]);
+		arr[l] = safe_join(dollar, arr[l], head);
 		if (!arr[l])
 			perror_exit_free_env("Malloc_failed\n", head);
+		dollar = ft_strdup("$");
 	}
+	free_ptr(dollar);
 	arr[l] = NULL;
 	return (arr);
 }
