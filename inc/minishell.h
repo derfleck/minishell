@@ -9,7 +9,8 @@
 # include <errno.h>
 # include <fcntl.h>
 # include <sys/wait.h>
-# include <sys/types.h> 
+# include <sys/types.h>
+# include <sys/stat.h> 
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -51,6 +52,8 @@ void		perror_exit_free_env(char *message, t_env *head);
 void		perror_cmd_not_found(char *cmd, t_shell *sh);
 void		perror_env_too_big(char *cmd, t_shell *sh, t_env **head);
 void		*free_env_list(t_env **head);
+void		perror_exit_2(char *message, t_shell *sh, t_env **env, int mode);
+
 
 /* utils */
 int			ft_strcmp(char *s1, char *s2);

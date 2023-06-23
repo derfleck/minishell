@@ -99,7 +99,7 @@ int		unlink_heredoc(t_cmd *cmd)
 		if (cmd->here_file && unlink(cmd->here_file) == -1)
 		{
 			perror("Error while unlinking");
-			return (0);
+			exit (1);
 		}
 		if (cmd->here_file)
 			free(cmd->here_file);

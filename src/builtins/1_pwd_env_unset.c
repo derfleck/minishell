@@ -27,7 +27,9 @@ int	builtin_env(t_env *env, char **args)
 	if (args && args[0])
 	{
 		g_stat = 127;
-		ft_putendl_fd("minishell: env: too many arguments", STDERR_FILENO);
+		ft_putstr_fd("env: '", STDERR_FILENO);
+		ft_putstr_fd(args[0], STDERR_FILENO);
+		ft_putendl_fd("': No such file or directory", STDERR_FILENO);
 		return (g_stat);
 	}
 	node = env;
