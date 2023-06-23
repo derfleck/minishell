@@ -8,7 +8,7 @@ char	**split_by_quotes(char *input, t_env *head)
 
 	s = '!';
 	count = ft_count_elements(input, s);
-	arr = malloc (sizeof(char *) * (count + 1));
+	arr = malloc(sizeof(char *) * (count + 1));
 	if (!arr)
 		perror_exit_free_env("Malloc_failed\n", head);
 	arr = ft_quotesplitter(arr, input, count, head);
@@ -90,17 +90,20 @@ char	**ft_quotesplitter(char **arr, char *input, int count, t_env *head)
 char	*ft_strjoin_multiple(char **arr, t_env *head)
 {
 	char	*str;
+	char	*tmp;
 	int		i;
 
 	i = 0;
-	str = ft_strjoin("", arr[0]);
+	str = ft_strdup(arr[0]);
 	if (!str)
 		perror_exit_free_env("Malloc_failed\n", head);
 	while (arr[++i])
 	{
+		tmp = str;
 		str = ft_strjoin(str, arr[i]);
 		if (!str)
 			perror_exit_free_env("Malloc_failed\n", head);
+		free_ptr(tmp);
 	}
 	return (str);
 }

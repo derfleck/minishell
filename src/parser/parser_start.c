@@ -56,10 +56,24 @@ static t_lexer	*create_parse_node(t_lexer *lex, int n_cmd, t_cmd *cmd, int j)
 	return (tmp);
 }
 
+//added late to have a pointer to the env head in every
+//cmd node
+static void	add_env_to_cmd(t_cmd *cmd, t_env *env)
+{
+	t_cmd	*tmp;
+
+	tmp = cmd;
+	while (tmp)
+	{
+		tmp->head = env;
+		tmp = tmp->next;
+	}
+}
+
 //executes parse check and creates new parse list
 //returns NULL on syntax or malloc error
 //parse_check returns the number of command groups
-t_cmd	*create_parse_list(t_lexer *lex)
+t_cmd	*create_parse_list(t_lexer *lex, t_env *env)
 {
 	t_cmd	*cmd;
 	t_lexer	*tmp;
@@ -78,5 +92,6 @@ t_cmd	*create_parse_list(t_lexer *lex)
 		tmp = create_parse_node(tmp, n_cmd, cmd + j, j);
 	if (j != n_cmd && tmp == NULL)
 		free_cmd(cmd);
+	add_env_to_cmd(cmd, env);
 	return (cmd);
 }

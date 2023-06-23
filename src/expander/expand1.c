@@ -98,7 +98,7 @@ char	*do_expansion_pre(char *input, t_env *head)
 	else if (i > 1)
 	{
 		j = -1;
-		arr = split_by_dollars(input, head, i);
+		arr = split_by_dollars(input, head);
 		while (arr[++j])
 			arr[j] = do_expansion_with_freeing(arr[j], head);
 		new_str = ft_strjoin_multiple(arr, head);
@@ -118,16 +118,18 @@ char	*do_expansion_pre_with_freeing(char *input, t_env *head)
 	char	**arr;
 	char	*new_str;
 
+	arr = NULL;
 	i = count_dollars(input);
 	if (i < 1 && input[0] != '~')
 		return (ft_strdup(input));
 	else if (i > 1)
 	{
 		j = -1;
-		arr = split_by_dollars(input, head, i);
+		arr = split_by_dollars(input, head);
 		while (arr[++j])
 			arr[j] = do_expansion_with_freeing(arr[j], head);
 		new_str = ft_strjoin_multiple(arr, head);
+		free_charray(arr);
 	}
 	else
 		new_str = do_expansion(input, head);
@@ -171,35 +173,34 @@ char	*do_expansion_with_freeing(char *input, t_env *head)
 			new_str = replace_string(input, head, &input[i]);
 			if (!new_str)
 				perror_exit_free_env("Malloc_failed\n", head);
-			free (input);
+			free_ptr(input);
 			return (new_str);
 		}
 	}
 	return (input);
 }
 
-char	**split_by_dollars(char *input, t_env *head, int i)
+char	**split_by_dollars(char *input, t_env *head)
 {
 	char	**arr;
 	int		l;
-	char	*dollar;
+	char	*trim;
 
-	arr = malloc (sizeof (char *) * (i + 1));
-	if (!arr)
+	trim = ft_strtrim(input, "\"");
+	if (!trim)
 		perror_exit_free_env("Malloc_failed\n", head);
-	dollar = ft_strdup("$");
-	arr = ft_split(input, '$');
+	arr = ft_split(trim, '$');
 	if (!arr)
 		perror_exit_free_env("Malloc_failed\n", head);
 	l = -1;
-	while (++l < i)
+	while (arr[++l])
 	{
-		arr[l] = safe_join(dollar, arr[l], head);
+		if ((l == 0 && trim[0] == '$') || l)
+			arr[l] = safe_join(ft_strdup("$"), arr[l], head);
 		if (!arr[l])
 			perror_exit_free_env("Malloc_failed\n", head);
-		dollar = ft_strdup("$");
 	}
-	free_ptr(dollar);
+	free_ptr(trim);
 	arr[l] = NULL;
 	return (arr);
 }
