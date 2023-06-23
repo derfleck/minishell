@@ -71,6 +71,7 @@ typedef struct s_cmd {
 	int				fd[2];
 	int				i;
 	struct s_cmd	*next;
+	t_env			*head;
 }	t_cmd;
 
 //struct for the whole shell, which points to essential values

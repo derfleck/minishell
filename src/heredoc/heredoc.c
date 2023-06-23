@@ -1,5 +1,18 @@
 #include "../../inc/minishell.h"
 
+static char *expand_heredoc(char *input, t_cmd *cmd)
+{
+	char *tmp;
+
+	tmp = NULL;
+	if (input)
+	{
+		tmp = expander(input, cmd->head);
+		free_ptr(input);
+	}
+	return (tmp);
+}
+
 static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 {
 	while (1)
@@ -9,21 +22,19 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		{
 			if (!input || ft_strcmp(input, cmd->here[i]))
 			{
-				free(input);
+				free_ptr(input);
 				break ;
 			}
-			if ((write(fd, input, ft_strlen(input)) == -1 || \
-				write(fd, "\n", 1) == -1))
+			input = expand_heredoc(input, cmd);
+			if (write(fd, input, ft_strlen(input)) == -1 || \
+				write(fd, "\n", 1) == -1)
 			{
 				free(input);
 				break ;
 			}
 		}
-		else
-		{
-			if (input && ft_strcmp(input, cmd->here[i]))
-				i++;
-		}
+		else if (input && ft_strcmp(input, cmd->here[i]))
+			i++;
 		free(input);
 	}
 }

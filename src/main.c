@@ -94,7 +94,7 @@ int	main(int argc, char **argv, char **envp)
 		if (!lex)
 			continue ;
 		expander_start(lex, env);
-		cmd = create_parse_list(lex);
+		cmd = create_parse_list(lex, env);
 		if (cmd != NULL && env != NULL)
 			init_shell(s, cmd, &env);
 	}

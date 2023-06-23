@@ -53,7 +53,6 @@ void		perror_cmd_not_found(char *cmd, t_shell *sh);
 void		perror_env_too_big(char *cmd, t_shell *sh, t_env **head);
 void		*free_env_list(t_env **head);
 void		perror_exit_2(char *message, t_shell *sh, t_env **env, int mode);
-void	*free_2d_arr(void **ptr);
 
 /* utils */
 int			ft_strcmp(char *s1, char *s2);
