@@ -92,4 +92,3 @@ t_env	*create_user_node(t_env **head)
 	add_node_to_list(head, node);
 	return (node);
 }
-

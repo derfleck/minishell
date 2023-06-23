@@ -37,9 +37,11 @@ void		append_node_value(t_env *node, char *value2, t_env **head);
 void		add_node_to_list(t_env **head, t_env *new);
 int			key_validity_check(char *key);
 void		increase_shell_level(t_env **env);
+void		reset_shlvl(t_env **head);
 
 /* free */
 void		*free_ptr(void *ptr);
+void		*free_charray(char **arr);
 void		perror_exit(char *message);
 void		perror_lexer(char *message, char *s, t_env *env, t_lexer *lex);
 void		perror_cmd(char *message, t_cmd *cmd, t_env *head);
@@ -53,6 +55,7 @@ void		*free_env_list(t_env **head);
 /* utils */
 int			ft_strcmp(char *s1, char *s2);
 int			ft_isnum(int c);
+char		*safe_join(char *s1, char *s2, t_env *head);
 
 /* Builtins */
 int			helper_get_arg_count(char **args);
