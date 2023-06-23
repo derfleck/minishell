@@ -19,27 +19,29 @@ int	is_builtin(char *cmd)
 static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
-		builtin_pwd(*env);
+		g_stat = builtin_pwd(*env);
 	else if (ft_strncmp(cmd->cmd, "env", 3) == 0)
-		builtin_env(*env, &cmd->arg[1]);
+		g_stat = builtin_env(*env, &cmd->arg[1]);
 	else if (ft_strncmp(cmd->cmd, "cd", 2) == 0)
-		builtin_cd(&cmd->arg[1], env);
+		g_stat = builtin_cd(&cmd->arg[1], env);
 	else if (ft_strncmp(cmd->cmd, "export", 6) == 0)
-		builtin_export(&cmd->arg[1], env);
+		g_stat = builtin_export(&cmd->arg[1], env);
 	else if (ft_strncmp(cmd->cmd, "unset", 5) == 0)
-		builtin_unset(&cmd->arg[1], env);
+		g_stat = builtin_unset(&cmd->arg[1], env);
 	else if (ft_strncmp(cmd->cmd, "echo", 4) == 0)
-		builtin_echo(&cmd->arg[1], *env);
+		g_stat = builtin_echo(&cmd->arg[1], *env);
 	else if (ft_strncmp(cmd->cmd, "exit", 4) == 0)
-		builtin_exit(sh, &cmd->arg[1], env, mode);
+		g_stat = builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
 	{
 		free_env_list(env);
 		free_shell(sh);
-		exit(0);
+		exit(g_stat);
 	}
 }
 
+//helper function, checks the absolute size in bytes of the
+//environment variables, doesn't return if too big, 1 if pass
 static int check_environ_size(t_shell *shell, t_env **head, char *cmd)
 {
 	size_t	size;
@@ -59,6 +61,32 @@ static int check_environ_size(t_shell *shell, t_env **head, char *cmd)
 	return (1);
 }
 
+//checks if a path is a file or directory
+//prints error and exits with 126 when directory
+int	check_file_dir(char *path, t_shell *sh, t_env **head)
+{
+	struct stat	st;
+
+	if (stat(path, &st) == -1)
+		perror("stat");
+	if (S_ISREG(st.st_mode))
+		return (1);
+	else if (S_ISDIR(st.st_mode))
+	{
+		ft_putstr_fd("bash: ", STDERR_FILENO);
+		ft_putstr_fd(path, STDERR_FILENO);
+		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
+		if (head)
+			free_env_list(head);
+		if (sh)
+			free_shell(sh);
+		g_stat = 126;
+		exit(126);
+	}
+	else
+		return (0);
+}
+
 //checks if command path is absolute or relative
 void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 {
@@ -67,27 +95,30 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 	tmp = NULL;
 	if (cmd->cmd == NULL)
 		return ;
-	if (ft_strncmp("./", cmd->cmd, 2) != 0 && !is_builtin(cmd->cmd))
+	if (check_environ_size(shell, head, cmd->cmd) && ft_strcmp(".", cmd->cmd))
+		perror_exit_2("source alias not supported\n", shell, head, mode);
+	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || is_builtin(cmd->cmd))
+	{
+		if (is_builtin(cmd->cmd))
+			mini_pathfinder(shell, cmd, head, mode);
+		else if (check_file_dir(cmd->cmd, shell, head))
+			return ;
+		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
+			perror("execve");
+	}	
+	else
 	{
 		tmp = get_cmd_with_path(cmd, shell->paths);
 		if (!tmp)
 			perror_cmd_not_found(cmd->cmd, shell);
-		if (check_environ_size(shell, head, tmp) && execve(tmp, cmd->arg, shell->envp) == -1)
+		if (execve(tmp, cmd->arg, shell->envp) == -1)
 			perror("execve");
 		free(tmp);
-	}
-	else if (check_environ_size(shell, head, cmd->cmd))
-	{
-		if (is_builtin(cmd->cmd))
-			mini_pathfinder(shell, cmd, head, mode);
-		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
-			perror("execve");
 	}
 }
 
 //initializes shell struct containing environment variables
 //and extracted paths from PATH variable, if it exists
-//TODO: remove t_shell return type, change to void
 void	init_shell(char *s, t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;

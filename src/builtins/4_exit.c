@@ -26,7 +26,6 @@ static void	exit_parent(t_shell *sh, char **args, t_env **head, int argc)
 	(void)head;
 	if (argc == 1)
 	{
-		free_env_list(head);
 		if (exit_stat_valid(args[0]))
 			exit_helper(sh, head, (unsigned char)ft_atoi(args[0]));
 		else

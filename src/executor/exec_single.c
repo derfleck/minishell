@@ -35,10 +35,14 @@ static void	set_last_cmd_path(t_cmd *cmd, t_shell *sh, t_env **head)
 }
 
 //helper, handles forking, redirection and execution
+//TODO: add check for minishell, no matter what path
 static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 {
 	shell->pid[0] = fork();
-	set_sigaction(shell->pid[0]);
+	if (ft_strcmp(cmd->cmd, "./minishell"))
+		set_sigaction(-1);
+	else
+		set_sigaction(shell->pid[0]);
 	if (shell->pid[0] == CHILD)
 	{
 		if (dup2(cmd->fd[IN], STDIN_FILENO) == -1)
@@ -46,8 +50,10 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
 			return ;
 		execute_cmd(cmd, shell, head, CHILD);
-		free_env_list(head);
-		free_shell(shell);
+		if (head)
+			free_env_list(head);
+		if (shell)
+			free_shell(shell);
 	}
 	else
 	{
@@ -56,7 +62,8 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		if (cmd->out)
 			close(cmd->fd[OUT]);
 		wait_children(shell, 1);
-		set_last_cmd_path(cmd, shell, head);
+		if (g_stat == 0)
+			set_last_cmd_path(cmd, shell, head);
 		unlink_heredoc(cmd);
 		shell = free_shell(shell);
 	}

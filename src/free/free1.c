@@ -25,6 +25,21 @@ void	perror_exit(char *message)
 	exit (1);
 }
 
+void	perror_exit_2(char *message, t_shell *sh, t_env **env, int mode)
+{
+	if (message)
+		ft_putstr_fd(message, STDERR_FILENO);
+	if (sh)
+		free_shell(sh);
+	g_stat = 2;
+	if (mode == CHILD)
+	{
+		if (env)
+			free_env_list(env);
+		exit (2);
+	}
+}
+
 void	perror_lexer(char *message, char *s, t_env *env, t_lexer *lex)
 {
 	if (s)

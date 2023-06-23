@@ -42,15 +42,19 @@ char	**get_paths(char **envp)
 //F_OK checks if the file exists, X_OK if the file is executable by the proccess
 char    *get_cmd_with_path(t_cmd *cmd, char **path)
 {
-	int     i;
-	char    *full_path;
+	int     	i;
+	char    	*full_path;
+	struct stat	st;
 
 	i = 0;
 	full_path = NULL;
+	if (ft_strcmp(".", cmd->cmd))
+		return (full_path);
 	while (path[i] != NULL)
 	{
 		full_path = ft_strjoin(path[i++], cmd->cmd);
-		if (access(full_path, F_OK | X_OK) == 0)
+		if (access(full_path, F_OK | X_OK) == 0 && \
+			stat(full_path, &st) == 0 && S_ISREG(st.st_mode))
 			return (full_path);
 		full_path = safe_free(full_path);
 	}
