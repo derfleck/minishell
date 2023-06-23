@@ -8,14 +8,14 @@ static int	look_for_nflag(char *str)
 {
 	int	i;
 
-	i = 1;
-	if (!str[i])
+	i = 0;
+	if (str[i] == '\0' || str[i] != '-' || \
+	(str[i] == '-' && str[1] == '\0'))
 		return (0);
-	while (str[i])
+	while (str[++i])
 	{
 		if (str[0] != '-' || str[i] != 'n')
 			return (0);
-		i++;
 	}
 	return (1);
 }
@@ -26,11 +26,10 @@ int	builtin_echo(char **args, t_env *head)
 	int	flag;
 	int	i;
 
-	g_stat = 0;
 	if (!args[0])
 	{
 		write(1, "\n", 1);
-		return (g_stat);
+		return (0);
 	}
 	(void)head;
 	i = -1;
@@ -45,5 +44,6 @@ int	builtin_echo(char **args, t_env *head)
 	}
 	if (flag == 0)
 		write(1, "\n", 1);
+	g_stat = 0;
 	return (g_stat);
 }

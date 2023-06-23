@@ -3,7 +3,7 @@
 int	g_stat = 0;
 
 //expands current directory so only path after home is shown
-static	char *expand_home_prompt(t_env *head)
+static	char	*expand_home_prompt(t_env *head)
 {
 	t_env	*node;
 	char	*home;
@@ -26,20 +26,6 @@ static	char *expand_home_prompt(t_env *head)
 	}
 	else
 		return (cwd);
-}
-
-static char *safe_join(char *s1, char *s2, t_env *head)
-{
-	char *ret;
-
-	ret = ft_strjoin(s1, s2);
-	if (!ret)
-		perror_exit_free_env("Malloc failed\n", head);
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
-	return (ret);
 }
 
 //constructs the prompt line from the copy of the environment variables

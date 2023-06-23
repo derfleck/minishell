@@ -11,7 +11,7 @@ int	builtin_pwd(t_env *head)
 	if (buf)
 	{
 		printf("%s\n", buf);
-		free(buf);
+		free_ptr(buf);
 	}
 	else
 		g_stat = 1;
@@ -96,7 +96,7 @@ int	builtin_unset(char **args, t_env **env)
 			if (node == NULL)
 				continue ;
 			else if (ft_strcmp(args[i], "SHLVL"))
-				continue ;
+				reset_shlvl(env);
 			else
 				remove_node(env, node);
 		}

@@ -49,13 +49,46 @@ static void	export_append_helper(char *key, char *str, t_env **env)
 	if (node == NULL)
 	{
 		realkey2 = ft_strjoin(realkey, "=");
-		free(realkey);
+		free_ptr(realkey);
 		node = create_node(ft_strjoin(realkey2, split_env_value(str)), *env);
 		add_node_to_list(env, node);
-	}	
+		free_ptr(realkey2);
+	}
 	else
-		append_node_value(node, split_env_value(str), env);
-	free_ptr(realkey);
+	{
+		if (ft_strcmp(realkey, "SHLVL"))
+			;
+		else
+			append_node_value(node, split_env_value(str), env);
+		free_ptr(realkey);
+	}
+}
+
+static void	deal_with_shlvl(char *arg, t_env **env, t_env *node)
+{
+	int		i;
+	char	*input_value;
+	char	*str;
+
+	input_value = split_env_value(arg);
+	if (!input_value)
+	{
+		reset_shlvl(env);
+		return ;
+	}
+	i = -1;
+	while (input_value[++i])
+	{
+		if (!ft_isnum(input_value[i]))
+		{
+			reset_shlvl(env);
+			return ;
+		}
+	}
+	i = ft_atoi(input_value);
+	str = ft_itoa(i % 1000);
+	replace_node_value(node, str, env);
+	free_ptr(str);
 }
 
 static void	builtin_export_helper(char *arg, t_env **env)
@@ -79,11 +112,12 @@ static void	builtin_export_helper(char *arg, t_env **env)
 	}
 	else
 	{
-		if (key_validity_check(key) == 1)
+		if (ft_strcmp(key, "SHLVL"))
+			deal_with_shlvl(arg, env, node);
+		else if (key_validity_check(key) == 1)
 			replace_node_value(node, split_env_value(arg), env);
 	}
-	free(key);
-	return ;
+	free_ptr(key);
 }
 
 /* takes a 2d array of strs as argument after export command.

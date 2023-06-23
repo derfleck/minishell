@@ -2,9 +2,23 @@
 
 void	*free_ptr(void *ptr)
 {
-	if (ptr)
+	if (ptr != NULL)
 		free(ptr);
 	ptr = NULL;
+	return (NULL);
+}
+
+void	*free_charray(char **arr)
+{
+	int	i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free_ptr(arr[i]);
+		i++;
+	}
+	free_ptr(arr);
 	return (NULL);
 }
 
@@ -93,6 +107,7 @@ void	perror_cmd_not_found(char *cmd, t_shell *sh)
 	}
 	if (sh)
 		free_shell(sh);
+	g_stat = 127;
 	exit(127);
 }
 

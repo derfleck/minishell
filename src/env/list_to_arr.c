@@ -48,3 +48,11 @@ int	return_list_size(t_env *head)
 	}
 	return (i);
 }
+
+void	reset_shlvl(t_env **head)
+{
+	t_env	*node;
+
+	node = find_env_node(*head, "SHLVL");
+	replace_node_value(node, "0", head);
+}

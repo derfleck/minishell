@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 
-/*  */
-char	*kill_quotes(char *expanded)
+/* as it says */
+char	*kill_quotes(char *expanded, t_env *head)
 {
 	char	*str;
 	int		i;
@@ -11,12 +11,14 @@ char	*kill_quotes(char *expanded)
 	i = 0;
 	j = 0;
 	str = ft_strdup(expanded);
+	if (!str)
+		perror_exit_free_env("Malloc_failed\n", head);
 	while (expanded[i])
 	{
 		if (expanded[i] == '"' || expanded[i] == '\'')
 		{
 			end = return_quote_len(&expanded[i], expanded[i]);
-			str = remove_quotes(str, j, j + end, expanded[i]);
+			str = remove_quotes(str, j, j + end, head);
 			i = i + end;
 			j = j + end - 2;
 		}
@@ -27,27 +29,25 @@ char	*kill_quotes(char *expanded)
 }
 
 /* Removes quotes (at positions start and end) from an incoming string,
- sends new string back */
-char	*remove_quotes(char *input, int start, int end, char c)
+ sends new string back
+ SHOULD free input! */
+char	*remove_quotes(char *input, int start, int end, t_env *head)
 {
 	char	*new;
 	char	*pre;
 	char	*post;
+	char	*str;
 
-	pre = return_pre_str(input, &input[start]);
-	if (!pre)
-		new = create_quote_free_str(input, start, end, c);
-	else
-		new = ft_strjoin(pre, create_quote_free_str(input, start, end, c));
+	pre = return_pre_str(input, &input[start], head);
+	str = create_quote_free_str(input, start, end, head);
+	new = safe_join(pre, str, head);
 	if (!new)
-		perror_exit("Malloc failed\n");
-	free(pre);
-	post = return_post_str(&input[end]);
-	if (post)
-		new = ft_strjoin(new, post);
+		perror_exit_free_env("Malloc_failed\n", head);
+	post = return_post_str(&input[end], head);
+	new = safe_join(new, post, head);
 	if (!new)
-		perror_exit("Malloc failed\n");
-	free_ptr(post);
+		perror_exit_free_env("Malloc_failed\n", head);
+	free_ptr(input);
 	return (new);
 }
 
@@ -81,21 +81,24 @@ int	found_quotes(char *input)
 	return (0);
 }
 
-/* Creates new string with the content of the quotes without quotes */
-char	*create_quote_free_str(char *input, int start, int end, char c)
+/* Creates new string with the content of the quotes without quotes
+DON'T FREE INPUT */
+char	*create_quote_free_str(char *input, int start, int end, t_env *head)
 {
 	char	*new;
 	char	*quoted_str;
 	char	quote_type[2];
+	char	c;
 
+	c = input[start];
 	quote_type[0] = c;
 	quote_type[1] = '\0';
 	quoted_str = ft_substr(input, start, (size_t)end - start + 1);
 	if (!quoted_str)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	new = ft_strtrim(quoted_str, quote_type);
 	if (!new)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc_failed\n", head);
 	free_ptr(quoted_str);
 	return (new);
 }

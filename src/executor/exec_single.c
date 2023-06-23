@@ -82,5 +82,5 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head)
 		unlink_heredoc(cmd);
 	}
 	else
-		exec_child_single(cmd, shell, head);	
+		exec_child_single(cmd, shell, head);
 }

@@ -52,6 +52,24 @@ t_env	*create_node(char *str, t_env *head)
 	return (temp);
 }
 
+void	increase_shell_level(t_env **env)
+{
+	t_env	*node;
+	char	*new_slvl;
+
+	node = find_env_node(*env, "SHLVL");
+	if (node)
+	{
+		new_slvl = ft_itoa(ft_atoi(split_env_value(node->key_value)) + 1);
+		if (!new_slvl)
+			perror_exit_free_env("Malloc failed \n", *env);
+		replace_node_value(node, new_slvl, env);
+		new_slvl = free_ptr(new_slvl);
+	}
+	else
+		add_node_to_list(env, create_node("SHLVL=1", *env));
+}
+
 /* receives key=value string, splits the value off (everything after
 the (=) sign, and returns it as a str.
 If something goes wrong, returns a NULL */
