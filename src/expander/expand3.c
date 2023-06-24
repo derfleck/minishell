@@ -103,7 +103,8 @@ char	*ft_strjoin_multiple(char **arr, t_env *head)
 		str = ft_strjoin(str, arr[i]);
 		if (!str)
 			perror_exit_free_env("Malloc_failed\n", head);
-		free_ptr(tmp);
+		tmp = free_ptr(tmp);
 	}
+	//free_charray(arr);
 	return (str);
 }

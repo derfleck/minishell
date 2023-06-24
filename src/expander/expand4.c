@@ -71,7 +71,7 @@ char	*remove_var_reference(char *input, char *dollar, t_env *head)
 
 	pre = return_pre_str(input, dollar, head);
 	new_str = ft_strdup(pre);
-	free_ptr(pre);
+	pre = free_ptr(pre);
 	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
 	key_len = return_key_len(dollar + 1);

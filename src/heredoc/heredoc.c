@@ -8,7 +8,7 @@ static char *expand_heredoc(char *input, t_cmd *cmd)
 	if (input)
 	{
 		tmp = expander(input, cmd->head);
-		free_ptr(input);
+		input = free_ptr(input);
 	}
 	return (tmp);
 }
@@ -22,7 +22,7 @@ static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		{
 			if (!input || ft_strcmp(input, cmd->here[i]))
 			{
-				free_ptr(input);
+				input = free_ptr(input);
 				break ;
 			}
 			input = expand_heredoc(input, cmd);

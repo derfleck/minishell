@@ -15,10 +15,10 @@ void	*free_charray(char **arr)
 	i = 0;
 	while (arr[i])
 	{
-		free_ptr(arr[i]);
+		arr[i] = free_ptr(arr[i]);
 		i++;
 	}
-	free_ptr(arr);
+	arr = free_ptr(arr);
 	return (NULL);
 }
 
@@ -134,9 +134,9 @@ static void	*free_env_node(t_env *node)
 
 	if (!node)
 		return (NULL);
-	free_ptr(node->key_value);
+	node->key_value = free_ptr(node->key_value);
 	tmp = node->next;
-	free_ptr(node);
+	node = free_ptr(node);
 	return (tmp);
 }
 

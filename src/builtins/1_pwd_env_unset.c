@@ -11,7 +11,7 @@ int	builtin_pwd(t_env *head)
 	if (buf)
 	{
 		printf("%s\n", buf);
-		free_ptr(buf);
+		buf = free_ptr(buf);
 	}
 	else
 		g_stat = 1;
@@ -70,8 +70,8 @@ static void	remove_node(t_env **head, t_env *node)
 		*head = (*head)->next;
 	else
 		prev->next = temp->next;
-	free_ptr(temp->key_value);
-	free_ptr(temp);
+	temp->key_value = free_ptr(temp->key_value);
+	temp = free_ptr(temp);
 }
 /* removes existing env variable, 
 writes bash: unset: `STR': not a valid identifier if not found 

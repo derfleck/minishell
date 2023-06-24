@@ -47,7 +47,7 @@ char	*remove_quotes(char *input, int start, int end, t_env *head)
 	new = safe_join(new, post, head);
 	if (!new)
 		perror_exit_free_env("Malloc_failed\n", head);
-	free_ptr(input);
+	input = free_ptr(input);
 	return (new);
 }
 
@@ -99,6 +99,6 @@ char	*create_quote_free_str(char *input, int start, int end, t_env *head)
 	new = ft_strtrim(quoted_str, quote_type);
 	if (!new)
 		perror_exit_free_env("Malloc_failed\n", head);
-	free_ptr(quoted_str);
+	quoted_str = free_ptr(quoted_str);
 	return (new);
 }

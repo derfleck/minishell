@@ -20,7 +20,7 @@ void	expander_start(t_lexer *lex, t_env *head)
 		{
 			temp = lex_tmp->str;
 			lex_tmp->str = expander(lex_tmp->str, head);
-			free_ptr(temp);
+			temp = free_ptr(temp);
 			lex_tmp = lex_tmp->next;
 		}
 	}
@@ -41,7 +41,7 @@ char	*expander(char *input, t_env *head)
 		if (!new)
 			perror_exit_free_env("Malloc failed\n", head);
 		new2 = kill_quotes(new, head);
-		free_ptr(new);
+		new = free_ptr(new);
 		return (new2);
 	}
 	else
@@ -105,6 +105,7 @@ char	*do_expansion_pre(char *input, t_env *head)
 	}
 	else
 		new_str = do_expansion(input, head);
+	arr = free_charray(arr);
 	return (new_str);
 }
 
@@ -133,7 +134,7 @@ char	*do_expansion_pre_with_freeing(char *input, t_env *head)
 	}
 	else
 		new_str = do_expansion(input, head);
-	free_ptr(input);
+	input = free_ptr(input);
 	return (new_str);
 }
 
@@ -173,7 +174,7 @@ char	*do_expansion_with_freeing(char *input, t_env *head)
 			new_str = replace_string(input, head, &input[i]);
 			if (!new_str)
 				perror_exit_free_env("Malloc_failed\n", head);
-			free_ptr(input);
+			input = free_ptr(input);
 			return (new_str);
 		}
 	}
@@ -200,7 +201,7 @@ char	**split_by_dollars(char *input, t_env *head)
 		if (!arr[l])
 			perror_exit_free_env("Malloc_failed\n", head);
 	}
-	free_ptr(trim);
+	trim = free_ptr(trim);
 	arr[l] = NULL;
 	return (arr);
 }

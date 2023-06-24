@@ -18,7 +18,7 @@ static int	export_isequal(char *arg, t_env *env)
 		g_stat = 1;
 		return (0);
 	}
-	free_ptr(str);
+	str = free_ptr(str);
 	while (arg[++i])
 	{
 		if (arg[i] == '=')
@@ -44,15 +44,15 @@ static void	export_append_helper(char *key, char *str, t_env **env)
 	realkey = ft_strtrim(key, "+");
 	if (!realkey)
 		perror_exit("Malloc failed\n");
-	free_ptr(key);
+	key = free_ptr(key);
 	node = find_env_node(*env, realkey);
 	if (node == NULL)
 	{
 		realkey2 = ft_strjoin(realkey, "=");
-		free_ptr(realkey);
+		realkey = free_ptr(realkey);
 		node = create_node(ft_strjoin(realkey2, split_env_value(str)), *env);
 		add_node_to_list(env, node);
-		free_ptr(realkey2);
+		realkey2 = free_ptr(realkey2);
 	}
 	else
 	{
@@ -60,7 +60,7 @@ static void	export_append_helper(char *key, char *str, t_env **env)
 			;
 		else
 			append_node_value(node, split_env_value(str), env);
-		free_ptr(realkey);
+		realkey = free_ptr(realkey);
 	}
 }
 
@@ -88,7 +88,7 @@ static void	deal_with_shlvl(char *arg, t_env **env, t_env *node)
 	i = ft_atoi(input_value);
 	str = ft_itoa(i % 1000);
 	replace_node_value(node, str, env);
-	free_ptr(str);
+	str = free_ptr(str);
 }
 
 static void	builtin_export_helper(char *arg, t_env **env)
@@ -117,7 +117,7 @@ static void	builtin_export_helper(char *arg, t_env **env)
 		else if (key_validity_check(key) == 1)
 			replace_node_value(node, split_env_value(arg), env);
 	}
-	free_ptr(key);
+	key = free_ptr(key);
 }
 
 /* takes a 2d array of strs as argument after export command.

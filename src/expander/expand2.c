@@ -55,10 +55,10 @@ char	*check_key_exist(t_env *head, char *i)
 	node = find_env_node(head, key);
 	if (!node)
 	{
-		free_ptr(key);
+		key = free_ptr(key);
 		return (NULL);
 	}
-	free_ptr(key);
+	key = free_ptr(key);
 	value = ft_strdup(split_env_value(node->key_value));
 	if (!value)
 		perror_exit_free_env("Malloc_failed\n", head);
