@@ -6,7 +6,7 @@
 /*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 15:37:30 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/06/26 15:37:39 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/06/26 17:08:27 by rmocsai          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ char	**split_by_quotes(char *input, t_env *head)
 	if (!arr)
 		perror_exit_free_env("Malloc_failed\n", head);
 	arr = ft_quotesplitter(arr, input, count, head);
-
 	return (arr);
 }
 
