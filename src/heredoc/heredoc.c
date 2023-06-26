@@ -1,43 +1,5 @@
 #include "../../inc/minishell.h"
 
-static char *expand_heredoc(char *input, t_cmd *cmd)
-{
-	char *tmp;
-
-	tmp = NULL;
-	if (input)
-	{
-		tmp = expander(input, cmd->head);
-		input = free_ptr(input);
-	}
-	return (tmp);
-}
-
-static void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
-{
-	while (1)
-	{
-		input = readline("> ");
-		if (i == cmd->num[HERE] - 1)
-		{
-			if (!input || ft_strcmp(input, cmd->here[i]))
-			{
-				input = free_ptr(input);
-				break ;
-			}
-			input = expand_heredoc(input, cmd);
-			if (write(fd, input, ft_strlen(input)) == -1 || \
-				write(fd, "\n", 1) == -1)
-			{
-				free(input);
-				break ;
-			}
-		}
-		else if (input && ft_strcmp(input, cmd->here[i]))
-			i++;
-		free(input);
-	}
-}
 /*
 static void	check_heredoc(t_cmd *cmd, int fd)
 {
@@ -57,31 +19,61 @@ static void	check_heredoc(t_cmd *cmd, int fd)
 }
 */
 
-//starts the heredoc mode, iterates through all stopwords
-//IMPORTANT: should always be started if heredoc stopwords provided
-static char	*start_heredoc(t_cmd *cmd)
+static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 {
 	int		fd;
 	int		i;
 	char	*input;
-	char	*number;
 
-	number = ft_itoa(cmd->i);
-	cmd->here_file = ft_strjoin("here_", number);
-	free(number);
 	i = 0;
 	input = NULL;
 	fd = open(cmd->here_file, O_CREAT | O_RDWR, 0644);
 	if (fd == -1)
-		return (NULL);
+		return ;
+	rl_catch_signals = 0;
+	signal(SIGINT, sig_handler_heredoc);
+	//signal(SIGQUIT, sig_handler_heredoc);
 	heredoc_loop(cmd, i, fd, input);
-	//check_heredoc(cmd, fd);
 	close(fd);
-	return (cmd->here_file);
+	cmd->here_file = free_ptr(cmd->here_file);
+	if (sh->head != NULL)
+		free_env_list(&sh->head);
+	if (sh != NULL)
+		free_shell(sh);
+	if (*(check_sigint()) == 1)
+	{
+		free(check_sigint());
+		exit(130);
+	}
+	exit (0);
+}
+
+//starts the heredoc mode, iterates through all stopwords
+//IMPORTANT: should always be started if heredoc stopwords provided
+static int	start_heredoc(t_shell *sh, t_cmd *cmd)
+{
+	char	*number;
+	pid_t	pid;
+	int		p_status;
+
+	p_status = 0;
+	number = ft_itoa(cmd->i);
+	cmd->here_file = ft_strjoin("here_", number);
+	free(number);
+	set_sigaction(-1);
+	pid = fork();
+	if (pid == CHILD)
+		child_heredoc(sh, cmd);
+	else
+		waitpid(pid, &p_status, 0);
+	if (WIFEXITED(p_status))
+		g_stat = WEXITSTATUS(p_status);
+	set_sigaction(PARENT);
+	return (g_stat);
 }
 
 //runs heredoc in the beginning for all command groups
-void	run_heredoc(t_cmd *cmd)
+int	run_heredoc(t_shell *sh, t_cmd *cmd)
 {
 	t_cmd	*tmp;
 
@@ -89,9 +81,13 @@ void	run_heredoc(t_cmd *cmd)
 	while (tmp)
 	{
 		if (tmp->num[HERE] > 0)
-			start_heredoc(tmp);
+		{
+			if (start_heredoc(sh, tmp) > 0)
+				return (1);
+		}
 		tmp = tmp->next;
 	}
+	return (0);
 }
 
 //closes and unlinks temporary heredoc
@@ -108,7 +104,7 @@ int		unlink_heredoc(t_cmd *cmd)
 			exit (1);
 		}
 		if (cmd->here_file)
-			free(cmd->here_file);
+			cmd->here_file = free_ptr(cmd->here_file);
 	}
 	return (1);
 }

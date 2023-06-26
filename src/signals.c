@@ -18,7 +18,6 @@ void	handle_ctrlc(int signum)
 /* Child process handler of signal types SIGINT(ctrlC) and SIGQUIT(ctrl\)*/
 void	handle_signals_child(int signum)
 {
-	printf("%d\n", signum);
 	if (signum == SIGINT)
 	{
 		ft_putstr_fd("\n", STDOUT_FILENO);
@@ -52,5 +51,5 @@ void	set_sigaction(int i)
 	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, SIG_IGN);
-		}
+	}
 }

@@ -71,7 +71,8 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 
 void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head)
 {
-	run_heredoc(cmd);
+	if (run_heredoc(shell, cmd))
+		return(perror_heredoc(shell));
 	if (open_files(cmd))
 		open_in_out(cmd);
 	else

@@ -13,7 +13,7 @@ void	*free_charray(char **arr)
 	int	i;
 
 	i = 0;
-	while (arr[i])
+	while (arr && arr[i])
 	{
 		arr[i] = free_ptr(arr[i]);
 		i++;
@@ -152,4 +152,18 @@ void	*free_env_list(t_env **head)
 		node = free_env_node(node);
 	head = NULL;
 	return (NULL);
+}
+
+void	perror_heredoc(t_shell *sh)
+{
+	t_cmd	*tmp;
+
+	tmp = sh->cmd_start;
+	while (tmp)
+	{
+		unlink_heredoc(tmp);
+		tmp = tmp->next;
+	}
+	if (sh != NULL)
+		free_shell(sh);
 }

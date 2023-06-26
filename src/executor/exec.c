@@ -70,7 +70,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 	if (stat(path, &st) == -1)
 		perror("stat");
 	if (S_ISREG(st.st_mode))
-		return (1);
+		return (0);
 	else if (S_ISDIR(st.st_mode))
 	{
 		ft_putstr_fd("bash: ", STDERR_FILENO);
@@ -84,7 +84,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 		exit(126);
 	}
 	else
-		return (0);
+		return (1);
 }
 
 //checks if command path is absolute or relative

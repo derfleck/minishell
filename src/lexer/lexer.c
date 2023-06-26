@@ -51,7 +51,10 @@ int	syntax_check(char *str)
 		else
 		{
 			tmp = str[i];
-			i += skip_quotes(str + i);
+			if (str[i + 1])
+				i += skip_quotes(str + i);
+			else
+				return (0);
 		}
 		if (!str[i] && str[i - 1] != tmp)
 			return (0);

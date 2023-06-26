@@ -33,7 +33,10 @@ char    *get_cmd_with_path(t_cmd *cmd, char **path);
 void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head);
 
 //heredoc
-void	run_heredoc(t_cmd *cmd);
+int		run_heredoc(t_shell *sh, t_cmd *cmd);
 int		unlink_heredoc(t_cmd *cmd);
+void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input);
+void	sig_handler_heredoc(int sig_num);
+int		*check_sigint(void);
 
 #endif

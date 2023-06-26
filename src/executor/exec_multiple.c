@@ -73,7 +73,8 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env)
 	tmp = cmd;
 	shell->stdin_cpy = dup(STDIN_FILENO);
 	i = 0;
-	run_heredoc(cmd);
+	if (run_heredoc(shell, cmd))
+		return(perror_heredoc(shell), 0);
 	while (tmp)
 	{
 		if (open_files(tmp))
