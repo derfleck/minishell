@@ -49,10 +49,23 @@ int	return_list_size(t_env *head)
 	return (i);
 }
 
+/* sets SHLVL var to 0 when called */
 void	reset_shlvl(t_env **head)
 {
 	t_env	*node;
 
 	node = find_env_node(*head, "SHLVL");
 	replace_node_value(node, "0", head);
+}
+
+/* Creates new HOME env node in case HOME was unset.
+Important for Expander! (~) */
+t_env	*create_home(char *str, t_env **head)
+{
+	t_env	*node;
+
+	node = create_node(str, *head);
+	add_node_to_list(head, node);
+	node->next = NULL;
+	return (node);
 }

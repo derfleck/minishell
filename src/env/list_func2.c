@@ -60,7 +60,8 @@ void	increase_shell_level(t_env **env)
 	node = find_env_node(*env, "SHLVL");
 	if (node)
 	{
-		new_slvl = ft_itoa(ft_atoi(split_env_value(node->key_value)) + 1);
+		new_slvl = ft_itoa \
+		((ft_atoi(split_env_value(node->key_value)) + 1) % 1000);
 		if (!new_slvl)
 			perror_exit_free_env("Malloc failed \n", *env);
 		replace_node_value(node, new_slvl, env);
@@ -103,19 +104,3 @@ char	*split_env_key(const char *str, t_env *head)
 		perror_exit_free_env("Malloc failed\n", head);
 	return (key);
 }
-
-// or alternatively a no-malloc option:
-// char	*split_env_key(const char *str)
-// {
-// 	size_t			i;
-// 	static char		key[250];
-
-// 	i = 0;
-// 	if (!str)
-// 		return (NULL);
-// 	while (str[i] != '=' && str)
-// 		i++;
-// 	ft_memmove(key, str, i);
-// 	key[(int)i] = '\0';
-// 	return (key);
-// }

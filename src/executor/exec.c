@@ -42,7 +42,7 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 
 //helper function, checks the absolute size in bytes of the
 //environment variables, doesn't return if too big, 1 if pass
-static int check_environ_size(t_shell *shell, t_env **head, char *cmd)
+static int	check_environ_size(t_shell *shell, t_env **head, char *cmd)
 {
 	size_t	size;
 	t_env	*tmp;
@@ -70,7 +70,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 	if (stat(path, &st) == -1)
 		perror("stat");
 	if (S_ISREG(st.st_mode))
-		return (1);
+		return (0);
 	else if (S_ISDIR(st.st_mode))
 	{
 		ft_putstr_fd("bash: ", STDERR_FILENO);
@@ -84,7 +84,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 		exit(126);
 	}
 	else
-		return (0);
+		return (1);
 }
 
 //checks if command path is absolute or relative
@@ -105,7 +105,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 			return ;
 		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("execve");
-	}	
+	}
 	else
 	{
 		tmp = get_cmd_with_path(cmd, shell->paths);

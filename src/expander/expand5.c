@@ -1,104 +1,87 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand5.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 15:13:26 by rmocsai           #+#    #+#             */
+/*   Updated: 2023/06/26 15:37:39 by rmocsai          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
-/* as it says */
-char	*kill_quotes(char *expanded, t_env *head)
-{
-	char	*str;
-	int		i;
-	int		j;
-	int		end;
-
-	i = 0;
-	j = 0;
-	str = ft_strdup(expanded);
-	if (!str)
-		perror_exit_free_env("Malloc_failed\n", head);
-	while (expanded[i])
-	{
-		if (expanded[i] == '"' || expanded[i] == '\'')
-		{
-			end = return_quote_len(&expanded[i], expanded[i]);
-			str = remove_quotes(str, j, j + end, head);
-			i = i + end;
-			j = j + end - 2;
-		}
-		i++;
-		j++;
-	}
-	return (str);
-}
-
-/* Removes quotes (at positions start and end) from an incoming string,
- sends new string back
- SHOULD free input! */
-char	*remove_quotes(char *input, int start, int end, t_env *head)
-{
-	char	*new;
-	char	*pre;
-	char	*post;
-	char	*str;
-
-	pre = return_pre_str(input, &input[start], head);
-	str = create_quote_free_str(input, start, end, head);
-	new = safe_join(pre, str, head);
-	if (!new)
-		perror_exit_free_env("Malloc_failed\n", head);
-	post = return_post_str(&input[end], head);
-	new = safe_join(new, post, head);
-	if (!new)
-		perror_exit_free_env("Malloc_failed\n", head);
-	input = free_ptr(input);
-	return (new);
-}
-
-/* Starts from right after the first quote (start + 1)
-and returns an int representing the length of str until the end quote */
-int	return_quote_len(char *start, char c)
-{
-	int	i;
-
-	i = 0;
-	while (start[++i])
-	{
-		if (start[i] == c)
-			break ;
-	}
-	return (i);
-}
-
-/* Iterates through the str, if finds a quotation mark, 
-returns 1 if not, returns 0 */
-int	found_quotes(char *input)
+/* checks if Dollar is followed by quote (bash behaves differently) */
+int	check_invalid_follow(char *str)
 {
 	int	i;
 
 	i = -1;
-	while (input[++i])
+	while (str[++i])
 	{
-		if (input[i] == '\'' || input[i] == '"')
+		if (str[i] == '$' && (str[i + 1] == '"' || str[i + 1] == '\''))
 			return (1);
 	}
 	return (0);
 }
 
-/* Creates new string with the content of the quotes without quotes
-DON'T FREE INPUT */
-char	*create_quote_free_str(char *input, int start, int end, t_env *head)
+char	*remove_dollarsign_bef_quotes(char *str, t_env *head)
 {
 	char	*new;
-	char	*quoted_str;
-	char	quote_type[2];
-	char	c;
+	char	*pre;
+	char	*post;
+	int		i;
 
-	c = input[start];
-	quote_type[0] = c;
-	quote_type[1] = '\0';
-	quoted_str = ft_substr(input, start, (size_t)end - start + 1);
-	if (!quoted_str)
-		perror_exit_free_env("Malloc_failed\n", head);
-	new = ft_strtrim(quoted_str, quote_type);
+	if (!str)
+		return (NULL);
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '$' && (str[i + 1] == '"' || str[i + 1] == '\''))
+			break ;
+	}
+	pre = return_pre_str(str, &str[i], head);
+	post = return_post_str(&str[i], head);
+	new = safe_join(pre, post, head);
 	if (!new)
-		perror_exit_free_env("Malloc_failed\n", head);
-	quoted_str = free_ptr(quoted_str);
+		perror_exit_free_env("Malloc failed\n", head);
 	return (new);
+}
+
+int	count_dollars(char *input)
+{
+	int	i;
+	int	count;
+
+	count = 0;
+	i = -1;
+	while (input[++i])
+	{
+		if (input[i] == '$')
+			count++;
+	}
+	return (count);
+}
+
+/* joins together any size of char arrays into one str */
+char	*ft_strjoin_multiple(char **arr, t_env *head)
+{
+	char	*str;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	str = ft_strdup(arr[0]);
+	if (!str)
+		perror_exit_free_env("Malloc_failed\n", head);
+	while (arr[++i])
+	{
+		tmp = str;
+		str = ft_strjoin(str, arr[i]);
+		if (!str)
+			perror_exit_free_env("Malloc_failed\n", head);
+		tmp = free_ptr(tmp);
+	}
+	return (str);
 }

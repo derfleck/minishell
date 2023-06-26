@@ -1,114 +1,135 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand4.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 15:13:34 by rmocsai           #+#    #+#             */
+/*   Updated: 2023/06/26 15:37:38 by rmocsai          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
-/* Gets everything to recreate new, expanded string.
-Spec is either ($) or (~) 
-choses what to do out of the following 3 functions:
- - expand_home (if ~)
- - expand status (if $?)
- - expand_env_var (if $ ) */
-char	*replace_string(char *input, t_env *head, char *spec)
+/* Mallocs the probable key after the $ sign
+Gets the pointer at first element right after */
+char	*return_key(char *str, t_env *head)
 {
-	char	*value;
-	char	*new_str;
+	char	*key;
+	int		len;
 
-	if ((input[0] == '~' && input[1] == '\0') || \
-	(input[0] == '~' && input[1] == '/'))
-		return (expand_home(input, head, spec));
-	if (spec[0] == '$')
+	if (!str)
+		return (NULL);
+	len = return_key_len(str);
+	if (!len)
+		return (NULL);
+	key = malloc (sizeof (char) * (len + 1));
+	if (!key)
+		perror_exit_free_env("Malloc_failed\n", head);
+	ft_memmove(key, str, len);
+	key[len] = '\0';
+	return (key);
+}
+
+/* Gets pointer at start of keyword, counts length of key only */
+int	return_key_len(char *str)
+{
+	int	len;
+
+	len = 0;
+	if (!str)
+		return (0);
+	if (ft_isnum(str[0]) || (!ft_isalnum(str[0]) && str[0] != '_'))
 	{
-		value = check_key_exist(head, spec + 1);
-		if (!value)
-		{
-			if (spec[1] == '?')
-				new_str = expand_status(input, spec, head);
-			else
-				new_str = remove_var_reference(input, spec, head);
-			return (new_str);
-		}
+		if (str[0] == '/')
+			return (0);
 		else
-			new_str = expand_env_var(input, spec, value, head);
-		return (new_str);
+			return (1);
 	}
-	return (ft_strdup(input));
+	while (ft_isalnum(str[len]) || str[len] == '_' || \
+	str[len] == '(' || str[len] == ')')
+		len++;
+	return (len);
 }
 
-/* tilde position arrives as char*. Replace it with value of home. 
-rejoin str together. Return new str */
-char	*expand_home(char *input, t_env *head, char *tilde)
+/* Check if string after dollarsign is a valid env var and
+returns the value if found. Returns NULL if not found or no key  */
+char	*check_key_exist(t_env *head, char *i)
 {
-	char	*home_value;
-	char	*new_str;
+	char	*key;
+	char	*value;
 	t_env	*node;
-	char	*pre;
-	char	*post;
 
-	node = find_env_node(head, "HOME");
+	key = return_key(i, head);
+	if (!key || ft_isnum(key[0]))
+		return (NULL);
+	node = find_env_node(head, key);
 	if (!node)
-		node = create_home("HOME=/nfs/homes/", &head);
-	home_value = ft_strdup(split_env_value(node->key_value));
-	if (!home_value)
+	{
+		key = free_ptr(key);
+		return (NULL);
+	}
+	key = free_ptr(key);
+	value = ft_strdup(split_env_value(node->key_value));
+	if (!value)
 		perror_exit_free_env("Malloc_failed\n", head);
-	pre = return_pre_str(input, tilde, head);
-	new_str = safe_join(pre, home_value, head);
-	if (!new_str)
-		perror_exit_free_env("Malloc_failed\n", head);
-	post = return_post_str(tilde + return_key_len(tilde + 1), head);
-	new_str = safe_join(new_str, post, head);
-	if (!new_str)
-		perror_exit_free_env("Malloc_failed\n", head);
-	return (new_str);
+	return (value);
 }
 
-/* Receives input and dollarsign position as char* 
-object: excise dollarsign and key, replace with empty str ("") */
-char	*remove_var_reference(char *input, char *dollar, t_env *head)
-{
-	char	*new_str;
-	char	*new_str2;
-	char	*pre;
-	char	*post;
-	int		key_len;
-
-	pre = return_pre_str(input, dollar, head);
-	new_str = ft_strdup(pre);
-	pre = free_ptr(pre);
-	if (!new_str)
-		perror_exit_free_env("Malloc_failed\n", head);
-	key_len = return_key_len(dollar + 1);
-	post = return_post_str(dollar + key_len, head);
-	new_str2 = safe_join(new_str, post, head);
-	if (!new_str2)
-		perror_exit_free_env("Malloc_failed\n", head);
-	return (new_str2);
-}
-
-/* returns newly allocated string after expanding */
-char	*expand_env_var(char *input, char *dollar, char *value, t_env *head)
+/* gets input and pointer to dollarsign (speci),
+returns newly allocated pre-str that is from 
+the 0th element until (excluding) spec 
+returns allocated empty str if no pre str is present */
+char	*return_pre_str(char *input, char *speci, t_env *head)
 {
 	char	*pre;
-	char	*post;
-	char	*new_str;
-	int		key_len;
+	int		i;
 
-	pre = return_pre_str(input, dollar, head);
-	new_str = safe_join(pre, value, head);
-	if (!new_str)
+	i = 0;
+	while (input[i] && input + i != speci)
+		i++;
+	if (i == 0)
+	{
+		pre = ft_strdup("");
+		if (!pre)
+			perror_exit_free_env("Malloc_failed\n", head);
+		return (pre);
+	}
+	pre = ft_substr(input, 0, (size_t)i);
+	if (!pre)
 		perror_exit_free_env("Malloc_failed\n", head);
-	key_len = return_key_len(dollar + 1);
-	post = return_post_str(dollar + key_len, head);
-	new_str = safe_join(new_str, post, head);
-	if (!new_str)
-		perror_exit_free_env("Malloc_failed\n", head);
-	return (new_str);
+	return (pre);
 }
 
-/* Creates new HOME env node in case HOME was unset. */
-t_env	*create_home(char *str, t_env **head)
+/* gets pointer to dollarsign + keylength (last char of the key),
+returns newly allocated str that is from end of key + 1 to endofstring
+returns allocated empty str if no post str is present */
+char	*return_post_str(char *key_end, t_env *head)
 {
-	t_env	*node;
+	char	*post;
+	char	*tmp;
+	int		len;
 
-	node = create_node(str, *head);
-	add_node_to_list(head, node);
-	node->next = NULL;
-	return (node);
+	len = 0;
+	tmp = NULL;
+	while (key_end[len])
+		len++;
+	if (len == 0)
+	{
+		post = ft_strdup("");
+		if (!post)
+			perror_exit_free_env("Malloc_failed\n", head);
+		return (post);
+	}
+	post = ft_substr(key_end, 1, len);
+	if (post[0] == '?' && key_end[0] == '$')
+	{
+		tmp = ft_strdup(&post[1]);
+		post = free_ptr(post);
+		post = tmp;
+	}
+	if (!post)
+		perror_exit_free_env("Malloc_failed\n", head);
+	return (post);
 }
