@@ -32,10 +32,21 @@ int	check_invalid_follow(char *str)
 char	*remove_dollarsign_bef_quotes(char *str, t_env *head)
 {
 	char	*new;
+	char	*pre;
+	char	*post;
+	int		i;
 
 	if (!str)
 		return (NULL);
-	new = ft_strdup(&str[1]);
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '$' && (str[i + 1] == '"' || str[i + 1] == '\''))
+			break ;
+	}
+	pre = return_pre_str(str, &str[i], head);
+	post = return_post_str(&str[i], head);
+	new = safe_join(pre, post, head);
 	if (!new)
 		perror_exit_free_env("Malloc failed\n", head);
 	return (new);

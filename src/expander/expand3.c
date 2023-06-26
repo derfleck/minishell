@@ -2,17 +2,19 @@
 
 char	**split_by_quotes(char *input, t_env *head)
 {
-	char	**arr;
+	char	**arr1;
+	char	**arr2;
 	char	s;
 	int		count;
 
 	s = '!';
 	count = ft_count_elements(input, s);
-	arr = malloc(sizeof(char *) * (count + 1));
-	if (!arr)
+	arr1 = malloc(sizeof(char *) * (count + 1));
+	if (!arr1)
 		perror_exit_free_env("Malloc_failed\n", head);
-	arr = ft_quotesplitter(arr, input, count, head);
-	return (arr);
+	arr2 = ft_quotesplitter(arr1, input, count, head);
+	arr1 = free_charray(arr1);
+	return (arr2);
 }
 
 /* Counts how many strings need to be allocated */
@@ -105,6 +107,5 @@ char	*ft_strjoin_multiple(char **arr, t_env *head)
 			perror_exit_free_env("Malloc_failed\n", head);
 		tmp = free_ptr(tmp);
 	}
-	//free_charray(arr);
 	return (str);
 }

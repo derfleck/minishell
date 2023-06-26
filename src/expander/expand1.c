@@ -60,16 +60,17 @@ char	*deal_with_expansion(char *input, t_env *head)
 	char	**arr;
 	char	*str;
 
-	(void)head;
 	i = -1;
 	if (!need_to_expand(input))
 		return (ft_strdup(input));
 	if (check_invalid_follow(input))
 	{
 		str = remove_dollarsign_bef_quotes(input, head);
-		return (str);
+		arr = split_by_quotes(str, head);
+		str = free_ptr(str);
 	}
-	arr = split_by_quotes(input, head);
+	else
+		arr = split_by_quotes(input, head);
 	while (arr[++i])
 	{
 		if (arr[i][0] != '\'')
@@ -78,12 +79,11 @@ char	*deal_with_expansion(char *input, t_env *head)
 	str = ft_strjoin_multiple(arr, head);
 	if (!str)
 		perror_exit_free_env("Malloc failed\n", head);
-	free_charray(arr);
+	arr = free_charray(arr);
 	return (str);
 }
 
 /* Checks incoming str if expansion is needed 
-REMOVE VAR REF here? 
 Multiple $s in one str? */
 char	*do_expansion_pre(char *input, t_env *head)
 {
@@ -131,7 +131,7 @@ char	*do_expansion_pre_with_freeing(char *input, t_env *head)
 		while (arr[++j])
 			arr[j] = do_expansion_with_freeing(arr[j], head);
 		new_str = ft_strjoin_multiple(arr, head);
-		free_charray(arr);
+		arr = free_charray(arr);
 	}
 	else
 		new_str = do_expansion(input, head);

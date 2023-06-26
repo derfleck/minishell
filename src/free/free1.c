@@ -13,7 +13,7 @@ void	*free_charray(char **arr)
 	int	i;
 
 	i = 0;
-	while (arr[i])
+	while (arr && arr[i])
 	{
 		arr[i] = free_ptr(arr[i]);
 		i++;
