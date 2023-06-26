@@ -92,6 +92,7 @@ char	*do_expansion_pre(char *input, t_env *head)
 	char	**arr;
 	char	*new_str;
 
+	arr = NULL;
 	i = count_dollars(input);
 	if (i < 1 && input[0] != '~')
 		return (ft_strdup(input));
