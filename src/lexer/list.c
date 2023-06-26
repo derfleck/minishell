@@ -53,7 +53,8 @@ static char	*syntax_trimming_helper(char *str, char *set)
 
 	if (!syntax_check(str))
 	{
-		ft_putendl_fd("Syntax error\n", STDOUT_FILENO);
+		ft_putendl_fd("Syntax error", STDOUT_FILENO);
+		g_stat = 2;
 		free(str);
 		return (NULL);
 	}
