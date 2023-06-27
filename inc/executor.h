@@ -4,8 +4,8 @@
 # include "types.h"
 
 //exec multiple
-int		cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env);
-int		fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i, t_env **env);
+int		cmd_with_pipes(t_shell *shell, t_cmd *cmd);
+int		fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i);
 int		child_redir(int *pip, t_cmd *cmd, t_shell *shell, t_env **env);
 int		parent_redir(int *pip, t_cmd *cmd);
 
@@ -27,7 +27,7 @@ void	open_check(t_cmd *cmd, t_shell *shell, t_env **head);
 
 //search path
 char	**get_paths(char **envp);
-char    *get_cmd_with_path(t_cmd *cmd, char **path);
+char	*get_cmd_with_path(t_cmd *cmd, char **path);
 
 //single cmd
 void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head);

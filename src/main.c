@@ -111,8 +111,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		expander_start(lex, env);
 		cmd = create_parse_list(lex, env);
-		if (cmd != NULL && env != NULL)
-			init_shell(s, cmd, &env);
+		init_shell(s, cmd, &env);
 	}
 	return (0);
 }

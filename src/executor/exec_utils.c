@@ -17,14 +17,14 @@ int	is_builtin(char *cmd)
 
 //waits for children to exit and sets status code
 //frees pid_t struct for all created processes
-pid_t   *wait_children(t_shell *shell, int cmd)
+pid_t	*wait_children(t_shell *shell, int cmd)
 {
 	int	i;
 
 	i = 0;
 	while (i < cmd)
 	{
-		if(waitpid(shell->pid[i], &shell->wstatus, 0) == -1)
+		if (waitpid(shell->pid[i], &shell->wstatus, 0) == -1)
 			return (NULL);
 		i++;
 	}
@@ -62,7 +62,7 @@ t_lexer	*free_lex(t_lexer *lex)
 	{
 		if (tmp->str != NULL)
 			tmp->str = free_ptr(tmp->str);
-		tmp = tmp->next;		
+		tmp = tmp->next;
 	}
 	return (free_ptr(lex));
 }

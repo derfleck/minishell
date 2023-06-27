@@ -32,7 +32,7 @@ char	**get_paths(char **envp)
 		i++;
 	}
 	if (envp[i] == NULL)
-		return(ft_calloc(1, sizeof(char *)));
+		return (ft_calloc(1, sizeof(char *)));
 	sub = ft_substr(envp[i], 5, ft_strlen(envp[i]) - 5);
 	tmp = ft_split(sub, ':');
 	free(sub);
@@ -40,17 +40,17 @@ char	**get_paths(char **envp)
 }
 
 //F_OK checks if the file exists, X_OK if the file is executable by the proccess
-char    *get_cmd_with_path(t_cmd *cmd, char **path)
+char	*get_cmd_with_path(t_cmd *cmd, char **path)
 {
-	int     	i;
-	char    	*full_path;
+	int			i;
+	char		*full_path;
 	struct stat	st;
 
 	i = 0;
 	full_path = NULL;
-	if (ft_strcmp(".", cmd->cmd))
+	if (cmd->cmd && ft_strcmp(".", cmd->cmd))
 		return (full_path);
-	while (path[i] != NULL)
+	while (cmd->cmd && path[i] != NULL)
 	{
 		full_path = ft_strjoin(path[i++], cmd->cmd);
 		if (access(full_path, F_OK | X_OK) == 0 && \

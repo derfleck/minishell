@@ -28,7 +28,7 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 
 //helper function, checks the absolute size in bytes of the
 //environment variables, doesn't return if too big, 1 if pass
-static int check_environ_size(t_shell *shell, t_env **head, char *cmd)
+static int	check_environ_size(t_shell *shell, t_env **head, char *cmd)
 {
 	size_t	size;
 	t_env	*tmp;
@@ -60,7 +60,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 		g_stat = 127;
 	}
 	if (S_ISREG(st.st_mode))
-		return (0);
+		return (1);
 	else if (S_ISDIR(st.st_mode))
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -81,19 +81,19 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 	char	*tmp;
 
 	tmp = NULL;
-	if (cmd->cmd == NULL)
+	if (cmd->cmd == NULL || (cmd->cmd && ft_strcmp(cmd->cmd, "")))
 		return ;
 	if (check_environ_size(shell, head, cmd->cmd) && ft_strcmp(".", cmd->cmd))
 		perror_exit_2("source alias not supported\n", shell, head, mode);
-	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || ft_strncmp("/", cmd->cmd, 1) == 0 || is_builtin(cmd->cmd))
+	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || \
+			ft_strncmp("/", cmd->cmd, 1) == 0 || is_builtin(cmd->cmd))
 	{
 		if (is_builtin(cmd->cmd))
 			mini_pathfinder(shell, cmd, head, mode);
-		else if (check_file_dir(cmd->cmd, shell, head))
-			return ;
-		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
+		else if (check_file_dir(cmd->cmd, shell, head) && \
+				execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("execve");
-	}	
+	}
 	else
 	{
 		tmp = get_cmd_with_path(cmd, shell->paths);
@@ -111,6 +111,8 @@ void	init_shell(char *s, t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
+	if (cmd == NULL || head == NULL)
+		return ;
 	cmd->cmd = cmd->arg[0];
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
@@ -125,7 +127,7 @@ void	init_shell(char *s, t_cmd *cmd, t_env **head)
 	if (!shell->pid)
 		perror_shell("Error initializing shell\n", shell);
 	if (cmd->num[CMD] > 1)
-		cmd_with_pipes(shell, cmd, head);
+		cmd_with_pipes(shell, cmd);
 	else
 		exec_single_cmd(cmd, shell, head);
 	if (shell != NULL)

@@ -27,6 +27,7 @@ static t_lexer	*new_lexer_list(char **cmd, int i)
 	}
 	return (lex);
 }
+
 //helper, removes set characters from beginning and end of string
 //required to split safely
 static char	*trim_string(char *str, char *set)

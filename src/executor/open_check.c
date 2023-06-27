@@ -1,7 +1,7 @@
 #include "../../inc/minishell.h"
 
 //checks if token is a redirection token
-static int is_redir(t_lexer *lex)
+static int	is_redir(t_lexer *lex)
 {
 	if (lex->token == GREAT || lex->token == GREAT_GREAT || \
 		lex->token == LESS || lex->token == LESS_LESS)
@@ -13,7 +13,7 @@ static int is_redir(t_lexer *lex)
 //tries to open the file and returns file descriptor
 static int	try_open(t_lexer *lex)
 {
-	int fd;
+	int	fd;
 
 	fd = -2;
 	if (lex->token == LESS && lex->next)
@@ -32,9 +32,9 @@ static int	try_open(t_lexer *lex)
 //creates files which don't exist yet for output
 //returns 1 on success, 0 on error, stops at error in list
 //TODO: add heredoc unlink if opening fails
-int		open_files(t_cmd *cmd)
+int	open_files(t_cmd *cmd)
 {
-	t_lexer *tmp;
+	t_lexer	*tmp;
 	char	*err;
 
 	tmp = cmd->start;
@@ -82,7 +82,6 @@ void	open_in_out(t_cmd *cmd)
 			cmd->fd[OUT] = STDOUT_FILENO;
 	}
 }
-
 
 void	open_check(t_cmd *cmd, t_shell *shell, t_env **head)
 {

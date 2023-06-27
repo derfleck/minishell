@@ -1,22 +1,5 @@
 #include "../inc/minishell.h"
 
-/* Handle conrol+C signal SIGINT in the parent process. 
-prints newline, empties RL buffer and redisplays prompt
-If parent process receives control+\ it ignores it with SIG_IGN */
-/*
-void	handle_ctrlc(int signum)
-{
-	if (signum == SIGINT)
-	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
-		g_stat = 130;
-	}
-}
-*/
-
 /* Child process handler of signal types SIGINT(ctrlC) and SIGQUIT(ctrl\)*/
 void	handle_signals_child(int signum)
 {

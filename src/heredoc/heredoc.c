@@ -51,6 +51,23 @@ static int	start_heredoc(t_shell *sh, t_cmd *cmd)
 	return (g_stat);
 }
 
+//signal handler for SIGINT in heredoc mode
+void	sig_handler_heredoc(int sig_num)
+{
+	int		*pressed;
+	char	newline;
+
+	newline = '\n';
+	pressed = check_sigint();
+	if (sig_num == SIGINT)
+	{
+		*pressed = 1;
+		write(STDOUT_FILENO, "^C", 3);
+		ioctl(STDIN_FILENO, TIOCSTI, &newline, sizeof(newline));
+		signal(SIGINT, sig_handler_heredoc);
+	}
+}
+
 //runs heredoc in the beginning for all command groups
 int	run_heredoc(t_shell *sh, t_cmd *cmd)
 {
@@ -71,7 +88,7 @@ int	run_heredoc(t_shell *sh, t_cmd *cmd)
 
 //closes and unlinks temporary heredoc
 //therefore removing it from the disk
-int		unlink_heredoc(t_cmd *cmd)
+int	unlink_heredoc(t_cmd *cmd)
 {
 	if (cmd->num[HERE] > 0)
 	{

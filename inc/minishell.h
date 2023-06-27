@@ -10,7 +10,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
-# include <sys/stat.h> 
+# include <sys/stat.h>
 # include <sys/time.h>
 # include <sys/ioctl.h>
 # include <signal.h>

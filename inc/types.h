@@ -15,7 +15,15 @@
 #  define ARG_MAX 4096
 # endif
 # ifndef HEREDOC_WARN
-#  define HEREDOC_WARN "minishell: warning : here-document delimited by end-of-file (wanted `%s')\n"
+#  define HEREDOC_WARN "minishell: warning : here-document delimited by \
+end-of-file (wanted `%s')\n"
+# endif
+# ifndef TOKEN_WARN_NEW
+#  define TOKEN_WARN_NEW "minishell: syntax error near unexpected token \
+`newline'"
+# endif
+# ifndef TOKEN_WARN_CHR
+#  define TOKEN_WARN_CHR "minishell: syntax error near unexpected token"
 # endif
 
 /* global variable for exit status */
