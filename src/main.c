@@ -24,11 +24,13 @@ static	char	*expand_home_prompt(t_env *head)
 	home = search_return_value(head, "HOME");
 	cwd = getcwd(NULL, 0);
 	if (cwd == NULL)
+	{
 		cwd = search_return_value(head, "PWD");
+		if (cwd != NULL)
+			cwd = ft_strdup(cwd);
+	}
 	if (cwd == NULL)
 		cwd = ft_strdup(".");
-	else
-		cwd = ft_strdup(cwd);
 	if (home && ft_strncmp(home, cwd, ft_strlen(home)) == 0 && \
 		home[ft_strlen(home) - 1] != '/')
 	{
