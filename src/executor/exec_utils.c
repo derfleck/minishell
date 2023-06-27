@@ -30,6 +30,10 @@ pid_t	*wait_children(t_shell *shell, int cmd)
 	}
 	if (WIFEXITED(shell->wstatus))
 		g_stat = WEXITSTATUS(shell->wstatus);
+	else if (WIFSIGNALED(shell->wstatus))
+		g_stat = WTERMSIG(shell->wstatus) + 128;
+	if (g_stat == 131)
+		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
 	return (NULL);
 }
 

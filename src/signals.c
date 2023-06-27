@@ -12,8 +12,9 @@ void	handle_signals_child(int signum)
 	}
 	else if (signum == SIGQUIT)
 	{
-		ft_putendl_fd("Quit (core dumped)", STDOUT_FILENO);
-		g_stat = 131;
+		//ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
+		printf("Quit (core dumped)\n");
+		//g_stat = 131;
 	}
 }
 
@@ -24,13 +25,13 @@ void	set_sigaction(int i)
 {
 	if (i == CHILD)
 	{
-		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 	}
 	else if (i > CHILD)
 	{
 		signal(SIGINT, handle_signals_child);
-		signal(SIGQUIT, handle_signals_child);
+		signal(SIGQUIT, SIG_IGN);
 	}
 	else
 	{

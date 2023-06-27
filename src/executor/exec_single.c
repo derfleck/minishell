@@ -66,7 +66,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 	{
 		if (cmd->in && cmd->fd[IN] != STDIN_FILENO)
 			close(cmd->fd[IN]);
-		if (cmd->out && cmd->fd[IN] != STDOUT_FILENO)
+		if (cmd->out && cmd->fd[OUT] != STDOUT_FILENO)
 			close(cmd->fd[OUT]);
 		wait_children(shell, 1);
 		if (g_stat == 0)
