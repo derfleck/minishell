@@ -20,7 +20,7 @@ static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 	if (sh->head != NULL)
 		free_env_list(&sh->head);
 	if (sh != NULL)
-		free_shell(sh);
+		sh = free_shell(sh);
 	if (*(check_sigint()) == 1)
 		g_stat = 130;
 	free(check_sigint());

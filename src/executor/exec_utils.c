@@ -78,7 +78,7 @@ t_shell	*free_shell(t_shell *sh)
 		i = -1;
 		while (sh->paths[++i] != NULL)
 			sh->paths[i] = safe_free(sh->paths[i]);
-		if (sh->paths)
+		if (sh->paths != NULL)
 			sh->paths = safe_free(sh->paths);
 		if (sh->pid != NULL)
 			sh->pid = safe_free(sh->pid);

@@ -34,8 +34,10 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 		g_stat = builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
 	{
-		free_env_list(env);
-		free_shell(sh);
+		if (env != NULL)
+			env = free_env_list(env);
+		if (sh != NULL)
+			sh = free_shell(sh);
 		exit(g_stat);
 	}
 }
@@ -76,10 +78,10 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 		ft_putstr_fd("bash: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		if (head)
-			free_env_list(head);
-		if (sh)
-			free_shell(sh);
+		if (head != NULL)
+			head = free_env_list(head);
+		if (sh != NULL)
+			sh = free_shell(sh);
 		g_stat = 126;
 		exit(126);
 	}
@@ -140,5 +142,6 @@ void	init_shell(char *s, t_cmd *cmd, t_env **head)
 		cmd_with_pipes(shell, cmd, head);
 	else
 		exec_single_cmd(cmd, shell, head);
-	free_shell(shell);
+	if (shell != NULL)
+		shell = free_shell(shell);
 }

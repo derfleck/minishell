@@ -50,10 +50,10 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
 			return ;
 		execute_cmd(cmd, shell, head, CHILD);
-		if (head)
-			free_env_list(head);
-		if (shell)
-			free_shell(shell);
+		if (head != NULL)
+			head = free_env_list(head);
+		if (shell != NULL)
+			shell = free_shell(shell);
 	}
 	else
 	{
