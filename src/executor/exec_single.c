@@ -39,7 +39,8 @@ static void	set_last_cmd_path(t_cmd *cmd, t_shell *sh, t_env **head)
 static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 {
 	shell->pid[0] = fork();
-	if (ft_strcmp(cmd->cmd, "./minishell"))
+	if (ft_strlen(cmd->cmd) > ft_strlen("/minishell") && \
+		!ft_strncmp(&cmd->cmd[ft_strlen(cmd->cmd) - 10], "/minishell", 10))
 		set_sigaction(-1);
 	else
 		set_sigaction(shell->pid[0]);
