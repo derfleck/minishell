@@ -26,6 +26,8 @@ SRCSLIST		:=	main.c \
 					builtins/4_exit.c \
 					builtins/5_echo.c \
 					free/free1.c \
+					free/free2.c \
+					free/free3.c \
 					utils.c \
 					lexer/lexer.c \
 					lexer/list.c \

@@ -43,7 +43,7 @@ static void	export_append_helper(char *key, char *str, t_env **env)
 
 	realkey = ft_strtrim(key, "+");
 	if (!realkey)
-		perror_exit("Malloc failed\n");
+		perror_exit_free_env("Malloc failed", *env);
 	key = free_ptr(key);
 	node = find_env_node(*env, realkey);
 	if (node == NULL)
