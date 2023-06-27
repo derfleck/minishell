@@ -55,7 +55,10 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i, t_env **env)
 	if (shell->pid[i] < 0)
 		return (0);
 	if (shell->pid[i] == CHILD)
+	{
+		open_check(cmd, shell, env);
 		return (child_redir(pip, cmd, shell, env));
+	}
 	else
 		return (parent_redir(pip, cmd));
 	return (1);
@@ -77,10 +80,6 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env)
 		return(perror_heredoc(shell), 0);
 	while (tmp)
 	{
-		if (open_files(tmp))
-			open_in_out(tmp);
-		else
-			break ;
 		if (!fork_and_exec(pip, tmp, shell, i++, env))
 			break ;
 		unlink_heredoc(tmp);

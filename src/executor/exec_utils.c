@@ -1,11 +1,18 @@
 #include "../../inc/minishell.h"
 
-//this function ensures that the value of the pointer is overwritten with NULL after freeing it
-void	*safe_free(void	*ptr)
+//checks if command is a builtin
+int	is_builtin(char *cmd)
 {
-	if (ptr)
-		free(ptr);
-	return (NULL);
+	if (ft_strncmp(cmd, "pwd", 3) == 0 || \
+		ft_strncmp(cmd, "env", 3) == 0 || \
+		ft_strncmp(cmd, "cd", 2) == 0 || \
+		ft_strncmp(cmd, "export", 6) == 0 || \
+		ft_strncmp(cmd, "unset", 5) == 0 || \
+		ft_strncmp(cmd, "exit", 4) == 0 || \
+		ft_strncmp(cmd, "echo", 4) == 0)
+		return (1);
+	else
+		return (0);
 }
 
 //waits for children to exit and sets status code
@@ -37,12 +44,12 @@ t_cmd	*free_cmd(t_cmd *cmd)
 	while (tmp)
 	{
 		if (tmp->arg != NULL)
-			tmp->arg = safe_free(tmp->arg);
+			tmp->arg = free_ptr(tmp->arg);
 		if (tmp->here != NULL)
-			tmp->here = safe_free(tmp->here);
+			tmp->here = free_ptr(tmp->here);
 		tmp = tmp->next;
 	}
-	return (safe_free(cmd));
+	return (free_ptr(cmd));
 }
 
 //frees lexer list node by node
@@ -54,10 +61,10 @@ t_lexer	*free_lex(t_lexer *lex)
 	while (tmp)
 	{
 		if (tmp->str != NULL)
-			tmp->str = safe_free(tmp->str);
+			tmp->str = free_ptr(tmp->str);
 		tmp = tmp->next;		
 	}
-	return (safe_free(lex));
+	return (free_ptr(lex));
 }
 
 t_shell	*free_shell(t_shell *sh)
@@ -72,19 +79,19 @@ t_shell	*free_shell(t_shell *sh)
 			sh->cmd_start = free_cmd(sh->cmd_start);
 		i = -1;
 		while (sh->envp[++i] != NULL)
-			sh->envp[i] = safe_free(sh->envp[i]);
+			sh->envp[i] = free_ptr(sh->envp[i]);
 		if (sh->envp)
-			sh->envp = safe_free(sh->envp);
+			sh->envp = free_ptr(sh->envp);
 		i = -1;
 		while (sh->paths[++i] != NULL)
-			sh->paths[i] = safe_free(sh->paths[i]);
+			sh->paths[i] = free_ptr(sh->paths[i]);
 		if (sh->paths != NULL)
-			sh->paths = safe_free(sh->paths);
+			sh->paths = free_ptr(sh->paths);
 		if (sh->pid != NULL)
-			sh->pid = safe_free(sh->pid);
+			sh->pid = free_ptr(sh->pid);
 		if (sh->s != NULL)
-			sh->s = safe_free(sh->s);
-		return (safe_free(sh));
+			sh->s = free_ptr(sh->s);
+		return (free_ptr(sh));
 	}
 	return (NULL);
 }

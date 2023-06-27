@@ -66,11 +66,11 @@ static char	*get_input(t_env *head)
 	if (prompt == NULL)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
-	prompt = safe_free(prompt);
+	prompt = free_ptr(prompt);
 	if (line == NULL)
 		return (ft_strdup("exit"));
 	else if (line[0] == 0)
-		return (safe_free(line));
+		return (free_ptr(line));
 	return (line);
 }
 

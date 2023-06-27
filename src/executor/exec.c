@@ -1,21 +1,5 @@
 #include "../../inc/minishell.h"
 
-//checks if command is a builtin
-int	is_builtin(char *cmd)
-{
-	if (ft_strncmp(cmd, "pwd", 3) == 0 || \
-		ft_strncmp(cmd, "env", 3) == 0 || \
-		ft_strncmp(cmd, "cd", 2) == 0 || \
-		ft_strncmp(cmd, "export", 6) == 0 || \
-		ft_strncmp(cmd, "unset", 5) == 0 || \
-		ft_strncmp(cmd, "exit", 4) == 0 || \
-		ft_strncmp(cmd, "echo", 4) == 0)
-		return (1);
-	else
-		return (0);
-}
-
-//TODO: set correct status code
 static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
@@ -70,23 +54,25 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 	struct stat	st;
 
 	if (stat(path, &st) == -1)
-		perror("stat");
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(path);
+		g_stat = 127;
+	}
 	if (S_ISREG(st.st_mode))
 		return (0);
 	else if (S_ISDIR(st.st_mode))
 	{
-		ft_putstr_fd("bash: ", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		if (head != NULL)
-			head = free_env_list(head);
-		if (sh != NULL)
-			sh = free_shell(sh);
 		g_stat = 126;
-		exit(126);
 	}
-	else
-		return (1);
+	if (head != NULL)
+		head = free_env_list(head);
+	if (sh != NULL)
+		sh = free_shell(sh);
+	exit(g_stat);
 }
 
 //checks if command path is absolute or relative
@@ -99,7 +85,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 		return ;
 	if (check_environ_size(shell, head, cmd->cmd) && ft_strcmp(".", cmd->cmd))
 		perror_exit_2("source alias not supported\n", shell, head, mode);
-	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || is_builtin(cmd->cmd))
+	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || ft_strncmp("/", cmd->cmd, 1) == 0 || is_builtin(cmd->cmd))
 	{
 		if (is_builtin(cmd->cmd))
 			mini_pathfinder(shell, cmd, head, mode);

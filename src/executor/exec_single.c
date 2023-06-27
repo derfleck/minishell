@@ -45,6 +45,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		set_sigaction(shell->pid[0]);
 	if (shell->pid[0] == CHILD)
 	{
+		open_check(cmd, shell, head);
 		if (dup2(cmd->fd[IN], STDIN_FILENO) == -1)
 			return ;
 		if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
@@ -57,9 +58,9 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 	}
 	else
 	{
-		if (cmd->in)
+		if (cmd->in && cmd->fd[IN] != STDIN_FILENO)
 			close(cmd->fd[IN]);
-		if (cmd->out)
+		if (cmd->out && cmd->fd[IN] != STDOUT_FILENO)
 			close(cmd->fd[OUT]);
 		wait_children(shell, 1);
 		if (g_stat == 0)
@@ -73,10 +74,10 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head)
 {
 	if (run_heredoc(shell, cmd))
 		return(perror_heredoc(shell));
-	if (open_files(cmd))
-		open_in_out(cmd);
-	else
-		return ;
+	//if (open_files(cmd))
+	//	open_in_out(cmd);
+	//else
+	//	return ;
 	if (check_builtins(cmd))
 	{
 		execute_cmd(cmd, shell, head, PARENT);

@@ -56,7 +56,7 @@ char    *get_cmd_with_path(t_cmd *cmd, char **path)
 		if (access(full_path, F_OK | X_OK) == 0 && \
 			stat(full_path, &st) == 0 && S_ISREG(st.st_mode))
 			return (full_path);
-		full_path = safe_free(full_path);
+		full_path = free_ptr(full_path);
 	}
 	return (full_path);
 }
