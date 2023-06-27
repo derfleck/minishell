@@ -5,6 +5,8 @@ static int	exit_stat_valid(char *str)
 	int	i;
 
 	i = -1;
+	if (str[0] == '+' || str[0] == '-')
+		i++;
 	while (str[++i])
 	{
 		if (!ft_isnum(str[i]))

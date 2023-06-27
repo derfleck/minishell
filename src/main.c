@@ -11,11 +11,14 @@ static	char	*expand_home_prompt(t_env *head)
 	char	*str;
 
 	node = find_env_node(head, "HOME");
-	home = split_env_value(node->key_value);
+	if (node)
+		home = split_env_value(node->key_value);
+	else
+		home = NULL;
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		perror_exit_free_env("Malloc failed\n", head);
-	if (ft_strncmp(home, cwd, ft_strlen(home)) == 0 && \
+	if (home && ft_strncmp(home, cwd, ft_strlen(home)) == 0 && \
 		home[ft_strlen(home) - 1] != '/')
 	{
 		str = ft_strjoin("~", cwd + ft_strlen(home));
@@ -39,7 +42,7 @@ static char	*prompt_line(t_env *head)
 	node = find_env_node(head, "USER");
 	tmp = ft_strjoin("\001\e\033[36m\002", split_env_value(node->key_value));
 	if (!tmp)
-		perror_exit_free_env("Malloc failed\n", head);
+		perror_exit_free_env("Malloc failed1\n", head);
 	tmp2 = ft_strjoin(tmp, "@minishell");
 	if (!tmp2)
 		perror_exit_free_env("Malloc failed\n", head);

@@ -44,7 +44,8 @@ SRCSLIST		:=	main.c \
 					expander/expand3.c \
 					expander/expand4.c \
 					expander/expand5.c \
-					expander/expand6.c
+					expander/expand6.c \
+					expander/expand7.c
 
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/

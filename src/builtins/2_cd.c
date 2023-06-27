@@ -1,29 +1,43 @@
 #include "../../inc/minishell.h"
 
+static t_env	*check_or_create(t_env **head, char *key, char *new_keyvalue)
+{
+	t_env	*node;
+
+	node = find_env_node(*head, key);
+	if (node == NULL)
+	{
+		node = create_node(new_keyvalue, *head);
+		add_node_to_list(head, node);
+	}
+	new_keyvalue = free_ptr(new_keyvalue);
+	return (node);
+}
+
 /* updates env variables PWD and OLDPWD after cd was called */
 static void	update_pwds(t_env **env, char *oldpath)
 {
 	t_env	*node1;
 	t_env	*node2;
 	char	*newpath;
+	char	*newpwd;
 	char	*oldpwd;
 
 	newpath = getcwd(NULL, 0);
+	newpwd = ft_strjoin("PWD=", newpath);
+	if (!newpwd)
+		perror_exit_free_env("Malloc failed", *env);
 	oldpwd = ft_strjoin("OLDPWD=", oldpath);
-	if (oldpwd == NULL)
-		perror_exit("Malloc failed\n");
-	node1 = find_env_node(*env, "PWD");
-	node2 = find_env_node(*env, "OLDPWD");
-	if (node2 == NULL)
-		node2 = create_node(oldpwd, *env);
-	else
-		replace_node_value(node2, oldpath, env);
-	oldpwd = free_ptr(oldpwd);
+	if (!oldpwd)
+		perror_exit_free_env("Malloc failed", *env);
+	node1 = check_or_create(env, "PWD", newpwd);
+	node2 = check_or_create(env, "OLDPWD", oldpwd);
+	replace_node_value(node2, oldpath, env);
 	oldpath = free_ptr(oldpath);
 	if (newpath == NULL)
 	{
 		if (chdir("/") != 0)
-			perror_exit("cd: chdir to home went wrong\n");
+			perror_exit_free_env("cd: chdir to home went wrong", *env);
 	}
 	else
 		replace_node_value(node1, newpath, env);

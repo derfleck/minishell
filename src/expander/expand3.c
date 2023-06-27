@@ -1,110 +1,127 @@
 #include "../../inc/minishell.h"
 
-char	**split_by_quotes(char *input, t_env *head)
+/* Gets everything together to recreate new, expanded string.
+Spec is either ($) or (~)
+choses what to do out of the following functions:
+ - expand_home (if ~ or ~/)
+ - expand status (if $?)
+ - expand_env_var (if $valid ) 
+ - remove_var_reference (if $invalid)*/
+char	*replace_string(char *input, t_env *head, char *spec)
 {
-	char	**arr;
-	char	s;
-	int		count;
+	char	*value;
+	char	*new_str;
 
-	s = '!';
-	count = ft_count_elements(input, s);
-	arr = malloc(sizeof(char *) * (count + 1));
-	if (!arr)
+	if ((input[0] == '~' && input[1] == '\0') || \
+	(input[0] == '~' && input[1] == '/'))
+		return (expand_home(input, head, spec));
+	if (spec[0] == '$')
+	{
+		value = check_key_exist(head, spec + 1);
+		if (!value)
+		{
+			if (spec[1] == '?')
+				new_str = expand_status(input, spec, head);
+			else
+				new_str = remove_var_reference(input, spec, head);
+			return (new_str);
+		}
+		else
+			new_str = expand_env_var(input, spec, value, head);
+		return (new_str);
+	}
+	return (ft_strdup(input));
+}
+
+/* tilde position arrives as char*. Replace it with value of home. 
+rejoin str together. Return new str */
+char	*expand_home(char *input, t_env *head, char *tilde)
+{
+	char	*home_value;
+	char	*new_str;
+	t_env	*node;
+	char	*pre;
+	char	*post;
+
+	node = find_env_node(head, "HOME");
+	if (!node)
+		node = create_home("HOME=/nfs/homes/", &head);
+	home_value = ft_strdup(split_env_value(node->key_value));
+	if (!home_value)
 		perror_exit_free_env("Malloc_failed\n", head);
-	arr = ft_quotesplitter(arr, input, count, head);
-	return (arr);
-}
-
-/* Counts how many strings need to be allocated */
-int	ft_count_elements(char *input, char s)
-{
-	int		count;
-	int		i;
-
-	count = 0;
-	i = -1;
-	while (input[++i])
-	{
-		if (input[i] && (input[i] == '\'' || input[i] == '"'))
-		{
-			count++;
-			s = input[i];
-			i++;
-			while (input[i] != s)
-				i++;
-		}
-		else if (input[i])
-		{
-			count++;
-			while (input[i] && (input[i] != '"' && input[i] != '\''))
-				i++;
-			i--;
-		}
-	}
-	return (count);
-}
-
-/* Gets input, tries to split it to **arr according to:
-characters not enclosed in quotes, quoted blocks bordered by
-single quotes, and quoted blocks bordered by double quotes. */
-char	**ft_quotesplitter(char **arr, char *input, int count, t_env *head)
-{
-	int		i;
-	int		len;
-	int		element;
-	char	q;
-
-	i = 0;
-	element = -1;
-	while (++element < count)
-	{
-		len = 0;
-		if (input[i] && (input[i] != '"' && input[i] != '\''))
-		{
-			while (input[i] && input[i] != '"' && input[i] != '\'')
-			{
-				i++;
-				len++;
-			}
-		}
-		else if (input[i] && (input[i] == '"' || input[i] == '\''))
-		{
-			q = input[i++];
-			len = 2;
-			while (input[i] != q)
-			{
-				i++;
-				len++;
-			}
-			i++;
-		}
-		arr[element] = ft_substr(input, i - len, len);
-		if (!arr[element])
-			perror_exit_free_env("Malloc_failed\n", head);
-	}
-	arr[element] = NULL;
-	return (arr);
-}
-
-/* joins together any size of char arrays into one str */
-char	*ft_strjoin_multiple(char **arr, t_env *head)
-{
-	char	*str;
-	char	*tmp;
-	int		i;
-
-	i = 0;
-	str = ft_strdup(arr[0]);
-	if (!str)
+	pre = return_pre_str(input, tilde, head);
+	new_str = safe_join(pre, home_value, head);
+	if (!new_str)
 		perror_exit_free_env("Malloc_failed\n", head);
-	while (arr[++i])
-	{
-		tmp = str;
-		str = ft_strjoin(str, arr[i]);
-		if (!str)
-			perror_exit_free_env("Malloc_failed\n", head);
-		tmp = free_ptr(tmp);
-	}
-	//free_charray(arr);
-	return (str);
+	post = return_post_str(tilde + return_key_len(tilde + 1), head);
+	new_str = safe_join(new_str, post, head);
+	if (!new_str)
+		perror_exit_free_env("Malloc_failed\n", head);
+	return (new_str);
+}
+
+/* Only if $? */
+char	*expand_status(char *input, char *dollar, t_env *head)
+{
+	char	*new_str;
+	char	*new_str2;
+	char	*pre;
+	char	*post;
+	char	*status;
+
+	status = ft_itoa(g_stat);
+	if (!status)
+		perror_exit_free_env("Malloc failed\n", head);
+	pre = return_pre_str(input, dollar, head);
+	new_str = safe_join(pre, status, head);
+	if (!new_str)
+		perror_exit_free_env("Malloc failed\n", head);
+	post = return_post_str(dollar + 1, head);
+	new_str2 = safe_join(new_str, post, head);
+	if (!new_str2)
+		perror_exit_free_env("Malloc failed\n", head);
+	return (new_str2);
+}
+
+/* Receives input and dollarsign position as char* 
+object: excise dollarsign and key, replace with empty str ("") */
+char	*remove_var_reference(char *input, char *dollar, t_env *head)
+{
+	char	*new_str;
+	char	*new_str2;
+	char	*pre;
+	char	*post;
+	int		key_len;
+
+	pre = return_pre_str(input, dollar, head);
+	new_str = ft_strdup(pre);
+	pre = free_ptr(pre);
+	if (!new_str)
+		perror_exit_free_env("Malloc_failed\n", head);
+	key_len = return_key_len(dollar + 1);
+	post = return_post_str(dollar + key_len, head);
+	new_str2 = safe_join(new_str, post, head);
+	if (!new_str2)
+		perror_exit_free_env("Malloc_failed\n", head);
+	return (new_str2);
+}
+
+/* returns newly allocated string after expanding */
+char	*expand_env_var(char *input, char *dollar, char *value, t_env *head)
+{
+	char	*pre;
+	char	*post;
+	char	*new_str;
+	int		key_len;
+
+	pre = return_pre_str(input, dollar, head);
+	new_str = safe_join(pre, value, head);
+	if (!new_str)
+		perror_exit_free_env("Malloc_failed\n", head);
+	key_len = return_key_len(dollar + 1);
+	post = return_post_str(dollar + key_len, head);
+	new_str = safe_join(new_str, post, head);
+	if (!new_str)
+		perror_exit_free_env("Malloc_failed\n", head);
+	return (new_str);
 }

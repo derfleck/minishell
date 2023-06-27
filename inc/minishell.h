@@ -10,7 +10,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
-# include <sys/stat.h> 
+# include <sys/stat.h>
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -39,6 +39,7 @@ void		add_node_to_list(t_env **head, t_env *new);
 int			key_validity_check(char *key);
 void		increase_shell_level(t_env **env);
 void		reset_shlvl(t_env **head);
+t_env		*create_home(char *str, t_env **head);
 
 /* free */
 void		*free_ptr(void *ptr);

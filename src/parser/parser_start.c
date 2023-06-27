@@ -22,6 +22,7 @@ static int	parse_check(t_lexer *lex)
 			}
 			else if (tmp->next == NULL && tmp->token)
 				ft_putendl_fd("minishell: syntax error near unexpected token `newline'", STDERR_FILENO);
+			g_stat = 2;
 			return (0);
 		}
 		while (tmp && tmp->token != PIPE)
