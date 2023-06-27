@@ -6,7 +6,7 @@
 /*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 14:59:12 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/06/26 15:37:36 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/06/27 16:56:13 by rmocsai          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,11 @@ char	*do_expansion_pre(char *input, t_env *head)
 	else if (i > 1)
 	{
 		j = -1;
+		if (check_simple_input(input))
+			return (do_expansion(input, head));
 		arr = split_by_dollars(input, head);
+		if (!arr[0])
+			return (do_expansion(input, head));
 		while (arr[++j])
 			arr[j] = do_expansion_with_freeing(arr[j], head);
 		new_str = ft_strjoin_multiple(arr, head);
@@ -99,6 +103,8 @@ char	*do_expansion_pre_with_freeing(char *input, t_env *head)
 	else if (i > 1)
 	{
 		j = -1;
+		if (check_simple_input(input))
+			return (do_expansion_with_freeing(input, head));
 		arr = split_by_dollars(input, head);
 		while (arr[++j])
 			arr[j] = do_expansion_with_freeing(arr[j], head);
@@ -106,7 +112,7 @@ char	*do_expansion_pre_with_freeing(char *input, t_env *head)
 		arr = free_charray(arr);
 	}
 	else
-		new_str = do_expansion(input, head);
+		return (do_expansion_with_freeing(input, head));
 	input = free_ptr(input);
 	return (new_str);
 }

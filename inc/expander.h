@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/27 14:09:39 by rmocsai           #+#    #+#             */
+/*   Updated: 2023/06/27 14:54:20 by rmocsai          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EXPANDER_H
 # define EXPANDER_H
 
@@ -41,5 +53,6 @@ char	**ft_quotesplitter(char **arr, char *input, int count, t_env *head);
 
 /* expander 7 -killing quotes */
 char	*kill_quotes(char *expanded, t_env *head);
+int		check_simple_input(char *str);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 15:13:34 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/06/26 15:37:38 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/06/27 17:01:29 by rmocsai          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ char	*check_key_exist(t_env *head, char *i)
 
 	key = return_key(i, head);
 	if (!key || ft_isnum(key[0]))
+	{
+		key = free_ptr(key);
 		return (NULL);
+	}
 	node = find_env_node(head, key);
 	if (!node)
 	{

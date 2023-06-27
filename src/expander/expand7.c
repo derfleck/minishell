@@ -6,7 +6,7 @@
 /*   By: rmocsai <rmocsai@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/26 15:13:06 by rmocsai           #+#    #+#             */
-/*   Updated: 2023/06/26 15:37:40 by rmocsai          ###   ########.fr       */
+/*   Updated: 2023/06/27 14:54:18 by rmocsai          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,21 @@ char	*kill_quotes(char *expanded, t_env *head)
 		j++;
 	}
 	return (str);
+}
+
+int	check_simple_input(char *str)
+{
+	int	i;
+
+	i = -1;
+	while (str[++i])
+	{
+		if (str[i] == '$')
+		{
+			if (!ft_isalnum(str[i + 1]) && str[i + 1] != '?' && \
+			str[i + 1] != '_')
+				return (1);
+		}
+	}
+	return (0);
 }

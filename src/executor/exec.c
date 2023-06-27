@@ -140,4 +140,5 @@ void	init_shell(char *s, t_cmd *cmd, t_env **head)
 		cmd_with_pipes(shell, cmd, head);
 	else
 		exec_single_cmd(cmd, shell, head);
+	free_shell(shell);
 }
