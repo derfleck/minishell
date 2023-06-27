@@ -1,24 +1,5 @@
 #include "../../inc/minishell.h"
 
-/*
-static void	check_heredoc(t_cmd *cmd, int fd)
-{
-	char	buf[1];
-	ssize_t	ret;
-	off_t	size;
-
-	size = 0;
-	while ((ret = read(fd, buf, sizeof(buf))) > 0)
-		size += ret;
-	if (size == 0) {
-		ft_putstr_fd("minishell: warning : here-document deli", STDOUT_FILENO);
-		ft_putstr_fd("mited by end-of-file (wanted `here`)\n", STDOUT_FILENO);
-		unlink_heredoc(cmd);
-		cmd->here_file = NULL;
-	}
-}
-*/
-
 static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 {
 	int		fd;
@@ -32,7 +13,7 @@ static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 		return ;
 	rl_catch_signals = 0;
 	signal(SIGINT, sig_handler_heredoc);
-	//signal(SIGQUIT, sig_handler_heredoc);
+	signal(SIGQUIT, SIG_DFL);
 	heredoc_loop(cmd, i, fd, input);
 	close(fd);
 	cmd->here_file = free_ptr(cmd->here_file);
@@ -41,11 +22,9 @@ static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 	if (sh != NULL)
 		free_shell(sh);
 	if (*(check_sigint()) == 1)
-	{
-		free(check_sigint());
-		exit(130);
-	}
-	exit (0);
+		g_stat = 130;
+	free(check_sigint());
+	exit (g_stat);
 }
 
 //starts the heredoc mode, iterates through all stopwords

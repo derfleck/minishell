@@ -65,7 +65,7 @@ static void	exec_child_single(t_cmd *cmd, t_shell *shell, t_env **head)
 		if (g_stat == 0)
 			set_last_cmd_path(cmd, shell, head);
 		unlink_heredoc(cmd);
-		shell = free_shell(shell);
+		//shell = free_shell(shell);
 	}
 }
 

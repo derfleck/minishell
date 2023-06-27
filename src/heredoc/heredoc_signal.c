@@ -1,5 +1,7 @@
 #include "../../inc/minishell.h"
 
+//performs expansion on heredoc input
+//executed only after stopword check
 static char *expand_heredoc(char *input, t_cmd *cmd)
 {
 	char *tmp;
@@ -26,6 +28,8 @@ static void	empty_file(t_cmd *cmd)
 	}
 }
 
+//helper, initializes a static value that indicates
+//if SIGINT has been received
 int	*check_sigint(void)
 {
 	static int	*pressed;
@@ -38,6 +42,7 @@ int	*check_sigint(void)
 	return (pressed);
 }
 
+//signal handler for SIGINT in heredoc mode
 void	sig_handler_heredoc(int sig_num)
 {
 	int		*pressed;
@@ -52,11 +57,6 @@ void	sig_handler_heredoc(int sig_num)
 		ioctl(STDIN_FILENO, TIOCSTI, &newline, sizeof(newline));
 		signal(SIGINT, sig_handler_heredoc);
 	}
-	else if (sig_num == SIGQUIT)
-	{
-		ft_putstr_fd("minishell: warning : here-document deli", STDOUT_FILENO);
-		ft_putstr_fd("mited by end-of-file (wanted `here`)\n", STDOUT_FILENO);
-	}
 }
 
 void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
@@ -66,10 +66,11 @@ void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 		input = readline("> ");
 		if (*(check_sigint()) == 1)
 			empty_file(cmd);
-		if (*(check_sigint()) != 1 && i == cmd->num[HERE] - 1)
+		if (!(*(check_sigint())) && i == cmd->num[HERE] - 1)
 		{
 			if (!input || ft_strcmp(input, cmd->here[i]))
 			{
+				printf(HEREDOC_WARN, cmd->here[i]);
 				input = free_ptr(input);
 				break ;
 			}
@@ -81,8 +82,7 @@ void	heredoc_loop(t_cmd	*cmd, int i, int fd, char *input)
 				break ;
 			}
 		}
-		else if (*(check_sigint()) != 1 && input \
-					&& ft_strcmp(input, cmd->here[i]))
+		else if (input && ft_strcmp(input, cmd->here[i]))
 			i++;
 		input = free_ptr(input);
 	}

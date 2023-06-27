@@ -14,6 +14,9 @@
 # ifndef ARG_MAX
 #  define ARG_MAX 4096
 # endif
+# ifndef HEREDOC_WARN
+#  define HEREDOC_WARN "minishell: warning : here-document delimited by end-of-file (wanted `%s')\n"
+# endif
 
 /* global variable for exit status */
 extern int	g_stat;
