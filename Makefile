@@ -42,6 +42,7 @@ SRCSLIST		:=	main.c \
 					executor/search_path.c \
 					executor/exec_multiple.c \
          			executor/exec_single.c \
+					executor/exec_check.c \
 					expander/expand1.c \
 					expander/expand2.c \
 					expander/expand3.c \

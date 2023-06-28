@@ -36,3 +36,11 @@ void	perror_env_too_big(char *cmd, t_shell *sh, t_env **head)
 		sh = free_shell(sh);
 	exit(126);
 }
+
+void	free_sh_and_env(t_shell *sh, t_env **head)
+{
+	if (head != NULL)
+		*head = free_env_list(head);
+	if (sh != NULL)
+		sh = free_shell(sh);
+}

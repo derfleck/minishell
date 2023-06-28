@@ -47,42 +47,11 @@ static int	check_environ_size(t_shell *shell, t_env **head, char *cmd)
 	return (1);
 }
 
-//checks if a path is a file or directory
-//prints error and exits with 126 when directory
-int	check_file_dir(char *path, t_shell *sh, t_env **head)
-{
-	struct stat	st;
-	int			suc;
-
-	suc = stat(path, &st);
-	if (suc == -1)
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		perror(path);
-		g_stat = 127;
-	}
-	if (suc == 0 && S_ISREG(st.st_mode))
-		return (1);
-	else if (suc == 0 && S_ISDIR(st.st_mode))
-	{
-		ft_putstr_fd("minishell: ", STDERR_FILENO);
-		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		g_stat = 126;
-	}
-	if (head != NULL)
-		head = free_env_list(head);
-	if (sh != NULL)
-		sh = free_shell(sh);
-	exit(g_stat);
-}
-
 //checks if command path is absolute or relative
 void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 {
 	char	*tmp;
 
-	tmp = NULL;
 	if (cmd->cmd == NULL || (cmd->cmd && ft_strcmp(cmd->cmd, "")))
 		return ;
 	if (check_environ_size(shell, head, cmd->cmd) && ft_strcmp(".", cmd->cmd))
@@ -93,7 +62,7 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 		if (is_builtin(cmd->cmd))
 			mini_pathfinder(shell, cmd, head, mode);
 		else if (check_file_dir(cmd->cmd, shell, head) && \
-				execve(cmd->cmd, cmd->arg, shell->envp) == -1)
+		execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("execve");
 	}
 	else
@@ -101,7 +70,8 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 		tmp = get_cmd_with_path(cmd, shell->paths);
 		if (!tmp)
 			perror_cmd_not_found(cmd->cmd, shell);
-		if (execve(tmp, cmd->arg, shell->envp) == -1)
+		if (check_file_dir(tmp, shell, head) && \
+		execve(tmp, cmd->arg, shell->envp) == -1)
 			perror("execve");
 		free(tmp);
 	}

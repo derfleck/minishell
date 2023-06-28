@@ -2,7 +2,7 @@
 
 int	g_stat = 0;
 
-static	char	*search_return_value(t_env *head, char *key)
+static char	*search_return_value(t_env *head, char *key)
 {
 	t_env	*node;
 	char	*val;

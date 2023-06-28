@@ -31,7 +31,6 @@ static int	try_open(t_lexer *lex)
 //throws an error on first input file that can't be opened (in order)
 //creates files which don't exist yet for output
 //returns 1 on success, 0 on error, stops at error in list
-//TODO: add heredoc unlink if opening fails
 int	open_files(t_cmd *cmd)
 {
 	t_lexer	*tmp;
@@ -51,7 +50,6 @@ int	open_files(t_cmd *cmd)
 			if (err != NULL)
 				perror(err);
 			err = free_ptr(err);
-			//unlink_heredoc(cmd);
 			g_stat = 1;
 			return (0);
 		}
