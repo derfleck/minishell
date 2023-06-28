@@ -15,7 +15,7 @@ static t_env	*check_or_create(t_env **head, char *key, char *new_keyvalue)
 }
 
 /* updates env variables PWD and OLDPWD after cd was called */
-static void	update_pwds(t_env **env, char *oldpath)
+static int	update_pwds(t_env **env, char *oldpath)
 {
 	t_env	*node1;
 	t_env	*node2;
@@ -26,22 +26,17 @@ static void	update_pwds(t_env **env, char *oldpath)
 	newpath = getcwd(NULL, 0);
 	newpwd = ft_strjoin("PWD=", newpath);
 	if (!newpwd)
-		perror_exit_free_env("Malloc failed", *env);
+		return (perror_return_one("Malloc failed"));
 	oldpwd = ft_strjoin("OLDPWD=", oldpath);
 	if (!oldpwd)
-		perror_exit_free_env("Malloc failed", *env);
+		return (perror_return_one("Malloc failed"));
 	node1 = check_or_create(env, "PWD", newpwd);
 	node2 = check_or_create(env, "OLDPWD", oldpwd);
 	replace_node_value(node2, oldpath, env);
 	oldpath = free_ptr(oldpath);
-	if (newpath == NULL)
-	{
-		if (chdir("/") != 0)
-			perror_exit_free_env("cd: chdir to home went wrong", *env);
-	}
-	else
-		replace_node_value(node1, newpath, env);
+	replace_node_value(node1, newpath, env);
 	newpath = free_ptr(newpath);
+	return (0);
 }
 
 static int	builtin_cd_nofileordirectory(char *str, char *oldpath)
@@ -72,7 +67,10 @@ static int	bi_cd_helper1(t_env **env, char *arg)
 			return (1);
 		}
 		else 
-			chdir(split_env_value(node->key_value));
+		{
+			ft_putendl_fd(split_env_value(node->key_value), STDOUT_FILENO);
+			return (export_minus_helper(split_env_value(node->key_value), env, oldpath));
+		}
 	}
 	else if (chdir(arg) != 0)
 		return (builtin_cd_nofileordirectory(arg, oldpath));

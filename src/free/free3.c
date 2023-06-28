@@ -36,3 +36,11 @@ void	perror_env_too_big(char *cmd, t_shell *sh, t_env **head)
 		sh = free_shell(sh);
 	exit(126);
 }
+
+int	perror_return_one(char *message)
+{
+	if (message)
+		ft_putendl_fd(message, STDERR_FILENO);
+	g_stat = 1;
+	return (g_stat);
+}

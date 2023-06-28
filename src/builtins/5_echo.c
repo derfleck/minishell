@@ -47,3 +47,21 @@ int	builtin_echo(char **args, t_env *head)
 	g_stat = 0;
 	return (g_stat);
 }
+
+int	export_minus_helper(char *path, t_env **env, char *just_to_free)
+{
+	char	**arr;
+	int		i;
+
+	just_to_free = free_ptr(just_to_free);
+	arr = malloc (sizeof (char *) * 2);
+	if (!arr)
+		return (perror_return_one("Malloc failed"));
+	arr[0] = ft_strdup(path);
+	if (!arr[0])
+		return (perror_return_one("Malloc failed"));
+	arr[1] = NULL;
+	i = builtin_cd(arr, env);
+	arr = free_charray(arr);
+	return (0);
+}
