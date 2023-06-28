@@ -7,7 +7,8 @@ static int	token_check(t_lexer *tmp)
 		((tmp->token == PIPE && \
 		(tmp->prev == NULL || tmp->next == NULL || tmp->prev->token)) \
 		|| (tmp->next == NULL && tmp->token) || \
-		(tmp->token && tmp->token != PIPE && tmp->prev && tmp->prev->token)))
+		(tmp->token && tmp->token != PIPE && tmp->prev && tmp->prev->token \
+		&& tmp->prev->token != PIPE)))
 	{
 		if (tmp->token && tmp->next == NULL)
 			ft_putendl_fd(TOKEN_WARN_NEW, STDERR_FILENO);
