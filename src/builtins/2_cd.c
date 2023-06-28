@@ -44,19 +44,6 @@ static void	update_pwds(t_env **env, char *oldpath)
 	newpath = free_ptr(newpath);
 }
 
-/* Counts how many arguments are in the array to deal with 
-SETS G_STAT to NULL!   USED IN: cd, exit */
-int	helper_get_arg_count(char **args)
-{
-	int	count;
-
-	g_stat = 0;
-	count = 0;
-	while (args[count])
-		count++;
-	return (count);
-}
-
 static int	builtin_cd_nofileordirectory(char *str, char *oldpath)
 {
 	ft_putstr_fd("Minishell: cd: ", STDERR_FILENO);
@@ -65,6 +52,32 @@ static int	builtin_cd_nofileordirectory(char *str, char *oldpath)
 	oldpath = free_ptr(oldpath);
 	g_stat = 1;
 	return (g_stat);
+}
+
+static int	bi_cd_helper1(t_env **env, char *arg)
+{
+	char	*oldpath;
+	t_env	*node;
+
+	oldpath = getcwd(NULL, 0);
+	if (!oldpath)
+		oldpath = ft_strdup("");
+	if (arg && arg[0] == '-' && arg[1] == '\0')
+	{
+		node = find_env_node(*env, "OLDPWD");
+		if (!node || !split_env_value(node->key_value))
+		{
+			ft_putendl_fd("Minishell: cd: OLDPWD not set", STDERR_FILENO);
+			oldpath = free_ptr(oldpath);
+			return (1);
+		}
+		else 
+			chdir(split_env_value(node->key_value));
+	}
+	else if (chdir(arg) != 0)
+		return (builtin_cd_nofileordirectory(arg, oldpath));
+	update_pwds(env, oldpath);
+	return (0);
 }
 
 /* changes the current working directory and updates env */
@@ -87,11 +100,9 @@ int	builtin_cd(char **args, t_env **env)
 		ft_putendl_fd("Minishell: cd:   : Too many arguments", STDERR_FILENO);
 		return (1);
 	}
+	else if (argc == 1)
+		g_stat = bi_cd_helper1(env, args[0]);
 	else if (args[0][0] == '\0')
 		return (0);
-	oldpath = getcwd(NULL, 0);
-	if (chdir(args[0]) != 0)
-		return (builtin_cd_nofileordirectory(args[0], oldpath));
-	update_pwds(env, oldpath);
 	return (g_stat);
 }

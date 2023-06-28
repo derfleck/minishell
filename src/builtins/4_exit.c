@@ -63,3 +63,16 @@ int	builtin_exit(t_shell *sh, char **args, t_env **env, int process)
 	}
 	return (g_stat);
 }
+
+/* Counts how many arguments are in the array to deal with 
+SETS G_STAT to NULL!   USED IN: cd, exit */
+int	helper_get_arg_count(char **args)
+{
+	int	count;
+
+	g_stat = 0;
+	count = 0;
+	while (args[count])
+		count++;
+	return (count);
+}
