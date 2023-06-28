@@ -23,7 +23,7 @@ t_shell	*free_shell(t_shell *sh);
 //open check
 int		open_files(t_cmd *cmd);
 void	open_in_out(t_cmd *cmd);
-void	open_check(t_cmd *cmd, t_shell *shell, t_env **head);
+void	open_check(t_cmd *cmd);
 
 //search path
 char	**get_paths(char **envp);

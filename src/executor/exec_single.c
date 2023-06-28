@@ -38,7 +38,6 @@ static void	set_last_cmd_path(t_cmd *cmd, t_shell *sh, t_env **head)
 
 static void	child_helper(t_cmd *cmd, t_shell *shell, t_env **head)
 {
-	open_check(cmd, shell, head);
 	if (dup2(cmd->fd[IN], STDIN_FILENO) == -1)
 		perror("dup2");
 	if (dup2(cmd->fd[OUT], STDOUT_FILENO) == -1)
@@ -79,6 +78,9 @@ void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head)
 {
 	if (run_heredoc(shell, cmd))
 		return (perror_heredoc(shell));
+	open_check(cmd);
+	if (g_stat == 1)
+		return ;
 	if (check_builtins(cmd))
 	{
 		execute_cmd(cmd, shell, head, PARENT);

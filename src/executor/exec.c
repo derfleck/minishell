@@ -52,16 +52,18 @@ static int	check_environ_size(t_shell *shell, t_env **head, char *cmd)
 int	check_file_dir(char *path, t_shell *sh, t_env **head)
 {
 	struct stat	st;
+	int			suc;
 
-	if (stat(path, &st) == -1)
+	suc = stat(path, &st);
+	if (suc == -1)
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		perror(path);
 		g_stat = 127;
 	}
-	if (S_ISREG(st.st_mode))
+	if (suc == 0 && S_ISREG(st.st_mode))
 		return (1);
-	else if (S_ISDIR(st.st_mode))
+	else if (suc == 0 && S_ISDIR(st.st_mode))
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);

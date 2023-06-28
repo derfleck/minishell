@@ -38,6 +38,7 @@ int	open_files(t_cmd *cmd)
 	char	*err;
 
 	tmp = cmd->start;
+	g_stat = 0;
 	while (tmp && tmp->token != PIPE)
 	{
 		while (tmp && tmp->token != PIPE && !is_redir(tmp))
@@ -83,14 +84,8 @@ void	open_in_out(t_cmd *cmd)
 	}
 }
 
-void	open_check(t_cmd *cmd, t_shell *shell, t_env **head)
+void	open_check(t_cmd *cmd)
 {
 	if (open_files(cmd))
 		open_in_out(cmd);
-	else
-	{
-		shell = free_shell(shell);
-		*head = free_env_list(head);
-		exit (1);
-	}
 }

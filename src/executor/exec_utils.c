@@ -82,12 +82,12 @@ t_shell	*free_shell(t_shell *sh)
 		if (sh->cmd_start != NULL)
 			sh->cmd_start = free_cmd(sh->cmd_start);
 		i = -1;
-		while (sh->envp[++i] != NULL)
+		while (sh->envp && sh->envp[++i] != NULL)
 			sh->envp[i] = free_ptr(sh->envp[i]);
 		if (sh->envp)
 			sh->envp = free_ptr(sh->envp);
 		i = -1;
-		while (sh->paths[++i] != NULL)
+		while (sh->paths && sh->paths[++i] != NULL)
 			sh->paths[i] = free_ptr(sh->paths[i]);
 		if (sh->paths != NULL)
 			sh->paths = free_ptr(sh->paths);

@@ -31,8 +31,8 @@ void	perror_env_too_big(char *cmd, t_shell *sh, t_env **head)
 		ft_putstr_fd(cmd, STDERR_FILENO);
 	ft_putstr_fd(": Argument list too long\n", STDERR_FILENO);
 	if (head)
-		free_env_list(head);
+		*head = free_env_list(head);
 	if (sh)
-		free_shell(sh);
+		sh = free_shell(sh);
 	exit(126);
 }

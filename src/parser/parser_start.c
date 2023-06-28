@@ -4,7 +4,8 @@
 static int	token_check(t_lexer *tmp)
 {
 	if (tmp && \
-		((tmp->token == PIPE && (tmp->prev == NULL || tmp->next == NULL)) \
+		((tmp->token == PIPE && \
+		(tmp->prev == NULL || tmp->next == NULL || tmp->prev->token)) \
 		|| (tmp->next == NULL && tmp->token)))
 	{
 		if (tmp->token && tmp->next == NULL)

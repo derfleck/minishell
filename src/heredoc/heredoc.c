@@ -18,7 +18,7 @@ static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 	close(fd);
 	cmd->here_file = free_ptr(cmd->here_file);
 	if (sh->head != NULL)
-		free_env_list(&sh->head);
+		sh->head = free_env_list(&sh->head);
 	if (sh != NULL)
 		sh = free_shell(sh);
 	if (*(check_sigint()) == 1)
@@ -90,7 +90,7 @@ int	run_heredoc(t_shell *sh, t_cmd *cmd)
 //therefore removing it from the disk
 int	unlink_heredoc(t_cmd *cmd)
 {
-	if (cmd->num[HERE] > 0)
+	if (cmd && cmd->num[HERE] > 0)
 	{
 		if (cmd->fd[IN])
 			close(cmd->fd[IN]);
