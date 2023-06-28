@@ -35,6 +35,7 @@ SRCSLIST		:=	main.c \
 					parser/parser_start.c \
 					parser/parser_input.c \
 					heredoc/heredoc.c \
+					heredoc/heredoc_signal.c \
 					executor/exec.c \
 					executor/exec_utils.c \
 					executor/open_check.c \

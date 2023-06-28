@@ -1,21 +1,5 @@
 #include "../../inc/minishell.h"
 
-//checks if command is a builtin
-int	is_builtin(char *cmd)
-{
-	if (ft_strncmp(cmd, "pwd", 3) == 0 || \
-		ft_strncmp(cmd, "env", 3) == 0 || \
-		ft_strncmp(cmd, "cd", 2) == 0 || \
-		ft_strncmp(cmd, "export", 6) == 0 || \
-		ft_strncmp(cmd, "unset", 5) == 0 || \
-		ft_strncmp(cmd, "exit", 4) == 0 || \
-		ft_strncmp(cmd, "echo", 4) == 0)
-		return (1);
-	else
-		return (0);
-}
-
-//TODO: set correct status code
 static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 {
 	if (ft_strncmp(cmd->cmd, "pwd", 3) == 0)
@@ -34,8 +18,10 @@ static void	mini_pathfinder(t_shell *sh, t_cmd *cmd, t_env **env, int mode)
 		g_stat = builtin_exit(sh, &cmd->arg[1], env, mode);
 	if (mode == CHILD)
 	{
-		free_env_list(env);
-		free_shell(sh);
+		if (env != NULL)
+			env = free_env_list(env);
+		if (sh != NULL)
+			sh = free_shell(sh);
 		exit(g_stat);
 	}
 }
@@ -68,23 +54,25 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 	struct stat	st;
 
 	if (stat(path, &st) == -1)
-		perror("stat");
+	{
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
+		perror(path);
+		g_stat = 127;
+	}
 	if (S_ISREG(st.st_mode))
 		return (0);
 	else if (S_ISDIR(st.st_mode))
 	{
-		ft_putstr_fd("bash: ", STDERR_FILENO);
+		ft_putstr_fd("minishell: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
 		ft_putstr_fd(": Is a directory\n", STDERR_FILENO);
-		if (head)
-			free_env_list(head);
-		if (sh)
-			free_shell(sh);
 		g_stat = 126;
-		exit(126);
 	}
-	else
-		return (1);
+	if (head != NULL)
+		head = free_env_list(head);
+	if (sh != NULL)
+		sh = free_shell(sh);
+	exit(g_stat);
 }
 
 //checks if command path is absolute or relative
@@ -93,17 +81,17 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 	char	*tmp;
 
 	tmp = NULL;
-	if (cmd->cmd == NULL)
+	if (cmd->cmd == NULL || (cmd->cmd && ft_strcmp(cmd->cmd, "")))
 		return ;
 	if (check_environ_size(shell, head, cmd->cmd) && ft_strcmp(".", cmd->cmd))
 		perror_exit_2("source alias not supported\n", shell, head, mode);
-	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || is_builtin(cmd->cmd))
+	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || \
+			ft_strncmp("/", cmd->cmd, 1) == 0 || is_builtin(cmd->cmd))
 	{
 		if (is_builtin(cmd->cmd))
 			mini_pathfinder(shell, cmd, head, mode);
-		else if (check_file_dir(cmd->cmd, shell, head))
-			return ;
-		else if (execve(cmd->cmd, cmd->arg, shell->envp) == -1)
+		else if (check_file_dir(cmd->cmd, shell, head) && \
+				execve(cmd->cmd, cmd->arg, shell->envp) == -1)
 			perror("execve");
 	}
 	else
@@ -123,6 +111,8 @@ void	init_shell(char *s, t_cmd *cmd, t_env **head)
 {
 	t_shell	*shell;
 
+	if (cmd == NULL || head == NULL)
+		return ;
 	cmd->cmd = cmd->arg[0];
 	shell = malloc(sizeof(t_shell));
 	if (!shell)
@@ -137,8 +127,9 @@ void	init_shell(char *s, t_cmd *cmd, t_env **head)
 	if (!shell->pid)
 		perror_shell("Error initializing shell\n", shell);
 	if (cmd->num[CMD] > 1)
-		cmd_with_pipes(shell, cmd, head);
+		cmd_with_pipes(shell, cmd);
 	else
 		exec_single_cmd(cmd, shell, head);
-	free_shell(shell);
+	if (shell != NULL)
+		shell = free_shell(shell);
 }

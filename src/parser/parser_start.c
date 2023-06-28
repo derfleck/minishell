@@ -1,5 +1,24 @@
 #include "../../inc/minishell.h"
 
+//checks if tokens have a corresponding word or if pipe is at correct pos
+static int	token_check(t_lexer *tmp)
+{
+	if (tmp && \
+		((tmp->token == PIPE && (tmp->prev == NULL || tmp->next == NULL)) \
+		|| (tmp->next == NULL && tmp->token)))
+	{
+		if (tmp->token && tmp->next == NULL)
+			ft_putendl_fd(TOKEN_WARN_NEW, STDERR_FILENO);
+		else
+		{
+			ft_putstr_fd(TOKEN_WARN_CHR, STDERR_FILENO);
+			ft_putendl_fd(tmp->str, STDERR_FILENO);
+		}
+		return (0);
+	}
+	return (1);
+}
+
 //checks if single tokens at beginning or end or in succession
 //returns number of command groups separated by pipes
 //needs to be adapted for error messages (or replaced by something else)
@@ -9,27 +28,17 @@ static int	parse_check(t_lexer *lex)
 	t_lexer	*tmp;
 
 	tmp = lex;
-	cmd = 0;
+	cmd = 1;
 	while (tmp)
 	{
-		if ((tmp->token == PIPE && (tmp->prev == NULL || tmp->next == NULL)) \
-		|| (tmp->next == NULL && tmp->token))
-		{
-			if (tmp->token == PIPE && tmp->prev == NULL)
-			{
-				ft_putstr_fd("minishell: syntax error near unexpected token", STDERR_FILENO);
-				ft_putendl_fd(tmp->str, STDERR_FILENO);
-			}
-			else if (tmp->next == NULL && tmp->token)
-				ft_putendl_fd("minishell: syntax error near unexpected token `newline'", STDERR_FILENO);
-			g_stat = 2;
-			return (0);
-		}
-		while (tmp && tmp->token != PIPE)
+		while (tmp && !tmp->token)
 			tmp = tmp->next;
+		if (!token_check(tmp))
+			return (0);
+		if (tmp && tmp->token == PIPE)
+			cmd++;
 		if (tmp)
 			tmp = tmp->next;
-		cmd++;
 	}
 	return (cmd);
 }

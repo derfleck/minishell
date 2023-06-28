@@ -27,6 +27,7 @@ static t_lexer	*new_lexer_list(char **cmd, int i)
 	}
 	return (lex);
 }
+
 //helper, removes set characters from beginning and end of string
 //required to split safely
 static char	*trim_string(char *str, char *set)
@@ -41,7 +42,7 @@ static char	*trim_string(char *str, char *set)
 	}
 	else if (tmp && tmp[0] == '\0')
 	{
-		safe_free(tmp);
+		tmp = free_ptr(tmp);
 		return (NULL);
 	}
 	return (tmp);
@@ -87,7 +88,7 @@ t_lexer	*start_lexer(char *str, t_env *env)
 	while (split[i])
 		i++;
 	lex = new_lexer_list(split, i);
-	split = safe_free(split);
+	split = free_ptr(split);
 	if (!lex)
 		perror_lexer("Error creating lexer list\n", str, env, lex);
 	return (lex);

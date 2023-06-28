@@ -20,16 +20,18 @@ void	*free_charray(char **arr)
 		arr[i] = free_ptr(arr[i]);
 		i++;
 	}
-	arr = free_ptr(arr);
+	if (arr != NULL)
+		arr = free_ptr(arr);
 	return (NULL);
 }
 
 /* frees environment list and exits with code 1 */
 void	perror_exit_free_env(char *message, t_env *head)
 {
-	if (message)
+	if (message != NULL)
 		perror(message);
-	free_env_list(&head);
+	if (head != NULL)
+		head = free_env_list(&head);
 	exit (1);
 }
 
@@ -59,4 +61,16 @@ void	*free_env_list(t_env **head)
 		node = free_env_node(node);
 	head = NULL;
 	return (NULL);
+}
+
+void	perror_heredoc(t_shell *sh)
+{
+	t_cmd	*tmp;
+
+	tmp = sh->cmd_start;
+	while (tmp)
+	{
+		unlink_heredoc(tmp);
+		tmp = tmp->next;
+	}
 }

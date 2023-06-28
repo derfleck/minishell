@@ -2,22 +2,35 @@
 
 int	g_stat = 0;
 
+static	char	*search_return_value(t_env *head, char *key)
+{
+	t_env	*node;
+	char	*val;
+
+	node = find_env_node(head, key);
+	if (!node)
+		return (NULL);
+	val = split_env_value(node->key_value);
+	return (val);
+}
+
 //expands current directory so only path after home is shown
 static	char	*expand_home_prompt(t_env *head)
 {
-	t_env	*node;
 	char	*home;
 	char	*cwd;
 	char	*str;
 
-	node = find_env_node(head, "HOME");
-	if (node)
-		home = split_env_value(node->key_value);
-	else
-		home = NULL;
+	home = search_return_value(head, "HOME");
 	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		perror_exit_free_env("Malloc failed\n", head);
+	if (cwd == NULL)
+	{
+		cwd = search_return_value(head, "PWD");
+		if (cwd != NULL)
+			cwd = ft_strdup(cwd);
+	}
+	if (cwd == NULL)
+		cwd = ft_strdup(".");
 	if (home && ft_strncmp(home, cwd, ft_strlen(home)) == 0 && \
 		home[ft_strlen(home) - 1] != '/')
 	{
@@ -66,11 +79,11 @@ static char	*get_input(t_env *head)
 	if (prompt == NULL)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
-	prompt = safe_free(prompt);
+	prompt = free_ptr(prompt);
 	if (line == NULL)
 		return (ft_strdup("exit"));
 	else if (line[0] == 0)
-		return (safe_free(line));
+		return (free_ptr(line));
 	return (line);
 }
 
@@ -98,8 +111,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		expander_start(lex, env);
 		cmd = create_parse_list(lex, env);
-		if (cmd != NULL && env != NULL)
-			init_shell(s, cmd, &env);
+		init_shell(s, cmd, &env);
 	}
 	return (0);
 }

@@ -27,7 +27,7 @@ static int	get_sub(char *str, char *set)
 			i += skip_quotes(str + i);
 		else
 			i++;
-	}		
+	}
 	return (i);
 }
 

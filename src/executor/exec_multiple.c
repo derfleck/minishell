@@ -22,7 +22,7 @@ int	parent_redir(int *pip, t_cmd *cmd)
 //redirects in and out files to STDIN/STDOUT respectively
 int	child_redir(int *pip, t_cmd *cmd, t_shell *shell, t_env **env)
 {
- 	if (cmd->next != NULL)
+	if (cmd->next != NULL)
 	{
 		if (dup2(pip[1], STDOUT_FILENO) == -1)
 			return (0);
@@ -43,7 +43,7 @@ int	child_redir(int *pip, t_cmd *cmd, t_shell *shell, t_env **env)
 }
 
 //creates fork of process and checks if parent/child process
-int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i, t_env **env)
+int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i)
 {
 	if (cmd->next != NULL)
 	{
@@ -55,16 +55,31 @@ int	fork_and_exec(int *pip, t_cmd *cmd, t_shell *shell, int i, t_env **env)
 	if (shell->pid[i] < 0)
 		return (0);
 	if (shell->pid[i] == CHILD)
-		return (child_redir(pip, cmd, shell, env));
+	{
+		open_check(cmd, shell, &shell->head);
+		return (child_redir(pip, cmd, shell, &shell->head));
+	}
 	else
 		return (parent_redir(pip, cmd));
 	return (1);
 }
 
+static void	unlink_helper(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+
+	tmp = cmd;
+	while (tmp)
+	{
+		unlink_heredoc(tmp);
+		tmp = tmp->next;
+	}
+}
+
 //executes piped commands and initializes redirects
 //returns 1 on success, 0 on failure
 //starting point for piped execution
-int	cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env)
+int	cmd_with_pipes(t_shell *shell, t_cmd *cmd)
 {
 	int		pip[2];
 	t_cmd	*tmp;
@@ -73,20 +88,17 @@ int	cmd_with_pipes(t_shell *shell, t_cmd *cmd, t_env **env)
 	tmp = cmd;
 	shell->stdin_cpy = dup(STDIN_FILENO);
 	i = 0;
-	run_heredoc(cmd);
+	if (run_heredoc(shell, cmd))
+		return (perror_heredoc(shell), 0);
 	while (tmp)
 	{
-		if (open_files(tmp))
-			open_in_out(tmp);
-		else
+		if (!fork_and_exec(pip, tmp, shell, i++))
 			break ;
-		if (!fork_and_exec(pip, tmp, shell, i++, env))
-			break ;
-		unlink_heredoc(tmp);
 		tmp = tmp->next;
 	}
 	dup2(shell->stdin_cpy, STDIN_FILENO);
 	close(shell->stdin_cpy);
 	wait_children(shell, i);
+	unlink_helper(cmd);
 	return (1);
 }

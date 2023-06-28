@@ -17,8 +17,10 @@ static int	exit_stat_valid(char *str)
 
 static void	exit_helper(t_shell *sh, t_env **head, int err)
 {
-	free_env_list(head);
-	free_shell(sh);
+	if (head != NULL)
+		head = free_env_list(head);
+	if (sh != NULL)
+		sh = free_shell(sh);
 	exit(err);
 }
 
