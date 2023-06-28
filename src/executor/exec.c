@@ -60,7 +60,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 		g_stat = 127;
 	}
 	if (S_ISREG(st.st_mode))
-		return (1);
+		return (0);
 	else if (S_ISDIR(st.st_mode))
 	{
 		ft_putstr_fd("minishell: ", STDERR_FILENO);

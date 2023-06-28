@@ -73,6 +73,7 @@ static void	remove_node(t_env **head, t_env *node)
 	temp->key_value = free_ptr(temp->key_value);
 	temp = free_ptr(temp);
 }
+
 /* removes existing env variable, 
 writes bash: unset: `STR': not a valid identifier if not found 
 Unsetting a variable or function that was not previously set

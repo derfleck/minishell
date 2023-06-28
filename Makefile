@@ -26,6 +26,8 @@ SRCSLIST		:=	main.c \
 					builtins/4_exit.c \
 					builtins/5_echo.c \
 					free/free1.c \
+					free/free2.c \
+					free/free3.c \
 					utils.c \
 					lexer/lexer.c \
 					lexer/list.c \
@@ -45,7 +47,8 @@ SRCSLIST		:=	main.c \
 					expander/expand3.c \
 					expander/expand4.c \
 					expander/expand5.c \
-					expander/expand6.c
+					expander/expand6.c \
+					expander/expand7.c
 
 SRCS			:= $(addprefix ${SRCSDIR}, ${SRCSLIST})
 HEADDIR			:= ./inc/

@@ -55,7 +55,7 @@ static char	*prompt_line(t_env *head)
 	node = find_env_node(head, "USER");
 	tmp = ft_strjoin("\001\e\033[36m\002", split_env_value(node->key_value));
 	if (!tmp)
-		perror_exit_free_env("Malloc failed\n", head);
+		perror_exit_free_env("Malloc failed1\n", head);
 	tmp2 = ft_strjoin(tmp, "@minishell");
 	if (!tmp2)
 		perror_exit_free_env("Malloc failed\n", head);
