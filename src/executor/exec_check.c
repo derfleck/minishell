@@ -37,7 +37,7 @@ int	check_file_dir(char *path, t_shell *sh, t_env **head)
 		return (1);
 	else if (suc == 0 && S_ISDIR(st.st_mode))
 		err_mess_helper(2, path);
-	else if (access(path, F_OK | X_OK) != 0)
+	else if (suc == 0 && access(path, F_OK | X_OK) != 0)
 		err_mess_helper(3, path);
 	free_sh_and_env(sh, head);
 	exit(g_stat);
