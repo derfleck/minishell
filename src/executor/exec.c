@@ -85,8 +85,8 @@ void	execute_cmd(t_cmd *cmd, t_shell *shell, t_env **head, int mode)
 		return ;
 	if (check_environ_size(shell, head, cmd->cmd) && ft_strcmp(".", cmd->cmd))
 		perror_exit_2("source alias not supported\n", shell, head, mode);
-	else if (ft_strncmp("./", cmd->cmd, 2) == 0 || \
-			ft_strncmp("/", cmd->cmd, 1) == 0 || is_builtin(cmd->cmd))
+	else if (!ft_strncmp("./", cmd->cmd, 2) || !ft_strncmp("/", cmd->cmd, 1) || \
+			!ft_strncmp("../", cmd->cmd, 3) || is_builtin(cmd->cmd))
 	{
 		if (is_builtin(cmd->cmd))
 			mini_pathfinder(shell, cmd, head, mode);
