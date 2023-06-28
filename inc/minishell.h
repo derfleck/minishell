@@ -41,7 +41,7 @@ char		*split_env_value(char *str);
 char		*split_env_key(const char *str, t_env *head);
 
 char		**create_env_arr(t_env *head);
-void		reset_shlvl(t_env **head);
+int			reset_shlvl(t_env **head);
 t_env		*create_home(char *str, t_env **head);
 
 /* free */
@@ -59,7 +59,9 @@ void		perror_shell_no_env(char *message, t_shell *sh);
 void		perror_cmd_not_found(char *cmd, t_shell *sh);
 void		perror_env_too_big(char *cmd, t_shell *sh, t_env **head);
 void		perror_heredoc(t_shell *sh);
+int			perror_return_one(char *message);
 void		free_sh_and_env(t_shell *sh, t_env **head);
+
 
 /* utils */
 int			ft_strcmp(char *s1, char *s2);
@@ -73,8 +75,10 @@ int			builtin_pwd(t_env *head);
 int			builtin_export(char **args, t_env **env);
 int			builtin_unset(char **args, t_env **env);
 int			builtin_cd(char **args, t_env **env);
+int			cd_help(char *path, t_env **env, char *just_to_free);
 int			builtin_exit(t_shell *sh, char **args, t_env **env, int process);
 int			builtin_echo(char **args, t_env *head);
+void		export_helper(char *realkey, t_env *node, char *str, t_env **env);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

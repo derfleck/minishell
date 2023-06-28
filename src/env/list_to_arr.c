@@ -50,12 +50,13 @@ char	**create_env_arr(t_env *head)
 }
 
 /* sets SHLVL var to 0 when called */
-void	reset_shlvl(t_env **head)
+int	reset_shlvl(t_env **head)
 {
 	t_env	*node;
 
 	node = find_env_node(*head, "SHLVL");
 	replace_node_value(node, "0", head);
+	return (1);
 }
 
 /* Creates new HOME env node in case HOME was unset.

@@ -27,7 +27,7 @@ char	*safe_join(char *s1, char *s2, t_env *head)
 
 	ret = ft_strjoin(s1, s2);
 	if (!ret)
-		perror_exit_free_env("Malloc failed\n", head);
+		perror_exit_free_env("Malloc failed", head);
 	if (s1 != NULL)
 		free(s1);
 	if (s2 != NULL)
