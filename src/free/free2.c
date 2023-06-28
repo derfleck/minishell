@@ -49,3 +49,15 @@ void	perror_shell(char *message, t_shell *sh)
 		ft_putendl_fd(message, STDERR_FILENO);
 	exit (1);
 }
+
+void	perror_heredoc(t_shell *sh)
+{
+	t_cmd	*tmp;
+
+	tmp = sh->cmd_start;
+	while (tmp)
+	{
+		unlink_heredoc(tmp);
+		tmp = tmp->next;
+	}
+}

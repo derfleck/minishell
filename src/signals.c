@@ -10,12 +10,6 @@ void	handle_signals_child(int signum)
 		rl_on_new_line();
 		g_stat = 130;
 	}
-	else if (signum == SIGQUIT)
-	{
-		//ft_putendl_fd("Quit (core dumped)", STDERR_FILENO);
-		printf("Quit (core dumped)\n");
-		//g_stat = 131;
-	}
 }
 
 /* Checks if process is running as parent (main process) or as child.

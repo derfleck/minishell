@@ -57,6 +57,16 @@ int	helper_get_arg_count(char **args)
 	return (count);
 }
 
+static int	builtin_cd_nofileordirectory(char *str, char *oldpath)
+{
+	ft_putstr_fd("Minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+	oldpath = free_ptr(oldpath);
+	g_stat = 1;
+	return (g_stat);
+}
+
 /* changes the current working directory and updates env */
 //TODO check how args come in from parser
 int	builtin_cd(char **args, t_env **env)
@@ -65,25 +75,23 @@ int	builtin_cd(char **args, t_env **env)
 	int		argc;
 
 	argc = helper_get_arg_count(args);
-	oldpath = getcwd(NULL, 0);
-	if (argc > 1)
+	if (argc == 0)
+	{
+		oldpath = getcwd(NULL, 0);
+		chdir("/");
+		update_pwds(env, oldpath);
+		return (g_stat);
+	}
+	else if (argc > 1)
 	{
 		ft_putendl_fd("Minishell: cd:   : Too many arguments", STDERR_FILENO);
-		g_stat = 1;
-		oldpath = free_ptr(oldpath);
-		return (g_stat);
+		return (1);
 	}
 	else if (args[0][0] == '\0')
-		return (g_stat);
-	else if (chdir(args[0]) != 0)
-	{
-		ft_putstr_fd("Minishell: cd: ", STDERR_FILENO);
-		ft_putstr_fd(args[0], STDERR_FILENO);
-		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-		g_stat = 1;
-		oldpath = free_ptr(oldpath);
-		return (g_stat);
-	}
+		return (0);
+	oldpath = getcwd(NULL, 0);
+	if (chdir(args[0]) != 0)
+		return (builtin_cd_nofileordirectory(args[0], oldpath));
 	update_pwds(env, oldpath);
 	return (g_stat);
 }

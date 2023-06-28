@@ -62,15 +62,3 @@ void	*free_env_list(t_env **head)
 	head = NULL;
 	return (NULL);
 }
-
-void	perror_heredoc(t_shell *sh)
-{
-	t_cmd	*tmp;
-
-	tmp = sh->cmd_start;
-	while (tmp)
-	{
-		unlink_heredoc(tmp);
-		tmp = tmp->next;
-	}
-}
