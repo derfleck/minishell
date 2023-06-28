@@ -51,7 +51,7 @@ int	open_files(t_cmd *cmd)
 			if (err != NULL)
 				perror(err);
 			err = free_ptr(err);
-			unlink_heredoc(cmd);
+			//unlink_heredoc(cmd);
 			g_stat = 1;
 			return (0);
 		}

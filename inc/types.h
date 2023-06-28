@@ -23,7 +23,7 @@ end-of-file (wanted `%s')\n"
 `newline'"
 # endif
 # ifndef TOKEN_WARN_CHR
-#  define TOKEN_WARN_CHR "minishell: syntax error near unexpected token"
+#  define TOKEN_WARN_CHR "minishell: syntax error near unexpected token "
 # endif
 
 /* global variable for exit status */
