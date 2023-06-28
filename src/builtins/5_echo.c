@@ -48,7 +48,7 @@ int	builtin_echo(char **args, t_env *head)
 	return (g_stat);
 }
 
-int	export_minus_helper(char *path, t_env **env, char *just_to_free)
+int	cd_help(char *path, t_env **env, char *just_to_free)
 {
 	char	**arr;
 	int		i;
@@ -64,4 +64,13 @@ int	export_minus_helper(char *path, t_env **env, char *just_to_free)
 	i = builtin_cd(arr, env);
 	arr = free_charray(arr);
 	return (0);
+}
+
+void	export_helper(char *realkey, t_env *node, char *str, t_env **env)
+{
+	if (ft_strcmp(realkey, "SHLVL"))
+		;
+	else
+		append_node_value(node, split_env_value(str), env);
+	realkey = free_ptr(realkey);
 }

@@ -41,7 +41,7 @@ char		*split_env_value(char *str);
 char		*split_env_key(const char *str, t_env *head);
 
 char		**create_env_arr(t_env *head);
-void		reset_shlvl(t_env **head);
+int			reset_shlvl(t_env **head);
 t_env		*create_home(char *str, t_env **head);
 
 /* free */
@@ -73,9 +73,10 @@ int			builtin_pwd(t_env *head);
 int			builtin_export(char **args, t_env **env);
 int			builtin_unset(char **args, t_env **env);
 int			builtin_cd(char **args, t_env **env);
-int			export_minus_helper(char *path, t_env **env, char *just_to_free);
+int			cd_help(char *path, t_env **env, char *just_to_free);
 int			builtin_exit(t_shell *sh, char **args, t_env **env, int process);
 int			builtin_echo(char **args, t_env *head);
+void		export_helper(char *realkey, t_env *node, char *str, t_env **env);
 
 /* signals for ctrl+(D || C || \) */
 void		set_sigaction(int i);

@@ -69,7 +69,7 @@ static int	bi_cd_helper1(t_env **env, char *arg)
 		else 
 		{
 			ft_putendl_fd(split_env_value(node->key_value), STDOUT_FILENO);
-			return (export_minus_helper(split_env_value(node->key_value), env, oldpath));
+			return (cd_help(split_env_value(node->key_value), env, oldpath));
 		}
 	}
 	else if (chdir(arg) != 0)
