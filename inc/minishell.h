@@ -60,6 +60,8 @@ void		perror_cmd_not_found(char *cmd, t_shell *sh);
 void		perror_env_too_big(char *cmd, t_shell *sh, t_env **head);
 void		perror_heredoc(t_shell *sh);
 int			perror_return_one(char *message);
+void		free_sh_and_env(t_shell *sh, t_env **head);
+
 
 /* utils */
 int			ft_strcmp(char *s1, char *s2);

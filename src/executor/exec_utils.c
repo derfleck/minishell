@@ -20,20 +20,27 @@ int	is_builtin(char *cmd)
 pid_t	*wait_children(t_shell *shell, int cmd)
 {
 	int	i;
+	int	sigq;
 
 	i = 0;
+	sigq = 0;
 	while (i < cmd)
 	{
 		if (waitpid(shell->pid[i], &shell->wstatus, 0) == -1)
 			return (NULL);
+		if (!sigq && WIFSIGNALED(shell->wstatus))
+		{
+			if (WTERMSIG(shell->wstatus) + 128 == 131)
+				sigq = 1;
+		}
 		i++;
 	}
 	if (WIFEXITED(shell->wstatus))
 		g_stat = WEXITSTATUS(shell->wstatus);
 	else if (WIFSIGNALED(shell->wstatus))
 		g_stat = WTERMSIG(shell->wstatus) + 128;
-	if (g_stat == 131)
-		write(STDOUT_FILENO, "Quit (core dumped)\n", 19);
+	if (sigq || g_stat == 131)
+		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 	return (NULL);
 }
 

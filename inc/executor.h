@@ -28,6 +28,7 @@ void	open_check(t_cmd *cmd);
 //search path
 char	**get_paths(char **envp);
 char	*get_cmd_with_path(t_cmd *cmd, char **path);
+int		check_file_dir(char *path, t_shell *sh, t_env **head);
 
 //single cmd
 void	exec_single_cmd(t_cmd *cmd, t_shell *shell, t_env **head);

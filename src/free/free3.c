@@ -44,3 +44,11 @@ int	perror_return_one(char *message)
 	g_stat = 1;
 	return (g_stat);
 }
+
+void	free_sh_and_env(t_shell *sh, t_env **head)
+{
+	if (head != NULL)
+		*head = free_env_list(head);
+	if (sh != NULL)
+		sh = free_shell(sh);
+}
