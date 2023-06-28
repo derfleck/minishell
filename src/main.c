@@ -80,7 +80,7 @@ static char	*get_input(t_env *head)
 		return (ft_strdup("exit"));
 	line = readline(prompt);
 	prompt = free_ptr(prompt);
-	if (line == NULL && isatty(STDIN_FILENO))
+	if (line == NULL)
 		return (ft_strdup("exit"));
 	else if (line[0] == 0)
 		return (free_ptr(line));
