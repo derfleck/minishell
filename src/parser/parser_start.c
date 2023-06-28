@@ -14,6 +14,7 @@ static int	token_check(t_lexer *tmp)
 			ft_putstr_fd(TOKEN_WARN_CHR, STDERR_FILENO);
 			ft_putendl_fd(tmp->str, STDERR_FILENO);
 		}
+		g_stat = 2;
 		return (0);
 	}
 	return (1);
