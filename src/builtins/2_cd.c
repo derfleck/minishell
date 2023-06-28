@@ -44,17 +44,40 @@ static void	update_pwds(t_env **env, char *oldpath)
 	newpath = free_ptr(newpath);
 }
 
-/* Counts how many arguments are in the array to deal with 
-SETS G_STAT to NULL!   USED IN: cd, exit */
-int	helper_get_arg_count(char **args)
+static int	builtin_cd_nofileordirectory(char *str, char *oldpath)
 {
-	int	count;
+	ft_putstr_fd("Minishell: cd: ", STDERR_FILENO);
+	ft_putstr_fd(str, STDERR_FILENO);
+	ft_putendl_fd(": No such file or directory", STDERR_FILENO);
+	oldpath = free_ptr(oldpath);
+	g_stat = 1;
+	return (g_stat);
+}
 
-	g_stat = 0;
-	count = 0;
-	while (args[count])
-		count++;
-	return (count);
+static int	bi_cd_helper1(t_env **env, char *arg)
+{
+	char	*oldpath;
+	t_env	*node;
+
+	oldpath = getcwd(NULL, 0);
+	if (!oldpath)
+		oldpath = ft_strdup("");
+	if (arg && arg[0] == '-' && arg[1] == '\0')
+	{
+		node = find_env_node(*env, "OLDPWD");
+		if (!node || !split_env_value(node->key_value))
+		{
+			ft_putendl_fd("Minishell: cd: OLDPWD not set", STDERR_FILENO);
+			oldpath = free_ptr(oldpath);
+			return (1);
+		}
+		else 
+			chdir(split_env_value(node->key_value));
+	}
+	else if (chdir(arg) != 0)
+		return (builtin_cd_nofileordirectory(arg, oldpath));
+	update_pwds(env, oldpath);
+	return (0);
 }
 
 /* changes the current working directory and updates env */
@@ -65,25 +88,21 @@ int	builtin_cd(char **args, t_env **env)
 	int		argc;
 
 	argc = helper_get_arg_count(args);
-	oldpath = getcwd(NULL, 0);
-	if (argc > 1)
+	if (argc == 0)
+	{
+		oldpath = getcwd(NULL, 0);
+		chdir("/");
+		update_pwds(env, oldpath);
+		return (g_stat);
+	}
+	else if (argc > 1)
 	{
 		ft_putendl_fd("Minishell: cd:   : Too many arguments", STDERR_FILENO);
-		g_stat = 1;
-		oldpath = free_ptr(oldpath);
-		return (g_stat);
+		return (1);
 	}
+	else if (argc == 1)
+		g_stat = bi_cd_helper1(env, args[0]);
 	else if (args[0][0] == '\0')
-		return (g_stat);
-	else if (chdir(args[0]) != 0)
-	{
-		ft_putstr_fd("Minishell: cd: ", STDERR_FILENO);
-		ft_putstr_fd(args[0], STDERR_FILENO);
-		ft_putendl_fd(": No such file or directory", STDERR_FILENO);
-		g_stat = 1;
-		oldpath = free_ptr(oldpath);
-		return (g_stat);
-	}
-	update_pwds(env, oldpath);
+		return (0);
 	return (g_stat);
 }
