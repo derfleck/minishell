@@ -40,8 +40,8 @@ int	child_redir(int *pip, t_cmd *cmd, t_shell *shell, t_env **env)
 	close(shell->stdin_cpy);
 	if (g_stat == 1)
 	{
-		free_shell(shell);
 		free_env_list(env);
+		free_shell(shell);
 		exit (1);
 	}
 	execute_cmd(cmd, shell, env, CHILD);
