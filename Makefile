@@ -101,7 +101,7 @@ fclean:			clean
 re:				fclean all
 
 val:			${NAME}
-	valgrind -s --leak-check=full --show-leak-kinds=definite --track-origins=yes --suppressions=vg_ignore ./minishell
+	valgrind -s --leak-check=full --show-leak-kinds=definite --track-origins=yes --sim-hints=lax-ioctls --suppressions=vg_ignore ./minishell
 
 norm:
 	norminette -R CheckForbiddenSourceHeaders $(SRCSDIR) $(HEADDIR)
