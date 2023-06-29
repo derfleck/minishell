@@ -26,7 +26,7 @@ int	builtin_echo(char **args, t_env *head)
 	int	flag;
 	int	i;
 
-	if (!args[0])
+	if (!args && !args[0])
 	{
 		write(1, "\n", 1);
 		return (0);

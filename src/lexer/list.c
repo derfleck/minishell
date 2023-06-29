@@ -52,9 +52,9 @@ static char	*syntax_trimming_helper(char *str, char *set)
 {
 	char	*tmp;
 
-	if (!syntax_check(str))
+	if (str && !syntax_check(str))
 	{
-		ft_putendl_fd("Syntax error", STDOUT_FILENO);
+		ft_putendl_fd("Syntax error: quotes unclosed", STDERR_FILENO);
 		g_stat = 2;
 		free(str);
 		return (NULL);

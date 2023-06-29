@@ -47,6 +47,7 @@ static void	heredoc_eof(t_cmd *cmd, char *input, int i)
 	if (!input)
 		printf(HEREDOC_WARN, cmd->here[i]);
 	input = free_ptr(input);
+	cmd->here_file = free_ptr(cmd->here_file);
 }
 
 void	heredoc_loop(t_cmd *cmd, int i, int fd, char *input)

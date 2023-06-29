@@ -23,7 +23,7 @@ static void	child_heredoc(t_shell *sh, t_cmd *cmd)
 		sh = free_shell(sh);
 	if (*(check_sigint()) == 1)
 		g_stat = 130;
-	free(check_sigint());
+	free_ptr(check_sigint());
 	exit (g_stat);
 }
 

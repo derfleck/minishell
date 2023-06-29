@@ -57,6 +57,8 @@ t_cmd	*free_cmd(t_cmd *cmd)
 			tmp->arg = free_ptr(tmp->arg);
 		if (tmp->here != NULL)
 			tmp->here = free_ptr(tmp->here);
+		if (tmp->here_file != NULL)
+			tmp->here_file = free_ptr(tmp->here_file);
 		tmp = tmp->next;
 	}
 	return (free_ptr(cmd));
