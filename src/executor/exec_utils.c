@@ -29,18 +29,17 @@ pid_t	*wait_children(t_shell *shell, int cmd)
 		if (waitpid(shell->pid[i], &shell->wstatus, 0) == -1)
 			return (NULL);
 		if (!sigq && WIFSIGNALED(shell->wstatus))
-		{
-			if (WTERMSIG(shell->wstatus) + 128 == 131)
-				sigq = 1;
-		}
+			sigq = WTERMSIG(shell->wstatus) + 128;
 		i++;
 	}
 	if (WIFEXITED(shell->wstatus))
 		g_stat = WEXITSTATUS(shell->wstatus);
 	else if (WIFSIGNALED(shell->wstatus))
 		g_stat = WTERMSIG(shell->wstatus) + 128;
-	if (sigq || g_stat == 131)
+	if (sigq == 131 && g_stat == 131)
 		write(STDERR_FILENO, "Quit (core dumped)\n", 19);
+	else if (sigq == 130)
+		write(STDERR_FILENO, "\n", 1);
 	return (NULL);
 }
 
