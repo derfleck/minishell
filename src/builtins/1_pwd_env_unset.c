@@ -1,4 +1,14 @@
-#include "../../inc/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   1_pwd_env_unset.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rmocsai <rmocsai@student.42.com>           +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/29 12:32:30 by rmocsai           #+#    #+#             */
+/*   Updated: 2023/06/29 12:35:37 by rmocsai          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 /* gets the current working directory and prints it on the screen */
 int	builtin_pwd(t_env *head)
