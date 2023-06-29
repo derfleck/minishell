@@ -85,10 +85,12 @@ t_env	*create_user_node(t_env **head)
 {
 	t_env	*node;
 
-	node = malloc (sizeof (t_env));
+	node = ft_calloc (1, sizeof (t_env));
+	if (node == NULL)
+		perror_exit_free_env("Malloc failed\n", *head);
 	node->key_value = ft_strdup("USER=anonymus");
 	if (!node->key_value)
-		perror_exit_free_env("Malloc failed\n", *head);
+		perror_exit_free_env("Malloc failed", *head);
 	add_node_to_list(head, node);
 	return (node);
 }
