@@ -1,5 +1,9 @@
 # Minishell
-- see in [Wiki] (https://github.com/derfleck/minishell/wiki) :)
+![](https://github.com/byaliego/42-project-badges/blob/996feb1d098aa52fc29383d2f666614f4d13fbab/badges/minishelle.png)
+
+Documentation currently WIP, project passed with 100
+
+- [Wiki](https://github.com/derfleck/minishell/wiki) :)
 
 ## Useful links
 
